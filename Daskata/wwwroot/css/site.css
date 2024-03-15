@@ -17,9 +17,11 @@ html {
 
 body {
     font-family: Arial, sans-serif;
+    line-height: 1.6;
+    letter-spacing: 0.5px;
     margin: 0;
     padding: 0;
-    background-color: #fff4ef;
+    background-color: #f0f2f5;
 }
 
 /* This is a custom CSS */
@@ -42,18 +44,19 @@ body {
     flex: 50%;
     justify-content: center;
     align-items: center;
-    padding-top: 160px;
-    padding-left: 160px;
-    
+    padding-top: 170px;
+    padding-left: 120px;
+    padding-right: 120px;
 }
 
 .login-container {
     background-color: #fff;
-    padding: 50px;
-    border-radius: 5px;
+    padding: 20px;
+    border-radius: 8px;
     border: 0;
-    box-shadow: 0 0px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     width: 100%;
+    box-sizing: border-box;
 }
 
 @media only screen and (max-width: 998px) {
@@ -74,43 +77,53 @@ body {
     }
 }
 
-    .login-container input[type="text"],
-    .login-container input[type="password"],
-    .login-container input[type="submit"],
-    .login-container input[type="button"] {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-    }
+.login-container input[type="text"],
+.login-container input[type="password"],
+.login-container input[type="submit"],
+.login-container input[type="button"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
 
-    .login-container input[type="submit"],
-    .login-container input[type="button"] {
-        background-color: rgba(255, 107, 37, 1);
-        color: #fff;
-        cursor: pointer;
-        border: none;
-        outline: none;
-    }
+.login-container input[type="submit"],
+.login-container input[type="button"] {
+    background-color: rgba(255, 107, 37, 1);
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    font-size: 16px !important;
+    font-weight: bold;
+    border-radius: 8px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
 
-        .login-container input[type="submit"]:hover,
-        .login-container input[type="button"]:hover {
-            background-color: rgba(255, 107, 37, 0.9)
-        }
+    .login-container input[type="submit"]:hover,
+    .login-container input[type="button"]:hover {
+        background-color: rgba(255, 107, 37, 0.9);
+    }
 
 .lost-password {
     display: block;
     margin-top: 30px;
     text-align: center;
+    font-size: 14px;
+    text-decoration: none;
+    color: #171717;
 }
 
 .button-register {
     background-color: rgba(37, 67, 136, 1) !important;
-    width: 80%;
-    font-size: 15px;
+    width: 60% !important;
     margin-top: 10px;
+    font-size: 16px !important;
+    font-weight: bold;
+    border-radius: 8px;
 }
 
     .button-register:hover {
@@ -119,7 +132,7 @@ body {
 
 
 .home-logo {
-    width: 80%;
+    width: 70%;
 }
 
 @media only screen and (max-width: 998px) {
@@ -142,4 +155,5 @@ body {
     height: 100px;
     background-color: #fff;
     margin: 0;
+    font-size: 14px;
 }
