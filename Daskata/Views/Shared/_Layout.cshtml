@@ -10,7 +10,8 @@
 </head>
 <body>
     <header>
-       
+        @if (User.Identity.IsAuthenticated)
+        {
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div class="container-fluid">
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Daskata</a>
@@ -31,7 +32,7 @@
                     </div>
                 </div>
             </nav>
-        
+        }
     </header>
 
     <div class="container">
@@ -40,8 +41,8 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
+    <footer class="footer">
+        <div class="footer-container">
             &copy; @DateTime.Now.Year - Daskata
         </div>
     </footer>
