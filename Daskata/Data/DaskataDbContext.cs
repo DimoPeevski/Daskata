@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Daskata.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class DaskataDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public DaskataDbContext(DbContextOptions<DaskataDbContext> options)
             : base(options)
         {
         }
