@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daskata", "Daskata\Daskata.csproj", "{5B750838-8C59-44F2-BABA-4A597B60143A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daskata", "Daskata\Daskata.csproj", "{5B750838-8C59-44F2-BABA-4A597B60143A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daskata.Core", "Daskata.Core\Daskata.Core.csproj", "{766BCC59-62F4-42C8-9831-E85DC3458073}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daskata.Infrastructure", "Daskata.Infrastructure\Daskata.Infrastructure.csproj", "{56BD07F1-19A3-4A4B-852E-06108465AFF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{5B750838-8C59-44F2-BABA-4A597B60143A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B750838-8C59-44F2-BABA-4A597B60143A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B750838-8C59-44F2-BABA-4A597B60143A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{766BCC59-62F4-42C8-9831-E85DC3458073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{766BCC59-62F4-42C8-9831-E85DC3458073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{766BCC59-62F4-42C8-9831-E85DC3458073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{766BCC59-62F4-42C8-9831-E85DC3458073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56BD07F1-19A3-4A4B-852E-06108465AFF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56BD07F1-19A3-4A4B-852E-06108465AFF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56BD07F1-19A3-4A4B-852E-06108465AFF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56BD07F1-19A3-4A4B-852E-06108465AFF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
