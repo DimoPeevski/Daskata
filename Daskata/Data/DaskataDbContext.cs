@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace Daskata.Data
 {
@@ -9,5 +10,6 @@ namespace Daskata.Data
             : base(options)
         {
         }
+
     }
 }
