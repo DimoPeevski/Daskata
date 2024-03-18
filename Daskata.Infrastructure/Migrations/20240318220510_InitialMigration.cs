@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Daskata.Data.Migrations
+namespace Daskata.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration

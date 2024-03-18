@@ -1,4 +1,4 @@
-﻿using Daskata.Data;
+﻿using Daskata.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
