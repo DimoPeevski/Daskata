@@ -7,6 +7,21 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Daskata.styles.css" asp-append-version="true" />
+
+    <meta name="description" content="Пригответе се за предстоящото ни приложение! Платформа, в която всички учители могат лесно да създават и администрират тестове на своите ученици.">
+    <meta property="og:locale" content="bg_BG" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Daskata.eu" />
+    <meta property="og:description" content="Пригответе се за предстоящото ни приложение! Платформа, в която всички учители могат лесно да създават и администрират тестове на своите ученици." />
+    <meta property="og:url" content="https://daskata.eu/" />
+    <meta property="og:site_name" content="Daskata" />
+    <meta property="og:image" content="https://daskata.eu/external-uploads/daskata-bg-desktop.jpg" />
+    <meta property="og:image:width" content="1920" />
+    <meta property="og:image:height" content="1080" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="shortcut icon" href="https://daskata.eu/external-uploads/fav.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="https://daskata.eu/external-uploads/fav.png">
 </head>
 <body>
     <header>
@@ -14,22 +29,25 @@
         {
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Daskata</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img class="header-logo" src="~/lib/logo-header.png" alt="Daskata">
+                    </a>
+
+                    <div class="mobile-menu">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                        </ul>
+                        @await Component.InvokeAsync(nameof(HeaderMenuComponent))
                         <partial name="_LoginPartial" />
                     </div>
                 </div>
             </nav>
-       }
+        }
+
     </header>
 
     <div class="container">
