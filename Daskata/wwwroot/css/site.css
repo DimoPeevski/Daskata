@@ -37,7 +37,8 @@ body {
     flex: 50%;
     justify-content: center;
     align-items: center;
-    margin-top: 150px;
+    margin-top: 100px;
+    text-align: center;
 }
 
 .right-home-box {
@@ -45,7 +46,7 @@ body {
     flex: 50%;
     justify-content: center;
     align-items: center;
-    padding-top: 140px;
+    padding-top: 100px;
     padding-left: 120px;
     padding-right: 120px;
 }
@@ -77,20 +78,38 @@ body {
     }
 }
 
-.login-container input[type="text"],
-.login-container input[type="password"],
-.login-container input[type="submit"],
-.login-container input[type="button"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
+.lost-password {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 15px;
+    text-decoration: none;
+    color: #171717;
 }
 
-.login-container input[type="submit"],
-.login-container input[type="button"] {
+.link-register {
+    display: block;
+    text-align: center;
+}
+
+.button-register {
+    background-color: transparent;
+    border: solid 1px #171717;
+    width: 60%;
+    color: #171717;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+    .button-register:hover {
+        background-color: rgb(39, 72, 127) !important;
+        color: #fff !important;
+    }
+
+.button-login {
     background-color: rgba(242, 85, 96, 1);
     cursor: pointer;
     border: none;
@@ -101,34 +120,11 @@ body {
     padding-top: 15px;
     padding-bottom: 15px;
     color: #fff;
+    width: 100%;
 }
 
-    .login-container input[type="submit"]:hover,
-    .login-container input[type="button"]:hover {
+    .button-login:hover {
         background-color: rgba(231, 77, 88, 1);
-    }
-
-.lost-password {
-    display: block;
-    margin-top: 20px;
-    text-align: center;
-    font-size: 14px;
-    text-decoration: none;
-    color: #171717;
-}
-
-.button-register {
-    background-color: transparent !important;
-    border: solid 1px #171717 !important;
-    width: 60% !important;
-    color: #171717 !important;
-    padding-top: 7px !important;
-    padding-bottom: 7px !important;
-}
-
-    .button-register:hover {
-        background-color: rgb(39, 72, 127) !important;
-        color: #fff !important;
     }
 
 .footer-container {
@@ -145,7 +141,6 @@ body {
 
 .home-logo {
     width: 70%;
-    max-width: 100%;
 }
 
 @media only screen and (max-width: 998px) {
@@ -161,5 +156,12 @@ body {
 }
 
 .header-logo {
-    width: 50%;
+    width: 40%;
 }
+
+@media only screen and (max-width: 598px) {
+    .header-logo {
+        width: 50%;
+    }
+}
+
