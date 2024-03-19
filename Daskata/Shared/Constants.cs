@@ -1,6 +1,6 @@
 ﻿namespace Daskata.Shared
 {
-    public static class HeaderMetaDataInfo
+    public static class Constants
     {
 
     }
