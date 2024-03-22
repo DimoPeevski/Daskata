@@ -1,26 +1,40 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Daskata.Infrastructure.Data.Models
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Здравей @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
-</ul>
+<div class="navbar-nav">
+    <div class="dropdown">
+        <button class="dropbtn" id="profile-picture">
+            <img class="profile-pic" src="~/lib/default-profile-picture.png" alt="Профил">
+        </button>
+
+        <div class="dropdown-content" id="dropdown-menu">
+            <span class="profile-username">@@peevski</span> <br />
+            <span class="profile-names">Dimo Peevski</span><br />
+            <span class="profile-email">@User?.Identity?.Name</span> <hr />
+            <a asp-area="Identity" asp-page="/Account/Manage/Index">Моят профил</a>
+            <a href="#">Преминати тестове</a>
+            <a href="#">Предстоящи изпити</a>
+            <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">Изход</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var profilePicture = document.getElementById("profile-picture");
+        var dropdownMenu = document.getElementById("dropdown-menu");
+
+        profilePicture.addEventListener("click", function (event) {
+            event.stopPropagation();
+            dropdownMenu.classList.toggle("show");
+        });
+
+        window.addEventListener("click", function (event) {
+            if (!event.target.matches('#profile-picture')) {
+                dropdownMenu.classList.remove("show");
+            }
+        });
+    });
+</script>
