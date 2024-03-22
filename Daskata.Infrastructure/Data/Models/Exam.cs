@@ -18,7 +18,7 @@ namespace Daskata.Infrastructure.Data.Models
         public string Title { get; set; } = string.Empty;
 
         [Comment("Description of the exam")]
-        public string? Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [Comment("Duration of the exam in minutes")]
         public TimeSpan Duration { get; set; }

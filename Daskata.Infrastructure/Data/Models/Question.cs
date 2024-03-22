@@ -17,17 +17,14 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Type of the question (e.g., multiple choice, true/false)")]
         public string QuestionType { get; set; } = string.Empty;
 
+        [Comment("Indicates if multiple correct answers are allowed")]
+        public bool IsMultipleCorrect { get; set; }
+
         [Comment("Explanation or additional information for the question")]
         public string Explanation { get; set; } = string.Empty;
 
         [Comment("Points assigned to the question")]
         public int Points { get; set; }
-
-        [Comment("Indicates if multiple correct answers are allowed")]
-        public bool IsMultipleCorrect { get; set; }
-
-        [Comment("Order index for sorting questions within an exam")]
-        public int OrderIndex { get; set; }
 
         [Required]
         [Comment("Foreign key referencing the associated exam")]
@@ -36,6 +33,9 @@ namespace Daskata.Infrastructure.Data.Models
         [ForeignKey(nameof(ExamID))]
         [Comment("Reference to the associated exam")]
         public virtual Exam Exam { get; set; } = null!;
+
+        [Comment("List of answers to the question")]
+        public virtual ICollection<Answer> Answers { get; set; } = new List<Answer>();
     }
 
 }

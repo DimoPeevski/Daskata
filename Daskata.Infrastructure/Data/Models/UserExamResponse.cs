@@ -15,24 +15,24 @@ namespace Daskata.Infrastructure.Data.Models
         public bool IsCorrect { get; set; }
 
         [Required]
-        [Comment("Foreign key referencing the associated exam attempt")]
-        public int AttemptID { get; set; }
-
-        [Required]
         [Comment("Foreign key referencing the associated question")]
         public int QuestionID { get; set; }
 
         [Required]
         [Comment("Foreign key referencing the selected answer")]
-        public int SelectedAnswerID { get; set; }
+        public int AnswerID { get; set; }
 
-        [ForeignKey(nameof(SelectedAnswerID))]
-        [Comment("Reference to the selected answer")]
-        public virtual Answer Answer { get; set; } = null!;
+        [Required]
+        [Comment("Foreign key referencing the associated exam attempt")]
+        public int AttemptID { get; set; }
 
         [ForeignKey(nameof(QuestionID))]
         [Comment("Reference to the associated question")]
         public virtual Question Question { get; set; } = null!;
+
+        [ForeignKey(nameof(AnswerID))]
+        [Comment("Reference to the selected answer")]
+        public virtual Answer Answer { get; set; } = null!;
 
         [ForeignKey(nameof(AttemptID))]
         [Comment("Reference to the associated exam attempt")]

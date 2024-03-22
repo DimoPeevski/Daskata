@@ -22,30 +22,6 @@ namespace Daskata.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Admin", b =>
-                {
-                    b.Property<int>("AdminID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasComment("Unique identifier for the admin");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdminID"));
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int")
-                        .HasComment("Foreign key referencing the associated user");
-
-                    b.HasKey("AdminID");
-
-                    b.HasIndex("UserID")
-                        .IsUnique();
-
-                    b.ToTable("Admins", t =>
-                        {
-                            t.HasComment("App administator");
-                        });
-                });
-
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Answer", b =>
                 {
                     b.Property<int>("AnswerID")
@@ -96,8 +72,8 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasComment("Description of the exam");
 
-                    b.Property<int>("DurationInMinutes")
-                        .HasColumnType("int")
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("time")
                         .HasComment("Duration of the exam in minutes");
 
                     b.Property<bool>("IsPublished")
@@ -116,7 +92,7 @@ namespace Daskata.Infrastructure.Migrations
 
                     b.Property<int>("TotalPoints")
                         .HasColumnType("int")
-                        .HasComment("otal points available in the exam");
+                        .HasComment("Total points available in the exam");
 
                     b.Property<int>("UserID")
                         .HasColumnType("int")
@@ -141,8 +117,8 @@ namespace Daskata.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttemptID"));
 
-                    b.Property<int>("DurationTaken")
-                        .HasColumnType("int")
+                    b.Property<TimeSpan>("DurationTaken")
+                        .HasColumnType("time")
                         .HasComment("Duration of the exam attempt in minutes");
 
                     b.Property<DateTime>("EndTime")
@@ -203,10 +179,6 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasComment("Indicates if multiple correct answers are allowed");
 
-                    b.Property<int>("OrderIndex")
-                        .HasColumnType("int")
-                        .HasComment("Order index for sorting questions within an exam");
-
                     b.Property<int>("Points")
                         .HasColumnType("int")
                         .HasComment("Points assigned to the question");
@@ -231,55 +203,74 @@ namespace Daskata.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Student", b =>
+            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Role", b =>
                 {
-                    b.Property<int>("StudentID")
+                    b.Property<int>("RoleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasComment("Unique identifier for the student");
+                        .HasComment("Unique identifier for the role");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("int")
-                        .HasComment("Foreign key referencing the associated user");
+                    b.Property<string>("RoleName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Name of the role (e.g. Admin, Teacher, Student)");
 
-                    b.HasKey("StudentID");
+                    b.HasKey("RoleId");
 
-                    b.HasIndex("UserID")
-                        .IsUnique();
-
-                    b.ToTable("Students", t =>
+                    b.ToTable("Roles", t =>
                         {
-                            t.HasComment("User with status - Student");
+                            t.HasComment("Represents user roles in the app");
                         });
                 });
 
-            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Teacher", b =>
+            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.UserExamResponse", b =>
                 {
-                    b.Property<int>("TeacherID")
+                    b.Property<int>("ResponseID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasComment("Unique identifier for the teacher");
+                        .HasComment("Unique identifier for the user's exam response");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TeacherID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResponseID"));
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("AnswerID")
                         .HasColumnType("int")
-                        .HasComment("Foreign key referencing the associated user");
+                        .HasComment("Foreign key referencing the selected answer");
 
-                    b.HasKey("TeacherID");
+                    b.Property<int>("AttemptID")
+                        .HasColumnType("int")
+                        .HasComment("Foreign key referencing the associated exam attempt");
 
-                    b.HasIndex("UserID")
-                        .IsUnique();
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit")
+                        .HasComment("Indicates if the user's response is correct");
 
-                    b.ToTable("Teachers", t =>
+                    b.Property<int>("QuestionID")
+                        .HasColumnType("int")
+                        .HasComment("Foreign key referencing the associated question");
+
+                    b.Property<int?>("UserProfileUserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ResponseID");
+
+                    b.HasIndex("AnswerID");
+
+                    b.HasIndex("AttemptID");
+
+                    b.HasIndex("QuestionID");
+
+                    b.HasIndex("UserProfileUserID");
+
+                    b.ToTable("UserExamResponses", t =>
                         {
-                            t.HasComment("User with status - Teacher");
+                            t.HasComment("Records user responses to questions");
                         });
                 });
 
-            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.User", b =>
+            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.UserProfile", b =>
                 {
                     b.Property<int>("UserID")
                         .ValueGeneratedOnAdd()
@@ -320,11 +311,6 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasComment("Last name of the user");
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("Hashed representation of the user's password for security");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -352,53 +338,9 @@ namespace Daskata.Infrastructure.Migrations
 
                     b.HasKey("UserID");
 
-                    b.ToTable("Users", t =>
+                    b.ToTable("UserProfiles", t =>
                         {
                             t.HasComment("Represents individual users within the system");
-                        });
-                });
-
-            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.UserExamResponse", b =>
-                {
-                    b.Property<int>("ResponseID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasComment("Unique identifier for the user's exam response");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResponseID"));
-
-                    b.Property<int>("AttemptID")
-                        .HasColumnType("int")
-                        .HasComment("Foreign key referencing the associated exam attempt");
-
-                    b.Property<bool>("IsCorrect")
-                        .HasColumnType("bit")
-                        .HasComment("Indicates if the user's response is correct");
-
-                    b.Property<int>("QuestionID")
-                        .HasColumnType("int")
-                        .HasComment("Foreign key referencing the associated question");
-
-                    b.Property<int>("SelectedAnswerID")
-                        .HasColumnType("int")
-                        .HasComment("Foreign key referencing the selected answer");
-
-                    b.Property<int?>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ResponseID");
-
-                    b.HasIndex("AttemptID");
-
-                    b.HasIndex("QuestionID");
-
-                    b.HasIndex("SelectedAnswerID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("UserExamResponses", t =>
-                        {
-                            t.HasComment("Records user responses to questions");
                         });
                 });
 
@@ -604,21 +546,10 @@ namespace Daskata.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Admin", b =>
-                {
-                    b.HasOne("Daskata.Infrastructure.Data.Models.User", "User")
-                        .WithOne("Admin")
-                        .HasForeignKey("Daskata.Infrastructure.Data.Models.Admin", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Answer", b =>
                 {
                     b.HasOne("Daskata.Infrastructure.Data.Models.Question", "Question")
-                        .WithMany()
+                        .WithMany("Answers")
                         .HasForeignKey("QuestionID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -628,7 +559,7 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Exam", b =>
                 {
-                    b.HasOne("Daskata.Infrastructure.Data.Models.User", "User")
+                    b.HasOne("Daskata.Infrastructure.Data.Models.UserProfile", "User")
                         .WithMany()
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -645,7 +576,7 @@ namespace Daskata.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Daskata.Infrastructure.Data.Models.User", "User")
+                    b.HasOne("Daskata.Infrastructure.Data.Models.UserProfile", "User")
                         .WithMany("ExamAttempts")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -659,7 +590,7 @@ namespace Daskata.Infrastructure.Migrations
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Question", b =>
                 {
                     b.HasOne("Daskata.Infrastructure.Data.Models.Exam", "Exam")
-                        .WithMany()
+                        .WithMany("Questions")
                         .HasForeignKey("ExamID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -667,34 +598,18 @@ namespace Daskata.Infrastructure.Migrations
                     b.Navigation("Exam");
                 });
 
-            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Student", b =>
-                {
-                    b.HasOne("Daskata.Infrastructure.Data.Models.User", "User")
-                        .WithOne("Student")
-                        .HasForeignKey("Daskata.Infrastructure.Data.Models.Student", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Teacher", b =>
-                {
-                    b.HasOne("Daskata.Infrastructure.Data.Models.User", "User")
-                        .WithOne("Teacher")
-                        .HasForeignKey("Daskata.Infrastructure.Data.Models.Teacher", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.UserExamResponse", b =>
                 {
+                    b.HasOne("Daskata.Infrastructure.Data.Models.Answer", "Answer")
+                        .WithMany()
+                        .HasForeignKey("AnswerID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Daskata.Infrastructure.Data.Models.ExamAttempt", "ExamAttempt")
                         .WithMany()
                         .HasForeignKey("AttemptID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Daskata.Infrastructure.Data.Models.Question", "Question")
@@ -703,15 +618,9 @@ namespace Daskata.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Daskata.Infrastructure.Data.Models.Answer", "Answer")
-                        .WithMany()
-                        .HasForeignKey("SelectedAnswerID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Daskata.Infrastructure.Data.Models.User", null)
+                    b.HasOne("Daskata.Infrastructure.Data.Models.UserProfile", null)
                         .WithMany("UserExamResponses")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserProfileUserID");
 
                     b.Navigation("Answer");
 
@@ -771,18 +680,19 @@ namespace Daskata.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.User", b =>
+            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Exam", b =>
                 {
-                    b.Navigation("Admin")
-                        .IsRequired();
+                    b.Navigation("Questions");
+                });
 
+            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Question", b =>
+                {
+                    b.Navigation("Answers");
+                });
+
+            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.UserProfile", b =>
+                {
                     b.Navigation("ExamAttempts");
-
-                    b.Navigation("Student")
-                        .IsRequired();
-
-                    b.Navigation("Teacher")
-                        .IsRequired();
 
                     b.Navigation("UserExamResponses");
                 });
