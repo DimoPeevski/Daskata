@@ -10,7 +10,7 @@ namespace Daskata.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Unique identifier for the exam")]
-        public int ExamID { get; set; }
+        public Guid ExamID { get; set; }
 
         [Required]
         [MaxLength(ExamTitleLenghtMax)]
@@ -38,7 +38,7 @@ namespace Daskata.Infrastructure.Data.Models
 
         [Required]
         [Comment("Foreign key referencing the user who created the exam")]
-        public int UserID { get; set; }
+        public Guid UserID { get; set; }
 
         [ForeignKey(nameof(UserID))]
         [Comment("Reference to the user who created the exam")]

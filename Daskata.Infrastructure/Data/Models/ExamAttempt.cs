@@ -9,7 +9,7 @@ namespace Daskata.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Unique identifier for the exam attempt")]
-        public int AttemptID { get; set; }
+        public Guid AttemptID { get; set; }
 
         [Comment("Start time of the exam attempt")]
         public DateTime StartTime { get; set; }
@@ -28,11 +28,11 @@ namespace Daskata.Infrastructure.Data.Models
 
         [Required]
         [Comment("Foreign key referencing the exam attempted")]
-        public int ExamID { get; set; }
+        public Guid ExamID { get; set; }
 
         [Required]
         [Comment("Foreign key referencing the user who attempted the exam")]
-        public int UserID { get; set; }
+        public Guid UserID { get; set; }
 
         [ForeignKey(nameof(UserID))]
         [Comment("Reference to the user who attempted the exam")]

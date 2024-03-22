@@ -24,12 +24,10 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Answer", b =>
                 {
-                    b.Property<int>("AnswerID")
+                    b.Property<Guid>("AnswerID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the answer");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AnswerID"));
 
                     b.Property<string>("AnswerText")
                         .IsRequired()
@@ -40,8 +38,8 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasComment("Indicates if the answer is correct");
 
-                    b.Property<int>("QuestionID")
-                        .HasColumnType("int")
+                    b.Property<Guid>("QuestionID")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key referencing the associated question");
 
                     b.HasKey("AnswerID");
@@ -56,12 +54,10 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Exam", b =>
                 {
-                    b.Property<int>("ExamID")
+                    b.Property<Guid>("ExamID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the exam");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExamID"));
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2")
@@ -94,8 +90,8 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasComment("Total points available in the exam");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("int")
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key referencing the user who created the exam");
 
                     b.HasKey("ExamID");
@@ -110,12 +106,10 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.ExamAttempt", b =>
                 {
-                    b.Property<int>("AttemptID")
+                    b.Property<Guid>("AttemptID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the exam attempt");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttemptID"));
 
                     b.Property<TimeSpan>("DurationTaken")
                         .HasColumnType("time")
@@ -125,8 +119,8 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasComment("End time of the exam attempt");
 
-                    b.Property<int>("ExamID")
-                        .HasColumnType("int")
+                    b.Property<Guid>("ExamID")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key referencing the exam attempted");
 
                     b.Property<bool>("IsCompleted")
@@ -141,8 +135,8 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasComment("Start time of the exam attempt");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("int")
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key referencing the user who attempted the exam");
 
                     b.HasKey("AttemptID");
@@ -159,15 +153,13 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Question", b =>
                 {
-                    b.Property<int>("QuestionID")
+                    b.Property<Guid>("QuestionID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the question");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionID"));
-
-                    b.Property<int>("ExamID")
-                        .HasColumnType("int")
+                    b.Property<Guid>("ExamID")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key referencing the associated exam");
 
                     b.Property<string>("Explanation")
@@ -205,12 +197,10 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Role", b =>
                 {
-                    b.Property<int>("RoleId")
+                    b.Property<Guid>("RoleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the role");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
 
                     b.Property<string>("RoleName")
                         .IsRequired()
@@ -228,31 +218,29 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.UserExamResponse", b =>
                 {
-                    b.Property<int>("ResponseID")
+                    b.Property<Guid>("ResponseID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the user's exam response");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResponseID"));
-
-                    b.Property<int>("AnswerID")
-                        .HasColumnType("int")
+                    b.Property<Guid>("AnswerID")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key referencing the selected answer");
 
-                    b.Property<int>("AttemptID")
-                        .HasColumnType("int")
+                    b.Property<Guid>("AttemptID")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key referencing the associated exam attempt");
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit")
                         .HasComment("Indicates if the user's response is correct");
 
-                    b.Property<int>("QuestionID")
-                        .HasColumnType("int")
+                    b.Property<Guid>("QuestionID")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key referencing the associated question");
 
-                    b.Property<int?>("UserProfileUserID")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("UserProfileUserID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ResponseID");
 
@@ -272,12 +260,10 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.UserProfile", b =>
                 {
-                    b.Property<int>("UserID")
+                    b.Property<Guid>("UserID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for each user");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"));
 
                     b.Property<string>("AdditionalInfo")
                         .IsRequired()

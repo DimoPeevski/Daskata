@@ -9,7 +9,7 @@ namespace Daskata.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Unique identifier for each user")]
-        public int UserID { get; set; }
+        public Guid UserID { get; set; }
 
         [Required]
         [MaxLength(UsernameLenghtMax)]

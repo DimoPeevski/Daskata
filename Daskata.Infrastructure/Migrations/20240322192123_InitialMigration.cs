@@ -54,8 +54,7 @@ namespace Daskata.Infrastructure.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    RoleId = table.Column<int>(type: "int", nullable: false, comment: "Unique identifier for the role")
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the role"),
                     RoleName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "Name of the role (e.g. Admin, Teacher, Student)")
                 },
                 constraints: table =>
@@ -68,8 +67,7 @@ namespace Daskata.Infrastructure.Migrations
                 name: "UserProfiles",
                 columns: table => new
                 {
-                    UserID = table.Column<int>(type: "int", nullable: false, comment: "Unique identifier for each user")
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for each user"),
                     Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "Unique username for authentication and identification"),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Email address of the user for communication and verification purposes"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "First name of the user"),
@@ -198,8 +196,7 @@ namespace Daskata.Infrastructure.Migrations
                 name: "Exams",
                 columns: table => new
                 {
-                    ExamID = table.Column<int>(type: "int", nullable: false, comment: "Unique identifier for the exam")
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ExamID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the exam"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Title of the exam"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Description of the exam"),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: false, comment: "Duration of the exam in minutes"),
@@ -207,7 +204,7 @@ namespace Daskata.Infrastructure.Migrations
                     IsPublished = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if the exam is published and available for students"),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date and time when the exam was created"),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date and time when the exam was last modified"),
-                    UserID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the user who created the exam")
+                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the user who created the exam")
                 },
                 constraints: table =>
                 {
@@ -225,15 +222,14 @@ namespace Daskata.Infrastructure.Migrations
                 name: "ExamAttempts",
                 columns: table => new
                 {
-                    AttemptID = table.Column<int>(type: "int", nullable: false, comment: "Unique identifier for the exam attempt")
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AttemptID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the exam attempt"),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Start time of the exam attempt"),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "End time of the exam attempt"),
                     DurationTaken = table.Column<TimeSpan>(type: "time", nullable: false, comment: "Duration of the exam attempt in minutes"),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if the exam attempt is completed"),
                     Score = table.Column<int>(type: "int", nullable: false, comment: "Score obtained in the exam attempt"),
-                    ExamID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the exam attempted"),
-                    UserID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the user who attempted the exam")
+                    ExamID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the exam attempted"),
+                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the user who attempted the exam")
                 },
                 constraints: table =>
                 {
@@ -257,14 +253,13 @@ namespace Daskata.Infrastructure.Migrations
                 name: "Questions",
                 columns: table => new
                 {
-                    QuestionID = table.Column<int>(type: "int", nullable: false, comment: "Unique identifier for the question")
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    QuestionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the question"),
                     QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Text of the question"),
                     QuestionType = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Type of the question (e.g., multiple choice, true/false)"),
                     IsMultipleCorrect = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if multiple correct answers are allowed"),
                     Explanation = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Explanation or additional information for the question"),
                     Points = table.Column<int>(type: "int", nullable: false, comment: "Points assigned to the question"),
-                    ExamID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the associated exam")
+                    ExamID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the associated exam")
                 },
                 constraints: table =>
                 {
@@ -282,11 +277,10 @@ namespace Daskata.Infrastructure.Migrations
                 name: "Answers",
                 columns: table => new
                 {
-                    AnswerID = table.Column<int>(type: "int", nullable: false, comment: "Unique identifier for the answer")
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AnswerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the answer"),
                     AnswerText = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Text of the answer"),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if the answer is correct"),
-                    QuestionID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the associated question")
+                    QuestionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the associated question")
                 },
                 constraints: table =>
                 {
@@ -304,13 +298,12 @@ namespace Daskata.Infrastructure.Migrations
                 name: "UserExamResponses",
                 columns: table => new
                 {
-                    ResponseID = table.Column<int>(type: "int", nullable: false, comment: "Unique identifier for the user's exam response")
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ResponseID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the user's exam response"),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if the user's response is correct"),
-                    QuestionID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the associated question"),
-                    AnswerID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the selected answer"),
-                    AttemptID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the associated exam attempt"),
-                    UserProfileUserID = table.Column<int>(type: "int", nullable: true)
+                    QuestionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the associated question"),
+                    AnswerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the selected answer"),
+                    AttemptID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the associated exam attempt"),
+                    UserProfileUserID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {

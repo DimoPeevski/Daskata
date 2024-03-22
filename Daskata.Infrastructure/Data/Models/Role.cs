@@ -9,7 +9,7 @@ namespace Daskata.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Unique identifier for the role")]
-        public int RoleId { get; set; }
+        public Guid RoleId { get; set; }
 
         [Required]
         [MaxLength(RoleLenghtMax)]

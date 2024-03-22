@@ -9,22 +9,22 @@ namespace Daskata.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Unique identifier for the user's exam response")]
-        public int ResponseID { get; set; }
+        public Guid ResponseID { get; set; }
 
         [Comment("Indicates if the user's response is correct")]
         public bool IsCorrect { get; set; }
 
         [Required]
         [Comment("Foreign key referencing the associated question")]
-        public int QuestionID { get; set; }
+        public Guid QuestionID { get; set; }
 
         [Required]
         [Comment("Foreign key referencing the selected answer")]
-        public int AnswerID { get; set; }
+        public Guid AnswerID { get; set; }
 
         [Required]
         [Comment("Foreign key referencing the associated exam attempt")]
-        public int AttemptID { get; set; }
+        public Guid AttemptID { get; set; }
 
         [ForeignKey(nameof(QuestionID))]
         [Comment("Reference to the associated question")]
