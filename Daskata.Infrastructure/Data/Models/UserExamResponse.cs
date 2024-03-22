@@ -16,26 +16,26 @@ namespace Daskata.Infrastructure.Data.Models
 
         [Required]
         [Comment("Foreign key referencing the associated exam attempt")]
-        public required int AttemptID { get; set; }
+        public int AttemptID { get; set; }
 
         [Required]
         [Comment("Foreign key referencing the associated question")]
-        public required int QuestionID { get; set; }
+        public int QuestionID { get; set; }
 
         [Required]
         [Comment("Foreign key referencing the selected answer")]
-        public required int SelectedAnswerID { get; set; }
+        public int SelectedAnswerID { get; set; }
 
         [ForeignKey(nameof(SelectedAnswerID))]
-        [Comment("Reference to the associated exam attempt")]
-        public virtual ExamAttempt ExamAttempt { get; set; } = null!;
+        [Comment("Reference to the selected answer")]
+        public virtual Answer Answer { get; set; } = null!;
 
         [ForeignKey(nameof(QuestionID))]
         [Comment("Reference to the associated question")]
         public virtual Question Question { get; set; } = null!;
 
-        [ForeignKey(nameof(SelectedAnswerID))]
-        [Comment("Reference to the selected answer")]
-        public virtual Answer Answer { get; set; } = null!;
+        [ForeignKey(nameof(AttemptID))]
+        [Comment("Reference to the associated exam attempt")]
+        public virtual ExamAttempt ExamAttempt { get; set; } = null!;
     }
 }

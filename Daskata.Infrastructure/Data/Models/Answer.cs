@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Daskata.Infrastructure.Data.Models
 {
     [Comment("Question answer")]
-
     public class Answer
     {
         [Key]
@@ -20,11 +19,10 @@ namespace Daskata.Infrastructure.Data.Models
 
         [Required]
         [Comment("Foreign key referencing the associated question")]
-        public required int QuestionID { get; set; }
+        public int QuestionID { get; set; }
 
         [ForeignKey(nameof(QuestionID))]
         [Comment("Reference to the associated question")]
         public virtual Question Question { get; set; } = null!;
     }
-
 }

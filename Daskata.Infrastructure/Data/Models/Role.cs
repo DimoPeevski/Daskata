@@ -1,0 +1,19 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using static Daskata.Infrastructure.Shared.Constants;
+
+namespace Daskata.Infrastructure.Data.Models
+{
+    [Comment("Represents user roles in the app")]
+    public class Role
+    {
+        [Key]
+        [Comment("Unique identifier for the role")]
+        public int RoleId { get; set; }
+
+        [Required]
+        [MaxLength(RoleLenghtMax)]
+        [Comment("Name of the role (e.g. Admin, Teacher, Student)")]
+        public string RoleName { get; set; } = string.Empty;
+    }
+}

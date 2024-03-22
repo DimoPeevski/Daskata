@@ -13,35 +13,39 @@ namespace Daskata.Infrastructure.Data.Models
         public int ExamID { get; set; }
 
         [Required]
-        [Comment("Title of the exam")]
         [MaxLength(ExamTitleLenghtMax)]
-        public required string Title { get; set; }
+        [Comment("Title of the exam")]
+        public string Title { get; set; } = string.Empty;
 
         [Comment("Description of the exam")]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
 
         [Comment("Duration of the exam in minutes")]
-        public int DurationInMinutes { get; set; }
+        public TimeSpan Duration { get; set; }
 
-        [Comment("otal points available in the exam")]
+        [Comment("Total points available in the exam")]
         public int TotalPoints { get; set; }
 
         [Comment("Indicates if the exam is published and available for students")]
-        public bool IsPublished { get; set; }
+        public bool IsPublished { get; set; } = false;
 
         [Required]
         [Comment("Date and time when the exam was created")]
-        public required DateTime CreationDate { get; set; }
+        public DateTime CreationDate { get; set; }
 
         [Comment("Date and time when the exam was last modified")]
         public DateTime LastModifiedDate { get; set; }
 
         [Required]
         [Comment("Foreign key referencing the user who created the exam")]
-        public required int UserID { get; set; }
+        public int UserID { get; set; }
 
         [ForeignKey(nameof(UserID))]
-        [Comment("Reference to the user who created the exa")]
-        public virtual User User { get; set; } = null!;
+        [Comment("Reference to the user who created the exam")]
+        public virtual UserProfile User { get; set; } = null!;
+
+        [Comment("Navigation property for questions in the exam")]
+        public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
     }
+
 }

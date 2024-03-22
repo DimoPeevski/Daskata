@@ -20,5 +20,9 @@
         //Constants user in: Exam
         public const int ExamTitleLenghtMin = 3;
         public const int ExamTitleLenghtMax = 100;
+
+
+        //Constants user in: Exam
+        public const int RoleLenghtMax = 50;
     }
 }

@@ -5,7 +5,7 @@ using static Daskata.Infrastructure.Shared.Constants;
 namespace Daskata.Infrastructure.Data.Models
 {
     [Comment("Represents individual users within the system")]
-    public class User
+    public class UserProfile
     {
         [Key]
         [Comment("Unique identifier for each user")]
@@ -14,16 +14,13 @@ namespace Daskata.Infrastructure.Data.Models
         [Required]
         [MaxLength(UsernameLenghtMax)]
         [Comment("Unique username for authentication and identification")]
-        public required string Username { get; set; }
-
-        [Required]
-        [Comment("Hashed representation of the user's password for security")]
-        public required string PasswordHash { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(EmailLenghtMax)]
+        [EmailAddress]
         [Comment("Email address of the user for communication and verification purposes")]
-        public required string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [MaxLength(FirstNameLenghtMax)]
         [Comment("First name of the user")]
@@ -35,11 +32,11 @@ namespace Daskata.Infrastructure.Data.Models
 
         [Required]
         [Comment("Role assigned to the user within the system (e.g., Admin, Teacher, Student)")]
-        public required UserRole Role { get; set; }
+        public UserRole Role { get; set; }
 
         [Required]
         [Comment("Date and time when the user account was registered")]
-        public required DateTime RegistrationDate { get; set; }
+        public DateTime RegistrationDate { get; set; }
 
         [Comment("Date and time of the user's last login")]
         public DateTime LastLoginDate { get; set; }
@@ -51,21 +48,13 @@ namespace Daskata.Infrastructure.Data.Models
         public string ProfilePictureUrl { get; set; } = string.Empty;
 
         [MaxLength(PhoneNumberLenghtMax)]
+        [Phone]
         [Comment("User phone number")]
         public string PhoneNumber { get; set; } = string.Empty;
 
         [MaxLength(AdditionalInfoLenghtMax)]
         [Comment("Additional information about the user")]
         public string AdditionalInfo { get; set; } = string.Empty;
-
-        [Comment("Navigation property for associated admin profile")]
-        public virtual Admin Admin { get; set; } = null!;
-
-        [Comment("Navigation property for associated teacher profile")]
-        public virtual Teacher Teacher { get; set; } = null!;
-
-        [Comment("Navigation property for associated student profile")]
-        public virtual Student Student { get; set; } = null!;
 
         [Comment("Navigation property for associated exam attempts")]
         public virtual ICollection<ExamAttempt> ExamAttempts { get; set; } = new List<ExamAttempt>();

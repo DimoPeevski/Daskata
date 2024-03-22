@@ -37,4 +37,5 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Reference to the associated exam")]
         public virtual Exam Exam { get; set; } = null!;
     }
+
 }

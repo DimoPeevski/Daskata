@@ -1,12 +1,14 @@
 ﻿using Daskata.Infrastructure.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Daskata.Infrastructure.Data
 {
-    public class DaskataDbContext : DbContext
+    public class DaskataDbContext : IdentityDbContext<IdentityUser>
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Admin> Admins { get; set; }
+        public DbSet<UserProfile> Users { get; set; }
+        public DbSet<Role> Admins { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Exam> Exams { get; set; }
@@ -24,10 +26,10 @@ namespace Daskata.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<UserProfile>()
                 .HasOne(u => u.Admin)
                 .WithOne(a => a.User)
-                .HasForeignKey<Admin>(a => a.UserID)
+                .HasForeignKey<Role>(a => a.UserID)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ExamAttempt>()
@@ -62,4 +64,3 @@ namespace Daskata.Infrastructure.Data
         }
     }
 }
-

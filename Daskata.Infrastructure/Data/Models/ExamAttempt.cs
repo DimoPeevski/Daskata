@@ -18,7 +18,7 @@ namespace Daskata.Infrastructure.Data.Models
         public DateTime EndTime { get; set; }
 
         [Comment("Duration of the exam attempt in minutes")]
-        public int DurationTaken { get; set; }
+        public TimeSpan DurationTaken { get; set; }
 
         [Comment("Indicates if the exam attempt is completed")]
         public bool IsCompleted { get; set; }
@@ -28,15 +28,15 @@ namespace Daskata.Infrastructure.Data.Models
 
         [Required]
         [Comment("Foreign key referencing the exam attempted")]
-        public required int ExamID { get; set; }
+        public int ExamID { get; set; }
 
         [Required]
         [Comment("Foreign key referencing the user who attempted the exam")]
-        public required int UserID { get; set; }
+        public int UserID { get; set; }
 
         [ForeignKey(nameof(UserID))]
         [Comment("Reference to the user who attempted the exam")]
-        public virtual User User { get; set; } = null!;
+        public virtual UserProfile User { get; set; } = null!;
 
         [ForeignKey(nameof(ExamID))]
         [Comment("Reference to the exam attempted")]
