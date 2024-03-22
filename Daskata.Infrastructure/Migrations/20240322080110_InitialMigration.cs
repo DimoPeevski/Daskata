@@ -134,8 +134,8 @@ namespace Daskata.Infrastructure.Migrations
                     DurationTaken = table.Column<int>(type: "int", nullable: false, comment: "Duration of the exam attempt in minutes"),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if the exam attempt is completed"),
                     Score = table.Column<int>(type: "int", nullable: false, comment: "Score obtained in the exam attempt"),
-                    UserID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the user who attempted the exam"),
-                    ExamID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the exam attempted")
+                    ExamID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the exam attempted"),
+                    UserID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the user who attempted the exam")
                 },
                 constraints: table =>
                 {
@@ -212,7 +212,8 @@ namespace Daskata.Infrastructure.Migrations
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if the user's response is correct"),
                     AttemptID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the associated exam attempt"),
                     QuestionID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the associated question"),
-                    SelectedAnswerID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the selected answer")
+                    SelectedAnswerID = table.Column<int>(type: "int", nullable: false, comment: "Foreign key referencing the selected answer"),
+                    UserID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -222,7 +223,7 @@ namespace Daskata.Infrastructure.Migrations
                         column: x => x.SelectedAnswerID,
                         principalTable: "Answers",
                         principalColumn: "AnswerID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserExamResponses_ExamAttempts_AttemptID",
                         column: x => x.AttemptID,
@@ -234,7 +235,12 @@ namespace Daskata.Infrastructure.Migrations
                         column: x => x.QuestionID,
                         principalTable: "Questions",
                         principalColumn: "QuestionID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserExamResponses_Users_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Users",
+                        principalColumn: "UserID");
                 },
                 comment: "Records user responses to questions");
 
@@ -295,6 +301,11 @@ namespace Daskata.Infrastructure.Migrations
                 name: "IX_UserExamResponses_SelectedAnswerID",
                 table: "UserExamResponses",
                 column: "SelectedAnswerID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserExamResponses_UserID",
+                table: "UserExamResponses",
+                column: "UserID");
         }
 
         /// <inheritdoc />

@@ -22,20 +22,43 @@ namespace Daskata.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ExamAttempt>()
-                .HasOne(ea => ea.User) 
-                .WithMany(s => s.ExamAttempts) 
-                .HasForeignKey(ea => ea.UserID)
-                .OnDelete(DeleteBehavior.Restrict); 
+            base.OnModelCreating(modelBuilder);
 
-           
-            modelBuilder.Entity<ExamAttempt>()
-                .HasOne(ea => ea.Exam)
-                .WithMany()
-                .HasForeignKey(ea => ea.ExamID)
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Admin)
+                .WithOne(a => a.User)
+                .HasForeignKey<Admin>(a => a.UserID)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ExamAttempt>()
+                .HasOne(ea => ea.User)
+                .WithMany(u => u.ExamAttempts)
+                .HasForeignKey(ea => ea.UserID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Answer>()
+                .HasOne(a => a.Question)
+                .WithMany()
+                .HasForeignKey(a => a.QuestionID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserExamResponse>()
+                .HasOne(uer => uer.ExamAttempt)
+                .WithMany()
+                .HasForeignKey(uer => uer.AttemptID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserExamResponse>()
+                .HasOne(uer => uer.Question)
+                .WithMany()
+                .HasForeignKey(uer => uer.QuestionID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserExamResponse>()
+                .HasOne(uer => uer.Answer)
+                .WithMany()
+                .HasForeignKey(uer => uer.SelectedAnswerID)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

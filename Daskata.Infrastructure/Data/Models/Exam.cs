@@ -36,10 +36,11 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Date and time when the exam was last modified")]
         public DateTime LastModifiedDate { get; set; }
 
-        [ForeignKey(nameof(Models.User))]
+        [Required]
         [Comment("Foreign key referencing the user who created the exam")]
-        public int UserID { get; set; }
+        public required int UserID { get; set; }
 
+        [ForeignKey(nameof(UserID))]
         [Comment("Reference to the user who created the exa")]
         public virtual User User { get; set; } = null!;
     }

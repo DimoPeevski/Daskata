@@ -14,24 +14,27 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Indicates if the user's response is correct")]
         public bool IsCorrect { get; set; }
 
-        [ForeignKey(nameof(Models.ExamAttempt))]
+        [Required]
         [Comment("Foreign key referencing the associated exam attempt")]
-        public int AttemptID { get; set; }
+        public required int AttemptID { get; set; }
 
-        [ForeignKey(nameof(Models.Question))]
+        [Required]
         [Comment("Foreign key referencing the associated question")]
-        public int QuestionID { get; set; }
+        public required int QuestionID { get; set; }
 
-        [ForeignKey(nameof(Models.Answer))]
+        [Required]
         [Comment("Foreign key referencing the selected answer")]
-        public int SelectedAnswerID { get; set; }
+        public required int SelectedAnswerID { get; set; }
 
+        [ForeignKey(nameof(SelectedAnswerID))]
         [Comment("Reference to the associated exam attempt")]
         public virtual ExamAttempt ExamAttempt { get; set; } = null!;
 
+        [ForeignKey(nameof(QuestionID))]
         [Comment("Reference to the associated question")]
         public virtual Question Question { get; set; } = null!;
 
+        [ForeignKey(nameof(SelectedAnswerID))]
         [Comment("Reference to the selected answer")]
         public virtual Answer Answer { get; set; } = null!;
     }

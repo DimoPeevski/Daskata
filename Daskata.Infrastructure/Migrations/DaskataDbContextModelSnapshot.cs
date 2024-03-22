@@ -383,6 +383,9 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasComment("Foreign key referencing the selected answer");
 
+                    b.Property<int?>("UserID")
+                        .HasColumnType("int");
+
                     b.HasKey("ResponseID");
 
                     b.HasIndex("AttemptID");
@@ -390,6 +393,8 @@ namespace Daskata.Infrastructure.Migrations
                     b.HasIndex("QuestionID");
 
                     b.HasIndex("SelectedAnswerID");
+
+                    b.HasIndex("UserID");
 
                     b.ToTable("UserExamResponses", t =>
                         {
@@ -399,11 +404,13 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Admin", b =>
                 {
-                    b.HasOne("Daskata.Infrastructure.Data.Models.User", null)
+                    b.HasOne("Daskata.Infrastructure.Data.Models.User", "User")
                         .WithOne("Admin")
                         .HasForeignKey("Daskata.Infrastructure.Data.Models.Admin", "UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Answer", b =>
@@ -460,20 +467,24 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Student", b =>
                 {
-                    b.HasOne("Daskata.Infrastructure.Data.Models.User", null)
+                    b.HasOne("Daskata.Infrastructure.Data.Models.User", "User")
                         .WithOne("Student")
                         .HasForeignKey("Daskata.Infrastructure.Data.Models.Student", "UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Teacher", b =>
                 {
-                    b.HasOne("Daskata.Infrastructure.Data.Models.User", null)
+                    b.HasOne("Daskata.Infrastructure.Data.Models.User", "User")
                         .WithOne("Teacher")
                         .HasForeignKey("Daskata.Infrastructure.Data.Models.Teacher", "UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.UserExamResponse", b =>
@@ -487,14 +498,18 @@ namespace Daskata.Infrastructure.Migrations
                     b.HasOne("Daskata.Infrastructure.Data.Models.Question", "Question")
                         .WithMany()
                         .HasForeignKey("QuestionID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Daskata.Infrastructure.Data.Models.Answer", "Answer")
                         .WithMany()
                         .HasForeignKey("SelectedAnswerID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Daskata.Infrastructure.Data.Models.User", null)
+                        .WithMany("UserExamResponses")
+                        .HasForeignKey("UserID");
 
                     b.Navigation("Answer");
 
@@ -515,6 +530,8 @@ namespace Daskata.Infrastructure.Migrations
 
                     b.Navigation("Teacher")
                         .IsRequired();
+
+                    b.Navigation("UserExamResponses");
                 });
 #pragma warning restore 612, 618
         }

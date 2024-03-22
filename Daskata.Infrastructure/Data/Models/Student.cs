@@ -11,8 +11,12 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Unique identifier for the student")]
         public int StudentID { get; set; }
 
-        [ForeignKey(nameof(User))]
+        [Required]
         [Comment("Foreign key referencing the associated user")]
-        public int UserID { get; set; }
+        public required int UserID { get; set; }
+
+        [ForeignKey(nameof(UserID))]
+        [Comment("Reference to the associated user")]
+        public virtual User User { get; set; } = null!;
     }
 }

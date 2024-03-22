@@ -69,5 +69,8 @@ namespace Daskata.Infrastructure.Data.Models
 
         [Comment("Navigation property for associated exam attempts")]
         public virtual ICollection<ExamAttempt> ExamAttempts { get; set; } = new List<ExamAttempt>();
+
+        [Comment("Navigation property for user responses to questions")]
+        public virtual ICollection<UserExamResponse> UserExamResponses { get; set; } = new List<UserExamResponse>();
     }
 }

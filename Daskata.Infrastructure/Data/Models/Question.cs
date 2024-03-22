@@ -29,10 +29,11 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Order index for sorting questions within an exam")]
         public int OrderIndex { get; set; }
 
-        [ForeignKey(nameof(Models.Exam))]
+        [Required]
         [Comment("Foreign key referencing the associated exam")]
         public int ExamID { get; set; }
 
+        [ForeignKey(nameof(ExamID))]
         [Comment("Reference to the associated exam")]
         public virtual Exam Exam { get; set; } = null!;
     }

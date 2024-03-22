@@ -18,10 +18,11 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Indicates if the answer is correct")]
         public bool IsCorrect { get; set; }
 
-        [ForeignKey(nameof(Models.Question))]
+        [Required]
         [Comment("Foreign key referencing the associated question")]
-        public int QuestionID { get; set; }
+        public required int QuestionID { get; set; }
 
+        [ForeignKey(nameof(QuestionID))]
         [Comment("Reference to the associated question")]
         public virtual Question Question { get; set; } = null!;
     }

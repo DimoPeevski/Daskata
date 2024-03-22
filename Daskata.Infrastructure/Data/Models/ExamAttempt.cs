@@ -26,17 +26,19 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Score obtained in the exam attempt")]
         public int Score { get; set; }
 
-        [Comment("Foreign key referencing the user who attempted the exam")]
-        [ForeignKey(nameof(Models.User))]
-        public int UserID { get; set; }
-
+        [Required]
         [Comment("Foreign key referencing the exam attempted")]
-        [ForeignKey(nameof(Models.Exam))]
-        public int ExamID { get; set; }
+        public required int ExamID { get; set; }
 
+        [Required]
+        [Comment("Foreign key referencing the user who attempted the exam")]
+        public required int UserID { get; set; }
+
+        [ForeignKey(nameof(UserID))]
         [Comment("Reference to the user who attempted the exam")]
         public virtual User User { get; set; } = null!;
 
+        [ForeignKey(nameof(ExamID))]
         [Comment("Reference to the exam attempted")]
         public virtual Exam Exam { get; set; } = null!;
     }
