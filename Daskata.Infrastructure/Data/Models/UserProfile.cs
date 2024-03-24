@@ -56,6 +56,12 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Additional information about the user")]
         public string AdditionalInfo { get; set; } = string.Empty;
 
+        [Comment("Property to store the user ID of the creator")]
+        public Guid CreatedByUserId { get; set; }
+
+        [Comment("Navigation property to refer to the user who created this profile")]
+        public virtual UserProfile? CreatedByUser { get; set; }
+
         [Comment("Navigation property for associated exam attempts")]
         public virtual ICollection<ExamAttempt> ExamAttempts { get; set; } = new List<ExamAttempt>();
 

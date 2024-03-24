@@ -2,7 +2,7 @@
 {
     public static class Constants
     {
-        //Constants user in: User
+        //Constants uses in: User
         public const int UsernameLenghtMin = 3;
         public const int UsernameLenghtMax = 50;
 
@@ -17,12 +17,12 @@
         public const int AdditionalInfoLenghtMax = 500;
 
 
-        //Constants user in: Exam
+        //Constants uses in: Exam
         public const int ExamTitleLenghtMin = 3;
         public const int ExamTitleLenghtMax = 100;
 
 
-        //Constants user in: Exam
+        //Constants uses in: Role
         public const int RoleLenghtMax = 50;
     }
 }
