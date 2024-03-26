@@ -1,10 +1,15 @@
-﻿namespace Daskata.Infrastructure.Data.Models
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using static Daskata.Infrastructure.Shared.Constants;
+
+namespace Daskata.Infrastructure.Data.Models
 {
-    public enum UserRole
+    [Comment("Represents user roles in the app")]
+    public class UserRole : IdentityRole<Guid>
     {
-        Admin = 10,
-        Manager = 20,
-        Teacher = 30,
-        Student = 40
+        [MaxLength(RoleLenghtMax)]
+        [Comment("Name of the role translated in Bulgarian (e.g. Администратор, Мениджър, Учител, Учиник)")]
+        public string? BGName { get; set; }
     }
 }

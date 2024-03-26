@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Daskata.Infrastructure.Data
 {
-    public class DaskataDbContext : IdentityDbContext<UserProfile>
+    public class DaskataDbContext : IdentityDbContext<UserProfile, UserRole, Guid>
     {
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Exam> Exams { get; set; }
         public DbSet<ExamAttempt> ExamAttempts { get; set; }
         public DbSet<Question> Questions { get; set; }
-        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserExamResponse> UserExamResponses { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
 
@@ -33,6 +33,12 @@ namespace Daskata.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(ea => ea.ExamID)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserProfile>()
+                .HasOne(u => u.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(u => u.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserExamResponse>(entity =>
             {

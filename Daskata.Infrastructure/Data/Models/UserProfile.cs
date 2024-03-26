@@ -6,22 +6,11 @@ using static Daskata.Infrastructure.Shared.Constants;
 namespace Daskata.Infrastructure.Data.Models
 {
     [Comment("Represents individual users within the system")]
-    public class UserProfile : IdentityUser
+    public class UserProfile : IdentityUser<Guid>
     {
         [Key]
         [Comment("Unique identifier for each user")]
         public Guid UserID { get; set; } = Guid.NewGuid();
-
-        [Required]
-        [MaxLength(UsernameLenghtMax)]
-        [Comment("Unique username for authentication and identification")]
-        public string Username { get; set; } = string.Empty;
-
-        [Required]
-        [MaxLength(EmailLenghtMax)]
-        [EmailAddress]
-        [Comment("Email address of the user for communication and verification purposes")]
-        public string Email { get; set; } = string.Empty;
 
         [MaxLength(FirstNameLenghtMax)]
         [Comment("First name of the user")]
@@ -32,8 +21,8 @@ namespace Daskata.Infrastructure.Data.Models
         public string LastName { get; set; } = string.Empty;
 
         [Required]
-        [Comment("Role assigned to the user within the system (e.g., Admin, Teacher, Student)")]
-        public UserRole Role { get; set; }
+        [Comment("Role assigned to the user within the system (e.g., Admin, Manager, Teacher, Student)")]
+        public Role Role { get; set; }
 
         [Required]
         [Comment("Date and time when the user account was registered")]
@@ -47,11 +36,6 @@ namespace Daskata.Infrastructure.Data.Models
 
         [Comment("URL for the user's profile picture")]
         public string ProfilePictureUrl { get; set; } = string.Empty;
-
-        [MaxLength(PhoneNumberLenghtMax)]
-        [Phone]
-        [Comment("User phone number")]
-        public string PhoneNumber { get; set; } = string.Empty;
 
         [MaxLength(AdditionalInfoLenghtMax)]
         [Comment("Additional information about the user")]
