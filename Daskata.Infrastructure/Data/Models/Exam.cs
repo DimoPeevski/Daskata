@@ -10,7 +10,7 @@ namespace Daskata.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Unique identifier for the exam")]
-        public Guid ExamID { get; set; }
+        public Guid ExamID { get; set; } = Guid.NewGuid();
 
         [Required]
         [MaxLength(ExamTitleLenghtMax)]

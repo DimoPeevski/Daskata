@@ -9,11 +9,11 @@ namespace Daskata.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Unique identifier for the role")]
-        public Guid RoleId { get; set; }
+        public Guid RoleId { get; set; } = Guid.NewGuid();
 
         [Required]
         [MaxLength(RoleLenghtMax)]
-        [Comment("Name of the role (e.g. Admin, Teacher, Student)")]
+        [Comment("Name of the role (e.g. Admin, Manager, Teacher, Student)")]
         public string RoleName { get; set; } = string.Empty;
     }
 }

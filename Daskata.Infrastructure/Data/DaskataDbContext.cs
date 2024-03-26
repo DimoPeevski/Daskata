@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Daskata.Infrastructure.Data
 {
-    public class DaskataDbContext : IdentityDbContext<IdentityUser>
+    public class DaskataDbContext : IdentityDbContext<UserProfile>
     {
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Exam> Exams { get; set; }

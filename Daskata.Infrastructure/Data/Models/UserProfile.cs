@@ -1,15 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Infrastructure.Data.Models
 {
     [Comment("Represents individual users within the system")]
-    public class UserProfile
+    public class UserProfile : IdentityUser
     {
         [Key]
         [Comment("Unique identifier for each user")]
-        public Guid UserID { get; set; }
+        public Guid UserID { get; set; } = Guid.NewGuid();
 
         [Required]
         [MaxLength(UsernameLenghtMax)]
