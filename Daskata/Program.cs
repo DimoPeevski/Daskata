@@ -1,12 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApplicationDbContext(builder.Configuration);
 
 builder.Services.AddApplicationIdentity(builder.Configuration);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddApplicationDbContext(builder.Configuration);
 
 builder.Services.AddApplicationServices();
+
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddRazorPages();
+
 
 var app = builder.Build();
 

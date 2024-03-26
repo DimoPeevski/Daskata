@@ -8,10 +8,6 @@ namespace Daskata.Infrastructure.Data.Models
     [Comment("Represents individual users within the system")]
     public class UserProfile : IdentityUser<Guid>
     {
-        [Key]
-        [Comment("Unique identifier for each user")]
-        public Guid UserID { get; set; } = Guid.NewGuid();
-
         [MaxLength(FirstNameLenghtMax)]
         [Comment("First name of the user")]
         public string FirstName { get; set; } = string.Empty;
@@ -22,7 +18,7 @@ namespace Daskata.Infrastructure.Data.Models
 
         [Required]
         [Comment("Role assigned to the user within the system (e.g., Admin, Manager, Teacher, Student)")]
-        public Role Role { get; set; }
+        public RoleCategory Role { get; set; }
 
         [Required]
         [Comment("Date and time when the user account was registered")]

@@ -9,7 +9,7 @@ namespace Daskata.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Unique identifier for the exam attempt")]
-        public Guid AttemptID { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Comment("Start time of the exam attempt")]
         public DateTime StartTime { get; set; }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Daskata.Infrastructure.Migrations
 {
     [DbContext(typeof(DaskataDbContext))]
-    [Migration("20240326192531_InitialMigration")]
+    [Migration("20240326194311_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -27,7 +27,7 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Answer", b =>
                 {
-                    b.Property<Guid>("AnswerID")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the answer");
@@ -45,7 +45,7 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key referencing the associated question");
 
-                    b.HasKey("AnswerID");
+                    b.HasKey("Id");
 
                     b.HasIndex("QuestionID");
 
@@ -57,7 +57,7 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Exam", b =>
                 {
-                    b.Property<Guid>("ExamID")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the exam");
@@ -97,7 +97,7 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key referencing the user who created the exam");
 
-                    b.HasKey("ExamID");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserID");
 
@@ -109,7 +109,7 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.ExamAttempt", b =>
                 {
-                    b.Property<Guid>("AttemptID")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the exam attempt");
@@ -142,7 +142,7 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Foreign key referencing the user who attempted the exam");
 
-                    b.HasKey("AttemptID");
+                    b.HasKey("Id");
 
                     b.HasIndex("ExamID");
 
@@ -156,7 +156,7 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Question", b =>
                 {
-                    b.Property<Guid>("QuestionID")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the question");
@@ -188,7 +188,7 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasComment("Type of the question (e.g., multiple choice, true/false)");
 
-                    b.HasKey("QuestionID");
+                    b.HasKey("Id");
 
                     b.HasIndex("ExamID");
 
@@ -200,7 +200,7 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.UserExamResponse", b =>
                 {
-                    b.Property<Guid>("ResponseID")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the user's exam response");
@@ -224,7 +224,7 @@ namespace Daskata.Infrastructure.Migrations
                     b.Property<Guid?>("UserProfileId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("ResponseID");
+                    b.HasKey("Id");
 
                     b.HasIndex("AnswerID");
 
@@ -332,10 +332,6 @@ namespace Daskata.Infrastructure.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Unique identifier for each user");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -358,16 +354,11 @@ namespace Daskata.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Daskata.Infrastructure.Data.Models.UserRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("BGName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("Name of the role translated in Bulgarian (e.g. Администратор, Мениджър, Учител, Учиник)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -388,10 +379,7 @@ namespace Daskata.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", null, t =>
-                        {
-                            t.HasComment("Represents user roles in the app");
-                        });
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -593,7 +581,7 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Daskata.Infrastructure.Data.Models.UserRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -620,7 +608,7 @@ namespace Daskata.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Daskata.Infrastructure.Data.Models.UserRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)

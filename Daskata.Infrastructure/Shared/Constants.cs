@@ -22,7 +22,8 @@
         public const int ExamTitleLenghtMax = 100;
 
 
-        //Constants uses in: Role
-        public const int RoleLenghtMax = 50;
+        //Constants uses in: RegisterFormModel
+        public const int PasswordLenghtMin = 6;
+        public const int PasswordLenghtMax = 50;
     }
 }

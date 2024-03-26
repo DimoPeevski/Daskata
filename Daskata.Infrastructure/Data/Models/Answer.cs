@@ -9,7 +9,7 @@ namespace Daskata.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Unique identifier for the answer")]
-        public Guid AnswerID { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Comment("Text of the answer")]
         public string AnswerText { get; set; } = string.Empty;

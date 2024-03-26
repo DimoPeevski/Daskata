@@ -26,12 +26,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services, IConfiguration config)
         {
-            services.AddIdentity<UserProfile, UserRole>(options => options.User.RequireUniqueEmail = true)
-                .AddRoles<UserRole>()
+            services.AddDefaultIdentity<UserProfile>(options => options.User.RequireUniqueEmail = false)
+                .AddRoles<IdentityRole<Guid>>()
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<DaskataDbContext>();
-            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //.AddEntityFrameworkStores<DaskataDbContext>();
 
             return services;
         }

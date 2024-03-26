@@ -14,7 +14,7 @@ namespace Daskata.Controllers
             _logger = logger;
         }
 
-        [Authorize]
+        //[Authorize]
         public IActionResult Index()
         {
             return View(); 

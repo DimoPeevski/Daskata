@@ -16,7 +16,6 @@ namespace Daskata.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BGName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true, comment: "Name of the role translated in Bulgarian (e.g. Администратор, Мениджър, Учител, Учиник)"),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -24,15 +23,13 @@ namespace Daskata.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                },
-                comment: "Represents user roles in the app");
+                });
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for each user"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "First name of the user"),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Last name of the user"),
                     Role = table.Column<int>(type: "int", nullable: false, comment: "Role assigned to the user within the system (e.g., Admin, Manager, Teacher, Student)"),
@@ -179,7 +176,7 @@ namespace Daskata.Infrastructure.Migrations
                 name: "Exams",
                 columns: table => new
                 {
-                    ExamID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the exam"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the exam"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Title of the exam"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Description of the exam"),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: false, comment: "Duration of the exam in minutes"),
@@ -191,7 +188,7 @@ namespace Daskata.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Exams", x => x.ExamID);
+                    table.PrimaryKey("PK_Exams", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Exams_AspNetUsers_UserID",
                         column: x => x.UserID,
@@ -205,7 +202,7 @@ namespace Daskata.Infrastructure.Migrations
                 name: "ExamAttempts",
                 columns: table => new
                 {
-                    AttemptID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the exam attempt"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the exam attempt"),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Start time of the exam attempt"),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "End time of the exam attempt"),
                     DurationTaken = table.Column<TimeSpan>(type: "time", nullable: false, comment: "Duration of the exam attempt in minutes"),
@@ -216,7 +213,7 @@ namespace Daskata.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExamAttempts", x => x.AttemptID);
+                    table.PrimaryKey("PK_ExamAttempts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ExamAttempts_AspNetUsers_UserID",
                         column: x => x.UserID,
@@ -227,7 +224,7 @@ namespace Daskata.Infrastructure.Migrations
                         name: "FK_ExamAttempts_Exams_ExamID",
                         column: x => x.ExamID,
                         principalTable: "Exams",
-                        principalColumn: "ExamID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 },
                 comment: "Exam attempted by user");
@@ -236,7 +233,7 @@ namespace Daskata.Infrastructure.Migrations
                 name: "Questions",
                 columns: table => new
                 {
-                    QuestionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the question"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the question"),
                     QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Text of the question"),
                     QuestionType = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Type of the question (e.g., multiple choice, true/false)"),
                     IsMultipleCorrect = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if multiple correct answers are allowed"),
@@ -246,12 +243,12 @@ namespace Daskata.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Questions", x => x.QuestionID);
+                    table.PrimaryKey("PK_Questions", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Questions_Exams_ExamID",
                         column: x => x.ExamID,
                         principalTable: "Exams",
-                        principalColumn: "ExamID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 },
                 comment: "Question in an exam");
@@ -260,19 +257,19 @@ namespace Daskata.Infrastructure.Migrations
                 name: "Answers",
                 columns: table => new
                 {
-                    AnswerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the answer"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the answer"),
                     AnswerText = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Text of the answer"),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if the answer is correct"),
                     QuestionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the associated question")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Answers", x => x.AnswerID);
+                    table.PrimaryKey("PK_Answers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Answers_Questions_QuestionID",
                         column: x => x.QuestionID,
                         principalTable: "Questions",
-                        principalColumn: "QuestionID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 },
                 comment: "Question answer");
@@ -281,7 +278,7 @@ namespace Daskata.Infrastructure.Migrations
                 name: "UserExamResponses",
                 columns: table => new
                 {
-                    ResponseID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the user's exam response"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the user's exam response"),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if the user's response is correct"),
                     QuestionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the associated question"),
                     AnswerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the selected answer"),
@@ -290,12 +287,12 @@ namespace Daskata.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserExamResponses", x => x.ResponseID);
+                    table.PrimaryKey("PK_UserExamResponses", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserExamResponses_Answers_AnswerID",
                         column: x => x.AnswerID,
                         principalTable: "Answers",
-                        principalColumn: "AnswerID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserExamResponses_AspNetUsers_UserProfileId",
@@ -306,13 +303,13 @@ namespace Daskata.Infrastructure.Migrations
                         name: "FK_UserExamResponses_ExamAttempts_AttemptID",
                         column: x => x.AttemptID,
                         principalTable: "ExamAttempts",
-                        principalColumn: "AttemptID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserExamResponses_Questions_QuestionID",
                         column: x => x.QuestionID,
                         principalTable: "Questions",
-                        principalColumn: "QuestionID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 },
                 comment: "Records user responses to questions");

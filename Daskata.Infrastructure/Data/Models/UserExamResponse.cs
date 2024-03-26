@@ -9,7 +9,7 @@ namespace Daskata.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Unique identifier for the user's exam response")]
-        public Guid ResponseID { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
 
         [Comment("Indicates if the user's response is correct")]
         public bool IsCorrect { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Daskata.Infrastructure.Data.Models
 {
-    public enum Role
+    public enum RoleCategory
     {
         Admin = 10,
         Manager = 20,
