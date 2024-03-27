@@ -1,4 +1,5 @@
-﻿@model RegisterFormModel
+﻿@using Daskata.Infrastructure.Data.Models
+@model RegisterFormModel
 @{
     ViewData["Title"] = "Регистрирай се";
 }
@@ -27,6 +28,13 @@
                     <label asp-for="ConfirmPassword">Потвърди парола</label>
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Role">Роля на потребителя:</label>
+                    <select asp-for="Role" class="form-control" asp-items="Html.GetEnumSelectList<RoleCategory>()">
+                        <option value="">Избери роля</option>
+                    </select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
                 <button id="registerSubmit" type="submit" class="button-login">Регистрация</button>
             </form>
         </div>
@@ -36,3 +44,4 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+

@@ -20,18 +20,18 @@
             var email = await UserManager.GetEmailAsync(user!);
 
             var userProfile = await _context.UserProfiles.FirstOrDefaultAsync();
-            string firstName = string.IsNullOrEmpty(userProfile?.FirstName) ? "Име" : userProfile.FirstName;
-            string lastName = string.IsNullOrEmpty(userProfile?.LastName) ? "Фамилия" : userProfile.LastName;
+            string userFirstName = string.IsNullOrEmpty(userProfile?.FirstName) ? "Име" : userProfile.FirstName;
+            string userLastName = string.IsNullOrEmpty(userProfile?.LastName) ? "Фамилия" : userProfile.LastName;
         }
 
         <div class="dropdown-content" id="dropdown-menu">
             <span class="profile-username">@@@user</span> <br />
-            <span class="profile-names">@firstName @lastName</span><br />
+            <span class="profile-names">@userFirstName @userLastName</span><br />
             <span class="profile-email">@email</span> <hr />
             <a asp-area="Identity" asp-page="/Account/Manage/Index">Моят профил</a>
             <a href="#">Преминати тестове</a>
             <a href="#">Предстоящи изпити</a>
-            <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">Изход</a>
+            <a asp-controller="User" asp-action="Logout" id="logoutLink">Изход</a>
         </div>
     </div>
 </div>
@@ -81,4 +81,14 @@ $(document).ready(function () {
         }
     })
 });
+</script>
+
+<script>
+    //Logout confirm
+    document.getElementById("logoutLink").addEventListener("click", function (event) {
+        event.preventDefault();
+        if (confirm("Наистина ли искате да излезете?")) {
+            window.location.href = this.href;
+        }
+    });
 </script>

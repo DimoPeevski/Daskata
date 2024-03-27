@@ -7,6 +7,8 @@ builder.Services.AddApplicationDbContext(builder.Configuration);
 
 builder.Services.AddApplicationServices();
 
+//builder.Services.AddApplicationAuthentication();
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddRazorPages();

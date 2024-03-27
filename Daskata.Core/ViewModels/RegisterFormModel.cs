@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Daskata.Infrastructure.Data.Models;
+using System.ComponentModel.DataAnnotations;
 using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Core.ViewModels
@@ -22,6 +23,7 @@ namespace Daskata.Core.ViewModels
         [Compare("Password", ErrorMessage = "Въведените пароли не съвпадат")]
         public string ConfirmPassword { get; set; } = null!;
 
-        public Guid CreatedByUserId { get; set; }
+        [Required]
+        public RoleCategory Role { get; set; }
     }
 }
