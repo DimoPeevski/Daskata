@@ -1,6 +1,5 @@
 ﻿using Daskata.Infrastructure.Data;
 using Daskata.Infrastructure.Data.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,19 +9,6 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            return services;
-        }
-
-        public static IServiceCollection AddApplicationAuthentication(this IServiceCollection services)
-        {
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options =>
-            {
-                options.Cookie.Name = "Daskata_Cookie";
-                //options.LoginPath = "/Identity/Account/Login";
-                options.LogoutPath = "/User/Logout";
-            });
-
             return services;
         }
 

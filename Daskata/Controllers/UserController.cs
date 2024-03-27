@@ -1,30 +1,67 @@
 ﻿using Daskata.Core.ViewModels;
 using Daskata.Infrastructure.Data;
 using Daskata.Infrastructure.Data.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Daskata.Controllers
 {
-    //[Authorize]
+   // [Authorize]
     public class UserController : Controller
     {
         private readonly SignInManager<UserProfile> _signInManager;
         private readonly UserManager<UserProfile> _userManager;
         private readonly IUserStore<UserProfile> _userStore;
-        private readonly ILogger<UserProfile> _logger;
+        private readonly ILogger<LoginFormModel> _logger;
         private readonly DaskataDbContext _context;
 
         public UserController(SignInManager<UserProfile> signInManager,
                               UserManager<UserProfile> userManager,
                               DaskataDbContext context, 
-                              ILogger<UserProfile> logger)
+                              ILogger<LoginFormModel> logger,
+                              IUserStore<UserProfile> userStore)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _context = context;
             _logger = logger;
+            _userStore = userStore;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Login(string? returnUrl = null)
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+            LoginFormModel model = new LoginFormModel();
+            {
+                model.ReturnUrl = returnUrl;
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, false);
+
+            if (!result.Succeeded)
+            {
+                TempData["Еrror"] = "There was an error while trying to login. Моля свеържете се с администратор";
+
+                return View(model);
+            }
+
+            return Redirect(model.ReturnUrl ?? "/Home/Index");
         }
 
         [HttpGet]
@@ -74,14 +111,14 @@ namespace Daskata.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
+            _logger.LogInformation("New user created.");
+
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-
-                _logger.LogInformation("New user created.");
 
                 return View(model);
             }
@@ -132,8 +169,3 @@ namespace Daskata.Controllers
         }
     }
 }
-
-
-
-
-

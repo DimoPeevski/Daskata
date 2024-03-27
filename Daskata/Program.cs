@@ -7,7 +7,11 @@ builder.Services.AddApplicationDbContext(builder.Configuration);
 
 builder.Services.AddApplicationServices();
 
-//builder.Services.AddApplicationAuthentication();
+builder.Services.ConfigureApplicationCookie(config =>
+{
+    config.LoginPath = "/User/Login";
+    config.LogoutPath = "/User/Logout";
+});
 
 builder.Services.AddControllersWithViews();
 
