@@ -30,8 +30,4 @@
     <ProjectReference Include="..\Daskata.Infrastructure\Daskata.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Identity\Pages\Account\" />
-  </ItemGroup>
-
 </Project>

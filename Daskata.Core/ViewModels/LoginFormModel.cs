@@ -5,7 +5,7 @@ namespace Daskata.Core.ViewModels
     public class LoginFormModel
     {
         [Required]
-        [EmailAddress]
+        //[EmailAddress]
         public string Email { get; set; } = null!;
 
         [Required]

@@ -1,6 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddApplicationIdentity(builder.Configuration);
 
 builder.Services.AddApplicationDbContext(builder.Configuration);
@@ -35,7 +34,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-//app.UseAuthentication();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapDefaultControllerRoute();

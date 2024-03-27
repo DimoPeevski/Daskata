@@ -1,6 +1,7 @@
 ﻿using Daskata.Core.ViewModels;
 using Daskata.Infrastructure.Data;
 using Daskata.Infrastructure.Data.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,7 @@ namespace Daskata.Controllers
         [HttpGet]
         public async Task<IActionResult> Login(string? returnUrl = null)
         {
-            //await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             LoginFormModel model = new LoginFormModel();
             {
@@ -49,14 +50,16 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, false);
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, lockoutOnFailure: false);
 
             if (!result.Succeeded)
             {
-                TempData["Еrror"] = "Имаше проблем при опита за вход. Моля свеържете се с администратор.";
+                ModelState.AddModelError(string.Empty, "Някъде има грешка...");
 
                 return View(model);
             }
+
+            _logger.LogInformation("User logged in.");
 
             return Redirect(model.ReturnUrl ?? "/Home/Index");
         }

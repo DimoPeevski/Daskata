@@ -26,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDefaultIdentity<UserProfile>(options => 
+            services.AddIdentity<UserProfile, IdentityRole<Guid>>(options => 
             options.User.RequireUniqueEmail = true)
                 .AddRoles<IdentityRole<Guid>>()
                 .AddDefaultTokenProviders()
