@@ -77,16 +77,6 @@ body {
     }
 }
 
-.lost-password {
-    display: block;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 15px;
-    text-decoration: none;
-    color: #171717;
-}
-
 .link-register {
     display: block;
     text-align: center;
@@ -127,36 +117,66 @@ body {
     }
 
 .button-create-user {
-    background-color: rgba(242, 85, 96, 1);
+    background-color: rgba(232, 75, 86, 1);
+    font-weight: bold;
     cursor: pointer;
     border: none;
+    border-radius: 5px;
     outline: none;
     font-size: 16px;
-    font-weight: bold;
-    border-radius: 8px;
+    color: #fafafa;
+    text-shadow: 1px 1px 1px rgba(23, 23, 23, 0.5);
+    padding-left: 20px;
+    padding-right: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
-    margin-left: 100px;
-    color: #fff;
-    width: 200px;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
     .button-create-user:hover {
-        background-color: rgba(231, 77, 88, 1);
+        background-color: #f3646d;
+    }
+
+.button-create-test {
+    background-color: #366793;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+    color: #fafafa;
+    text-shadow: 1px 1px 1px rgba(23, 23, 23, 0.5);
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+    .button-create-test:hover {
+        background-color: #3f72a0;
     }
 
 .header-menu {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-weight: bold;
-    font-size: 17px;
-    margin-right: 20px;
+    font-size: 16px;
+    margin-right: 18px;
     text-transform: uppercase;
+    border-radius: 5px;
+}
+
+.links-header-menu {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
     .header-menu:hover {
-        color: #db455f !important;
+        background-color: #224f77;
     }
 
 .header-container {
@@ -272,6 +292,7 @@ body {
 .profile-pic {
     width: 50px;
     margin-right: 30px;
+    border-radius: 100px;
 }
 
 .dropdown:hover .dropdown-content {

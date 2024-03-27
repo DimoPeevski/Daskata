@@ -1,19 +1,21 @@
-﻿<ul class="navbar-nav flex-grow-1">
+﻿
+<ul class="navbar-nav flex-grow-1">
     <li class="nav-item">
-        <a class="nav-link text-white header-menu" asp-area="" asp-controller="Home" asp-action="Index">Моята дъска</a>
+        <a class="nav-link text-white header-menu links-header-menu" asp-area="" asp-controller="Home" asp-action="Index">Моята дъска</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-white header-menu" asp-area="" asp-controller="Home" asp-action="Index">Свободни тестове</a>
+        <a class="nav-link text-white header-menu links-header-menu" asp-area="" asp-controller="Home" asp-action="Index">Всички тестове</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-white header-menu" asp-area="" asp-controller="Home" asp-action="Index">Преминати изпити</a>
+        <a class="nav-link text-white header-menu links-header-menu" asp-area="" asp-controller="Home" asp-action="Index">Преминати изпити</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link text-white header-menu" asp-area="" asp-controller="Home" asp-action="Index">Полезна информация</a>
+    <li>
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center">📝 Създай тест</a>
     </li>
-    <li class="nav-item">
-        <button class="button-create-user">Създай потребител</button>
+    <li>
+        <a asp-area="" asp-controller="User" asp-action="Register" class="button-create-user btn btn-primary d-flex justify-content-center align-items-center">🧑 Нов потребител</a>
     </li>
+
 </ul>
 
 

@@ -2,10 +2,10 @@ using Daskata.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Daskata.Infrastructure.Data;
 
 namespace Daskata.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -15,7 +15,6 @@ namespace Daskata.Controllers
             _logger = logger;
         }
 
-        [Authorize]
         public ActionResult Index()
         {
 

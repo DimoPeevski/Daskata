@@ -11,7 +11,7 @@
     </div>
     <div class="right-home-box">
         <div class="login-container">
-            <form id="account" method="post">
+            <form id="account" method="post" asp-controller="User" asp-action="Login">
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">
                     <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
@@ -20,14 +20,11 @@
                 </div>
                 <div class="form-floating mb-3">
                     <input asp-for="Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Password" class="form-label">Парола</label>
+                    <label asp-for="Password" class="form-label">Password</label>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div>
                     <button id="login-submit" type="submit" class="button-login">Влез</button>
-                </div>
-                <div>
-                    <a id="forgot-password" asp-controller="User" asp-action="Login" class="lost-password">Забравена парола?</a>
                 </div>
             </form>
         </div>
