@@ -25,7 +25,8 @@
 </head>
 <body>
     <header>
-        
+        @if (User?.Identity?.IsAuthenticated ?? false)
+        {
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm header-container border-bottom box-shadow mb-3">
                 <div class="container-fluid">
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
@@ -45,8 +46,7 @@
                     </div>
                 </div>
             </nav>
-        
-
+        }
     </header>
 
     <div class="container">

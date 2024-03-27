@@ -2,6 +2,7 @@ using Daskata.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Daskata.Infrastructure.Data;
 
 namespace Daskata.Controllers
 {
@@ -14,10 +15,12 @@ namespace Daskata.Controllers
             _logger = logger;
         }
 
-        //[Authorize]
-        public IActionResult Index()
+        [Authorize]
+        public ActionResult Index()
         {
-            return View(); 
+
+
+            return View();
         }
 
 

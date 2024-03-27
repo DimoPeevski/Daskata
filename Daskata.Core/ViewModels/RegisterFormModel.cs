@@ -21,5 +21,7 @@ namespace Daskata.Core.ViewModels
         [Display(Name = "Повтори парола")]
         [Compare("Password", ErrorMessage = "Въведените пароли не съвпадат")]
         public string ConfirmPassword { get; set; } = null!;
+
+        public Guid CreatedByUserId { get; set; }
     }
 }

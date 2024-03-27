@@ -1,7 +1,10 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using Daskata.Infrastructure.Data
+@using Microsoft.AspNetCore.Identity
 @using Daskata.Infrastructure.Data.Models
+@using Microsoft.EntityFrameworkCore
 @inject SignInManager<UserProfile> SignInManager
 @inject UserManager<UserProfile> UserManager
+@inject DaskataDbContext _context
 
 <div id="header">
     <div id="weather"></div>
@@ -12,10 +15,19 @@
             <img class="profile-pic" src="~/lib/default-profile-picture.png" alt="Профил">
         </button>
 
+        @{
+            var user = await UserManager.GetUserAsync(User);
+            var email = await UserManager.GetEmailAsync(user!);
+
+            var userProfile = await _context.UserProfiles.FirstOrDefaultAsync();
+            string firstName = string.IsNullOrEmpty(userProfile?.FirstName) ? "Име" : userProfile.FirstName;
+            string lastName = string.IsNullOrEmpty(userProfile?.LastName) ? "Фамилия" : userProfile.LastName;
+        }
+
         <div class="dropdown-content" id="dropdown-menu">
-            <span class="profile-username">@@peevski</span> <br />
-            <span class="profile-names">Dimo Peevski</span><br />
-            <span class="profile-email">@User?.Identity?.Name</span> <hr />
+            <span class="profile-username">@@@user</span> <br />
+            <span class="profile-names">@firstName @lastName</span><br />
+            <span class="profile-email">@email</span> <hr />
             <a asp-area="Identity" asp-page="/Account/Manage/Index">Моят профил</a>
             <a href="#">Преминати тестове</a>
             <a href="#">Предстоящи изпити</a>
