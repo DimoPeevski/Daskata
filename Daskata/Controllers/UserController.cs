@@ -135,8 +135,6 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            await _signInManager.SignInAsync(user, false);
-
             return RedirectToAction("Index", "Home");
         }
 

@@ -17,17 +17,35 @@
 
         @{
             var user = await _userManager.GetUserAsync(User);
-            var email = await _userManager.GetEmailAsync(user!);
 
-            var userProfile = await _context.UserProfiles.FirstOrDefaultAsync();
-            string userFirstName = string.IsNullOrEmpty(userProfile?.FirstName) ? "Име" : userProfile.FirstName;
-            string userLastName = string.IsNullOrEmpty(userProfile?.LastName) ? "Фамилия" : userProfile.LastName;
+            string userFirstName = user?.FirstName ?? "Име";
+            string userLastName = user?.LastName ?? "Фамилия";
+            string userRole = user?.Role.ToString() ?? "Роля";
         }
 
         <div class="dropdown-content" id="dropdown-menu">
             <span class="profile-username">@@@user</span> <br />
             <span class="profile-names">@userFirstName @userLastName</span><br />
-            <span class="profile-email">@email</span> <hr />
+
+            @{
+                if (userRole == "Admin")
+                {
+                    <span class="profile-email">⭐⭐⭐⭐ Вие сте @userRole.ToLower()!</span> <hr />
+                }
+                else if (userRole == "Manager")
+                {
+                    <span class="profile-email">⭐⭐⭐ Вие сте @userRole.ToLower()!</span> <hr />
+                }
+                else if (userRole == "Teacher")
+                {
+                    <span class="profile-email">⭐⭐ Вие сте @userRole.ToLower()!</span> <hr />
+                }
+                else if (userRole == "Student")
+                {
+                    <span class="profile-email">⭐ Вие сте @userRole.ToLower()!</span> <hr />
+                }
+            }
+
             <a asp-area="Identity" asp-page="/Account/Manage/Index">Профилът ми</a>
             <a href="#">Минали изпити</a>
             <a href="#">Бъдещи изпити</a>
@@ -38,50 +56,50 @@
 </div>
 
 <script>
-//Profile menu dropdown
-document.addEventListener("DOMContentLoaded", function () {
-    var profilePicture = document.getElementById("profile-picture");
-    var dropdownMenu = document.getElementById("dropdown-menu");
+    //Profile menu dropdown
+    document.addEventListener("DOMContentLoaded", function () {
+        var profilePicture = document.getElementById("profile-picture");
+        var dropdownMenu = document.getElementById("dropdown-menu");
 
-    profilePicture.addEventListener("click", function (event) {
-        event.stopPropagation();
-        dropdownMenu.classList.toggle("show");
-    });
+        profilePicture.addEventListener("click", function (event) {
+            event.stopPropagation();
+            dropdownMenu.classList.toggle("show");
+        });
 
-    window.addEventListener("click", function (event) {
-        if (!event.target.matches('#profile-picture')) {
-            dropdownMenu.classList.remove("show");
-        }
+        window.addEventListener("click", function (event) {
+            if (!event.target.matches('#profile-picture')) {
+                dropdownMenu.classList.remove("show");
+            }
+        });
     });
-});
 </script>
 
 
 <script>
-//Weather AJAX and API
-$(document).ready(function () {
-    var apiKey = 'API-код-като-си-взема-абонамент';
-    var location = 'Sofia';
+    //Weather AJAX and API
+    $(document).ready(function () {
+        var apiKey = 'API-код-като-си-взема-абонамент';
+        var location = 'Sofia';
 
-    $.ajax({
-        url: 'https://api.openweathermap.org/data/2.5/weather',
-        type: 'GET',
-        data: {
-            q: location,
-            appid: apiKey,
-            units: 'metric'
-        },
-        success: function (response) {
-            var temperature = response.main.temp;
-            var condition = response.weather[0].main;
+        $.ajax({
+            url: 'https://api.openweathermap.org/data/2.5/weather',
+            type: 'GET',
+            data: {
+                q: location,
+                appid: apiKey,
+                units: 'metric'
+            },
+            success: function (response) {
+                var temperature = response.main.temp;
+                var condition = response.weather[0].main;
 
-            $('#weather').text('Temperature: ' + temperature + '°C, Condition: ' + condition);
-        },
-        error: function (xhr, status, error) {
-            console.error('Failed to fetch weather data:', error);
-        }
-    })
-});
+                $('#weather').text('Temperature: ' + temperature + '°C, Condition: ' + condition);
+            },
+            error: function (xhr, status, error) {
+                console.error('Failed to fetch weather data:', error);
+            }
+        })
+    });
 </script>
 
 <script>
