@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Daskata.Controllers
 {
@@ -15,18 +16,22 @@ namespace Daskata.Controllers
         private readonly IUserStore<UserProfile> _userStore;
         private readonly ILogger<LoginFormModel> _logger;
         private readonly DaskataDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserController(SignInManager<UserProfile> signInManager,
                               UserManager<UserProfile> userManager,
-                              DaskataDbContext context, 
+                              DaskataDbContext context,
                               ILogger<LoginFormModel> logger,
-                              IUserStore<UserProfile> userStore)
+                              IUserStore<UserProfile> userStore,
+                              IHttpContextAccessor httpContextAccessor)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _context = context;
             _logger = logger;
             _userStore = userStore;
+            _httpContextAccessor = httpContextAccessor;
+
         }
 
         [HttpGet]
@@ -50,7 +55,7 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, lockoutOnFailure: false);
 
             if (!result.Succeeded)
             {
@@ -59,7 +64,8 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            _logger.LogInformation("User logged in.");
+            var curentUserId = GetCurentUserId();
+            _logger.LogInformation($"User with id {curentUserId} logged in.");
 
             return Redirect(model.ReturnUrl ?? "/Home/Index");
         }
@@ -96,22 +102,28 @@ namespace Daskata.Controllers
 
             UserProfile user = new UserProfile()
             {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
                 Role = model.Role,
                 RegistrationDate = DateTime.Now,
                 LastLoginDate = DateTime.Now,
                 IsActive = true,
-                EmailConfirmed = true
+                EmailConfirmed = false,
+                PhoneNumber = string.Empty,
+                PhoneNumberConfirmed = false,
+                TwoFactorEnabled = false,
+                LockoutEnabled = false,
             };
 
-            await _userManager.SetEmailAsync(user, model.Email);
+            user.CreatedByUserId = await GetCurentUserId();
+            string serviceGeneratedEmail = $"{uniqueUsername}@daskata.eu";
 
             await _userManager.SetUserNameAsync(user, uniqueUsername);
-
-            user.CreatedByUserId = await GetCurentUserId();
-
+            await _userManager.SetEmailAsync(user, serviceGeneratedEmail);
+            
             var result = await _userManager.CreateAsync(user, model.Password);
-
-            _logger.LogInformation("New user created.");
+            _logger.LogInformation
+                ($"New user with id {uniqueUsername} was created successfully by user with id {user.CreatedByUserId}.");
 
             if (!result.Succeeded)
             {
@@ -123,13 +135,11 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            //await _signInManager.SignInAsync(user, false);
-            await Task.Delay(1000);
+            await _signInManager.SignInAsync(user, false);
 
             return RedirectToAction("Index", "Home");
         }
 
-        //Bellow you can find the methods used in that controller
         private async Task<string> GenerateUniqueUsernameAsync()
         {
             string username = string.Empty;
@@ -157,15 +167,15 @@ namespace Daskata.Controllers
 
         private async Task<Guid?> GetCurentUserId()
         {
-            var userProfile = await _context.UserProfiles.FirstOrDefaultAsync();
+            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (userProfile != null && Guid.TryParse(userProfile.Id.ToString(), out Guid userId))
+            if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid parsedUserId))
             {
-                return userId;
+                return await Task.FromResult(parsedUserId);
             }
             else
-            { 
-                return null;
+            {
+                return await Task.FromResult<Guid?>(null);
             }
         }
     }

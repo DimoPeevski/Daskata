@@ -38,7 +38,7 @@ namespace Daskata.Infrastructure.Migrations
                     IsActive = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates whether the user account is active or deactivated"),
                     ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "URL for the user's profile picture"),
                     AdditionalInfo = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false, comment: "Additional information about the user"),
-                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Property to store the user ID of the creator"),
+                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true, comment: "Property to store the user ID of the creator"),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -112,8 +112,8 @@ namespace Daskata.Infrastructure.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -157,8 +157,8 @@ namespace Daskata.Infrastructure.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>

@@ -9,8 +9,10 @@
         public const int EmailLenghtMin = 3;
         public const int EmailLenghtMax = 100;
 
-        
+        public const int FirstNameLenghtMin = 1;
         public const int FirstNameLenghtMax = 50;
+
+        public const int LastNameLenghtMin = 1;
         public const int LastNameLenghtMax = 100;
 
         public const int PhoneNumberLenghtMax = 50;

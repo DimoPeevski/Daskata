@@ -14,9 +14,14 @@
             <form id="registerForm" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">
-                    <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Email">Email</label>
-                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <input asp-for="FirstName" class="form-control" autocomplete="username" aria-required="true" placeholder="Иван" />
+                    <label asp-for="FirstName">Име</label>
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="LastName" class="form-control" autocomplete="username" aria-required="true" placeholder="Иванов" />
+                    <label asp-for="LastName">Фамилия</label>
+                    <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <input asp-for="Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />

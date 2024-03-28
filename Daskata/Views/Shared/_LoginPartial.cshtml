@@ -2,8 +2,8 @@
 @using Microsoft.AspNetCore.Identity
 @using Daskata.Infrastructure.Data.Models
 @using Microsoft.EntityFrameworkCore
-@inject SignInManager<UserProfile> SignInManager
-@inject UserManager<UserProfile> UserManager
+@inject SignInManager<UserProfile> _signInManager
+@inject UserManager<UserProfile> _userManager
 @inject DaskataDbContext _context
 
 <div id="header">
@@ -16,8 +16,8 @@
         </button>
 
         @{
-            var user = await UserManager.GetUserAsync(User);
-            var email = await UserManager.GetEmailAsync(user!);
+            var user = await _userManager.GetUserAsync(User);
+            var email = await _userManager.GetEmailAsync(user!);
 
             var userProfile = await _context.UserProfiles.FirstOrDefaultAsync();
             string userFirstName = string.IsNullOrEmpty(userProfile?.FirstName) ? "Име" : userProfile.FirstName;
