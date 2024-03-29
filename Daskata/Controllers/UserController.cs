@@ -116,7 +116,7 @@ namespace Daskata.Controllers
             };
 
             user.CreatedByUserId = await GetCurentUserId();
-            string serviceGeneratedEmail = $"{uniqueUsername}@daskata.eu";
+            string serviceGeneratedEmail = "no@email.created";
 
             await _userManager.SetUserNameAsync(user, uniqueUsername);
             await _userManager.SetEmailAsync(user, serviceGeneratedEmail);

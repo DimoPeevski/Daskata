@@ -30,19 +30,23 @@
             @{
                 if (userRole == "Admin")
                 {
-                    <span class="profile-email">⭐⭐⭐⭐ Вие сте @userRole.ToLower()!</span> <hr />
+                    <span class="profile-role">⭐⭐⭐⭐ Вие сте админ!</span> <hr />
                 }
                 else if (userRole == "Manager")
                 {
-                    <span class="profile-email">⭐⭐⭐ Вие сте @userRole.ToLower()!</span> <hr />
+                    <span class="profile-role">⭐⭐⭐ Вие сте мениджър!</span> <hr />
                 }
                 else if (userRole == "Teacher")
                 {
-                    <span class="profile-email">⭐⭐ Вие сте @userRole.ToLower()!</span> <hr />
+                    <span class="profile-role">⭐⭐ Вие сте учител!</span> <hr />
                 }
                 else if (userRole == "Student")
                 {
-                    <span class="profile-email">⭐ Вие сте @userRole.ToLower()!</span> <hr />
+                    <span class="profile-role">⭐ Вие сте ученик!</span> <hr />
+                }
+                else
+                {
+                    <span class="profile-role">⭐ Вие нямате зададена роля</span> <hr />
                 }
             }
 

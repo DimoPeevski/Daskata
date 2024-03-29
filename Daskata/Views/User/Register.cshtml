@@ -6,7 +6,7 @@
 <div class="home-container">
     <div class="left-home-box">
         <a asp-controller="Home" asp-action="Index">
-            <img class="home-logo" src="~/lib/welcome-logo-transparent.png" alt="Daskata - Добре дошли">
+            <img class="home-logo-register" src="~/lib/welcome-logo-transparent.png" alt="Daskata - Добре дошли">
         </a>
     </div>
     <div class="right-home-box">
@@ -16,22 +16,22 @@
                 <div class="form-floating mb-3">
                     <input asp-for="FirstName" class="form-control" autocomplete="username" aria-required="true" placeholder="Иван" />
                     <label asp-for="FirstName">Име</label>
-                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                    <span asp-validation-for="FirstName" class="validation-labels"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <input asp-for="LastName" class="form-control" autocomplete="username" aria-required="true" placeholder="Иванов" />
                     <label asp-for="LastName">Фамилия</label>
-                    <span asp-validation-for="LastName" class="text-danger"></span>
+                    <span asp-validation-for="LastName" class="validation-labels"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <input asp-for="Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                     <label asp-for="Password">Парола</label>
-                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <span asp-validation-for="Password" class="validation-labels"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                     <label asp-for="ConfirmPassword">Потвърди парола</label>
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    <span asp-validation-for="ConfirmPassword" class="validation-labels"></span>
                 </div>
                 <div class="form-group mb-3">
                     <label asp-for="Role">Роля на потребителя:</label>

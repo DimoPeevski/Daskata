@@ -27,6 +27,7 @@ body {
 /* This is a custom CSS */
 .home-container {
     display: flex;
+    flex: 50%;
     justify-content: center;
     align-items: center;
 }
@@ -36,7 +37,7 @@ body {
     flex: 50%;
     justify-content: center;
     align-items: center;
-    margin-top: 100px;
+    margin-top: 120px;
     text-align: center;
 }
 
@@ -45,7 +46,7 @@ body {
     flex: 50%;
     justify-content: center;
     align-items: center;
-    padding-top: 100px;
+    margin-top: 120px;
     padding-left: 120px;
     padding-right: 120px;
 }
@@ -197,8 +198,12 @@ body {
     font-weight: bold
 }
 
-.home-logo {
-    width: 70%;
+.home-logo-register {
+    width: 85%;
+}
+
+.home-logo-login {
+    width: 85%;
 }
 
 @media only screen and (max-width: 998px) {
@@ -313,7 +318,12 @@ span.profile-names {
     font-weight: bold;
 }
 
-span.profile-email {
+span.profile-role {
     font-size: 14px !important;
     font-weight: 200 !important;
+}
+
+span.validation-labels {
+    color: #fe5963;
+    font-size: 13px;
 }
