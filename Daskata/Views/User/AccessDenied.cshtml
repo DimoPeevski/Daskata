@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Нямате достъп";
+}
+
+<div class="home-container-column">
+    <div class="form-group mb-3 text-center">
+        <img class="access-denied-image" src="~/lib/access-denied.png" alt="Daskata - Нямате достъп">
+        <div>
+            <span><strong>Изглежда, че се опитвате да достъпите ресурс, до който нямате права или достъп. Моля, върнете се обратно!</strong></span>
+        </div>
+    </div>
+    <hr />
+    <div class="text-center">
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="button-create-user btn btn-primary d-flex justify-content-center align-items-center">Върни ме</a>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

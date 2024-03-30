@@ -1,11 +1,10 @@
 ﻿using Daskata.Infrastructure.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Daskata.Infrastructure.Data
 {
-    public class DaskataDbContext : IdentityDbContext<UserProfile, IdentityRole<Guid>, Guid>
+    public class DaskataDbContext : IdentityDbContext<UserProfile, UserRole, Guid>
     {
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Exam> Exams { get; set; }

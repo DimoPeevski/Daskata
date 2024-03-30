@@ -6,10 +6,13 @@ builder.Services.AddApplicationDbContext(builder.Configuration);
 
 builder.Services.AddApplicationServices();
 
+await builder.Services.RolesSeedAsync(builder.Configuration);
+
 builder.Services.ConfigureApplicationCookie(config =>
 {
     config.LoginPath = "/User/Login";
     config.LogoutPath = "/User/Logout";
+    config.AccessDeniedPath = "/User/AccessDenied";
 });
 
 builder.Services.AddControllersWithViews();

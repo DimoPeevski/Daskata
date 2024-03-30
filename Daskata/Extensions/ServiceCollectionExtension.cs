@@ -26,13 +26,41 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services, IConfiguration config)
         {
-            services.AddIdentity<UserProfile, IdentityRole<Guid>>(options => 
-            options.User.RequireUniqueEmail = true)
-                .AddRoles<IdentityRole<Guid>>()
+            services.AddDefaultIdentity<UserProfile>(options =>
+            {
+                options.User.RequireUniqueEmail = false;
+            })
+                .AddRoles<UserRole>()
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<DaskataDbContext>();
 
             return services;
+        }
+
+        public static async Task<IServiceCollection> RolesSeedAsync(this IServiceCollection services, IConfiguration config)
+        {
+            var serviceProvider = services.BuildServiceProvider();
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<UserRole>>();
+
+                await SeedRolesAsync(roleManager);
+            }
+
+            return services;
+        }
+
+        private static async Task SeedRolesAsync(RoleManager<UserRole> roleManager)
+        {
+            var roles = new[] { "Admin", "Manager", "Teacher", "Student" };
+
+            foreach (var roleName in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(roleName))
+                {
+                    await roleManager.CreateAsync(new UserRole { Name = roleName });
+                }  
+            }
         }
     }
 }

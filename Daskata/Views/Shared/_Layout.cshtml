@@ -41,7 +41,14 @@
                     </div>
 
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        @await Component.InvokeAsync(nameof(HeaderMenuComponent))
+                        @if (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Teacher"))
+                        {
+                            @await Component.InvokeAsync(nameof(HeaderAdminMenuComponent))
+                        }
+                        else
+                        {
+                            @await Component.InvokeAsync(nameof(HeaderMenuComponent))
+                        }
                         <partial name="_LoginPartial" />
                     </div>
                 </div>

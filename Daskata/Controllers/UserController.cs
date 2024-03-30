@@ -2,10 +2,12 @@
 using Daskata.Infrastructure.Data;
 using Daskata.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Controllers
 {
@@ -13,7 +15,6 @@ namespace Daskata.Controllers
     {
         private readonly SignInManager<UserProfile> _signInManager;
         private readonly UserManager<UserProfile> _userManager;
-        private readonly IUserStore<UserProfile> _userStore;
         private readonly ILogger<LoginFormModel> _logger;
         private readonly DaskataDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -22,16 +23,30 @@ namespace Daskata.Controllers
                               UserManager<UserProfile> userManager,
                               DaskataDbContext context,
                               ILogger<LoginFormModel> logger,
-                              IUserStore<UserProfile> userStore,
                               IHttpContextAccessor httpContextAccessor)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _context = context;
             _logger = logger;
-            _userStore = userStore;
             _httpContextAccessor = httpContextAccessor;
 
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation("User logged out.");
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -59,7 +74,7 @@ namespace Daskata.Controllers
 
             if (!result.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, "Някъде има грешка...");
+                ModelState.AddModelError(string.Empty, signInErrorMessage);
 
                 return View(model);
             }
@@ -70,26 +85,20 @@ namespace Daskata.Controllers
             return Redirect(model.ReturnUrl ?? "/Home/Index");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
-
-            return RedirectToAction("Index", "Home");
-        }
-
+        [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterFormModel model)
         {
             if (!ModelState.IsValid)
             {
+                ModelState.AddModelError(string.Empty, signInErrorMessage);
                 return this.View(model);
             }
 
@@ -97,6 +106,7 @@ namespace Daskata.Controllers
 
             if (uniqueUsername == string.Empty)
             {
+                ModelState.AddModelError(string.Empty, uniqueUserGeneratedFailMessage);
                 return RedirectToAction("Index", "Home");
             }
 
@@ -104,7 +114,6 @@ namespace Daskata.Controllers
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Role = model.Role,
                 RegistrationDate = DateTime.Now,
                 LastLoginDate = DateTime.Now,
                 IsActive = true,
@@ -115,15 +124,19 @@ namespace Daskata.Controllers
                 LockoutEnabled = false,
             };
 
-            user.CreatedByUserId = await GetCurentUserId();
-            string serviceGeneratedEmail = "no@email.created";
+            string userEmail = "no@email.created";
+            string userRole = model.Role.ToString();
 
+            user.CreatedByUserId = await GetCurentUserId();
             await _userManager.SetUserNameAsync(user, uniqueUsername);
-            await _userManager.SetEmailAsync(user, serviceGeneratedEmail);
+            await _userManager.SetEmailAsync(user, userEmail);
             
             var result = await _userManager.CreateAsync(user, model.Password);
+            
             _logger.LogInformation
                 ($"New user with id {uniqueUsername} was created successfully by user with id {user.CreatedByUserId}.");
+
+            await _userManager.AddToRoleAsync(user, userRole);
 
             if (!result.Succeeded)
             {
@@ -146,14 +159,14 @@ namespace Daskata.Controllers
 
             while (usernameExists)
             {
-                Random rand = new Random();
-                string randomNumbers = rand.Next(100000, 999999).ToString();
+                Random random = new Random();
+                string randomNumbers = random.Next(100000, 999999).ToString();
                 username = $"user{randomNumbers}";
 
                 usernameExists = await _context.UserProfiles.AnyAsync(u => u.UserName == username);
                 counter++;
 
-                if (counter > 999999)
+                if (counter > 1_000_000)
                 {
                     username = string.Empty;
                     break;

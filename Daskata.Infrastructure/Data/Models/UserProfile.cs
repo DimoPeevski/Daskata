@@ -17,10 +17,6 @@ namespace Daskata.Infrastructure.Data.Models
         public string LastName { get; set; } = string.Empty;
 
         [Required]
-        [Comment("Role assigned to the user within the system (e.g., Admin, Manager, Teacher, Student)")]
-        public RoleCategory Role { get; set; }
-
-        [Required]
         [Comment("Date and time when the user account was registered")]
         public DateTime RegistrationDate { get; set; }
 

@@ -32,6 +32,14 @@ body {
     align-items: center;
 }
 
+.home-container-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
 .left-home-box {
     display: flex;
     flex: 50%;
@@ -196,6 +204,11 @@ body {
     font-size: 14px;
     color: #fafafa;
     font-weight: bold
+}
+
+.access-denied-image {
+    width: 30%;
+    padding-bottom: 50px;
 }
 
 .home-logo-register {

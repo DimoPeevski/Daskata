@@ -35,8 +35,12 @@
                 </div>
                 <div class="form-group mb-3">
                     <label asp-for="Role">Роля на потребителя:</label>
-                    <select asp-for="Role" class="form-control" asp-items="Html.GetEnumSelectList<RoleCategory>()">
+                    <select asp-for="Role" class="form-control">
                         <option value="">Избери роля</option>
+                        <option value="Admin">Админ</option>
+                        <option value="Manager">Мениджър</option>
+                        <option value="Teacher">Учител</option>
+                        <option value="Student">Ученик</option>
                     </select>
                     <span asp-validation-for="Role" class="text-danger"></span>
                 </div>
