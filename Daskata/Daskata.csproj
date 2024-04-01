@@ -24,7 +24,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
   </ItemGroup>
-
+	
   <ItemGroup>
     <ProjectReference Include="..\Daskata.Core\Daskata.Core.csproj" />
     <ProjectReference Include="..\Daskata.Infrastructure\Daskata.Infrastructure.csproj" />

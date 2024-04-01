@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Страницата не е намерена";
+}
+
+<div class="home-container-column">
+    <div class="form-group mb-3 text-center">
+        <img class="access-denied-image" src="~/lib/404-not-found.png" alt="Daskata - Не намерен ресурс">
+        <div>
+            <span><strong>Изглежда, че се опитвате да достъпите ресурс, който не съществува. Моля, върнете се обратно!</strong></span>
+        </div>
+    </div>
+    <hr />
+    <div class="text-center">
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="button-create-user btn btn-primary d-flex justify-content-center align-items-center">Върни ме</a>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

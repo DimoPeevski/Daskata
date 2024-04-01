@@ -12,7 +12,7 @@ builder.Services.ConfigureApplicationCookie(config =>
 {
     config.LoginPath = "/User/Login";
     config.LogoutPath = "/User/Logout";
-    config.AccessDeniedPath = "/User/AccessDenied";
+    config.AccessDeniedPath = "/Error/AccessDenied";
 });
 
 builder.Services.AddControllersWithViews();
@@ -31,6 +31,8 @@ else
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
+app.UseStatusCodePagesWithReExecute("/Error/404");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

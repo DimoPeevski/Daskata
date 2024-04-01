@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Security.Claims;
 using static Daskata.Infrastructure.Shared.Constants;
 
@@ -32,13 +31,6 @@ namespace Daskata.Controllers
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
 
-        }
-
-        [Authorize]
-        [HttpGet]
-        public ActionResult AccessDenied()
-        {
-            return View();
         }
 
         [HttpGet]
