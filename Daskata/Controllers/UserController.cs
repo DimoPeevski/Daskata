@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Security.Claims;
 using static Daskata.Infrastructure.Shared.Constants;
 
@@ -54,7 +55,7 @@ namespace Daskata.Controllers
         {
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            LoginFormModel model = new LoginFormModel();
+            LoginFormModel model = new ();
             {
                 model.ReturnUrl = returnUrl;
             };
@@ -110,7 +111,7 @@ namespace Daskata.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            UserProfile user = new UserProfile()
+            UserProfile user = new ()
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -124,7 +125,7 @@ namespace Daskata.Controllers
                 LockoutEnabled = false,
             };
 
-            string userEmail = "no@email.created";
+            string userEmail = "no@email.xyz";
             string userRole = model.Role.ToString();
 
             user.CreatedByUserId = await GetCurentUserId();
@@ -154,19 +155,21 @@ namespace Daskata.Controllers
         private async Task<string> GenerateUniqueUsernameAsync()
         {
             string username = string.Empty;
+            List<string> usernamesGenerated = new ();
             bool usernameExists = true;
             int counter = 0;
 
             while (usernameExists)
             {
-                Random random = new Random();
+                Random random = new ();
                 string randomNumbers = random.Next(100000, 999999).ToString();
                 username = $"user{randomNumbers}";
+                usernamesGenerated.Add(username);
 
                 usernameExists = await _context.UserProfiles.AnyAsync(u => u.UserName == username);
                 counter++;
 
-                if (counter > 1_000_000)
+                if (!usernamesGenerated.Contains(username) && counter > 1_000_000)
                 {
                     username = string.Empty;
                     break;

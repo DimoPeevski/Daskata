@@ -6,7 +6,7 @@ namespace Daskata.Components
     {
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return await Task.FromResult<IViewComponentResult>(View());
+            return await Task.FromResult<IViewComponentResult>(View("Admin"));
         } 
     }
 }
