@@ -32,61 +32,6 @@ namespace Daskata.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            var loggedUser = await _userManager.GetUserAsync(User);
-            var model = new EditUserProfileInfoModel
-            {
-                Username = loggedUser.UserName,
-                Email = loggedUser.Email,
-                FirstName = loggedUser.FirstName,
-                LastName = loggedUser.LastName,
-                PhoneNumber = loggedUser.PhoneNumber,
-                AdditionalInfo = loggedUser.AdditionalInfo,
-                ProfilePictureUrl = loggedUser.ProfilePictureUrl
-            };
-
-            return View(model);
-        }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> Profile()
-        {
-            return await EditUserProfileInfo();
-        }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> EditUserProfileInfo()
-        {
-            var loggedUser = await _userManager.GetUserAsync(User);
-            var model = new EditUserProfileInfoModel
-            {
-                Username = loggedUser.UserName,
-                Email = loggedUser.Email,
-                FirstName = loggedUser.FirstName,
-                LastName = loggedUser.LastName,
-                PhoneNumber = loggedUser.PhoneNumber,
-                AdditionalInfo = loggedUser.AdditionalInfo,
-                ProfilePictureUrl = loggedUser.ProfilePictureUrl
-            };
-
-            return View(model);
-        }
-
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> EditUserProfileInfo(EditUserProfileInfoModel model)
-        {
-            var loggedUser = await _userManager.GetUserAsync(User);
-
-            return RedirectToAction("User","Index");
-        }
-
-
         [HttpGet]
         public async Task<IActionResult> Logout()
         {

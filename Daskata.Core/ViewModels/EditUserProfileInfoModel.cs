@@ -39,5 +39,11 @@ namespace Daskata.Core.ViewModels
 
         [DataType(DataType.ImageUrl)]
         public string ProfilePictureUrl { get; set; } = null!;
+
+        public string RegistrationDate { get; set; } = null!;
+
+        public string Location { get; set; } = null!;
+
+        public string School { get; set; } = null!;
     }
 }

@@ -1,0 +1,92 @@
+﻿@using Daskata.Infrastructure.Data
+@using Daskata.Infrastructure.Data.Models
+@using Microsoft.AspNetCore.Identity
+@using static Daskata.Controllers.ProfileController
+@model Daskata.Core.ViewModels.EditUserProfileInfoModel
+@inject UserManager<UserProfile> _userManager
+
+@{
+    ViewData["Title"] = "Профил";
+
+    var loggedUser = await _userManager.GetUserAsync(User);
+    var userRolesNames = await _userManager.GetRolesAsync(loggedUser!);
+    var roleName = userRolesNames.FirstOrDefault() ?? "None";
+
+    var userFirstName = loggedUser?.FirstName ?? "Име";
+    var userLastName = loggedUser?.LastName ?? "Фамилия";
+
+    var userLocation = loggedUser?.Location ?? "София, България";
+    var userSchool = loggedUser?.School ?? "ОУ 'Христо Смирненски'";
+
+    var modifiedDate = loggedUser!.RegistrationDate.ToString();
+    var formattedRegistrationDate = GetRegistrationMonthYear(modifiedDate);
+}
+
+<div class="container-fluid">
+    <div class="row profile-container-cover">
+        <div class="col-md-3">
+            <img src="@Model.ProfilePictureUrl" class="profile-pic-edit" alt="Профилна снимка на @Model.FirstName @Model.LastName">
+        </div>
+        <div class="col-md-9">
+            <div class="row profile-container-info">
+                <div class="col-md-8">
+                    <span class="profile-acc-name">@Model.FirstName @Model.LastName</span>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a class="btn btn-primary button-connect" id="connectButton" href="#">🛠️ Редактирай!</a>
+                </div>
+                <div class="mb-2">
+                    <span class="profile-acc-username" id="username">@@@Model.Username</span>
+                </div>
+                <div class="mb-4">
+                    <span class="profile-acc-username">@TranslateRoleInBG(roleName)</span>
+                </div>
+                <div class="mb-4">
+                    <span class="profile-acc-info">@Model.AdditionalInfo</span>
+                </div>
+                <div class="row">
+                    @if (@loggedUser.School != string.Empty)
+                    {
+                        <div class="col-md-4"><div class="profile-box"><img src="~/lib/school.png" alt="Моето училище"> @loggedUser!.School</div></div>
+                    }
+                    @if (@loggedUser.Location != string.Empty)
+                    {
+                        <div class="col-md-4"><div class="profile-box"><img src="~/lib/location.png" alt="Моята локация"> @loggedUser!.Location</div></div>
+                    }
+                    <div class="col-md-4"><div class="profile-box"><img src="~/lib/calendar.png" alt="Дата на присъединяване"> Регистриран @formattedRegistrationDate</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Temporary content -->
+<div class="home-container exam-container">
+    <div class="exam-box">Тест 1</div>
+    <div class="exam-box">Тест 2</div>
+    <div class="exam-box">Тест 3</div>
+    <div class="exam-box">Тест 4</div>
+    <div class="exam-box">Тест 5</div>
+    <div class="exam-box">Тест 6</div>
+    <div class="exam-box">Тест 7</div>
+    <div class="exam-box">Тест 8</div>
+</div>
+<br />
+<br />
+<br />
+<br />
+
+<script>
+    const usernameElement = document.getElementById('username');
+    const username = usernameElement.textContent.trim();
+
+    const connectButton = document.getElementById('connectButton');
+
+    if (username === '@@@Model.Username') {
+        connectButton.textContent = '🛠️ Редактирай!';
+        connectButton.href = '/Profile/Edit';
+    } else {
+        connectButton.textContent = '👋 Свържете се!';
+        connectButton.href = '#';
+    }
+</script>

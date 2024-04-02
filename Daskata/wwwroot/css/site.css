@@ -25,36 +25,37 @@ body {
 }
 
 /* This is a custom CSS */
-.home-container {
-    display: flex;
-    flex: 50%;
-    justify-content: center;
-    align-items: center;
-}
-
 .home-container-column {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    min-height: 100%;
+    margin-top: 80px;
+}
+
+.home-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    margin-top: 150px;
 }
 
 .left-home-box {
     display: flex;
-    flex: 50%;
+    flex: 48%;
     justify-content: center;
     align-items: center;
-    margin-top: 120px;
     text-align: center;
 }
 
 .right-home-box {
     display: flex;
-    flex: 50%;
+    flex: 48%;
     justify-content: center;
     align-items: center;
-    margin-top: 120px;
+    text-align: center;
     padding-left: 120px;
     padding-right: 120px;
 }
@@ -91,19 +92,19 @@ body {
     text-align: center;
 }
 
-.button-register {
+.button-connect {
     background-color: transparent;
     border: solid 1px #171717;
-    width: 60%;
+    width: 80%;
     color: #171717;
     padding-top: 7px;
     padding-bottom: 7px;
-    border-radius: 5px;
+    border-radius: 20px;
     font-weight: bold;
 }
 
-    .button-register:hover {
-        background-color: rgb(39, 72, 127) !important;
+    .button-connect:hover {
+        background-color: #306590 !important;
         color: #fff !important;
     }
 
@@ -124,6 +125,7 @@ body {
     .button-login:hover {
         background-color: rgba(231, 77, 88, 1);
     }
+
 
 .button-create-user {
     background-color: rgba(242, 85, 96, 1);
@@ -270,22 +272,25 @@ body {
 
 .exam-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, auto);
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    padding: 0;
     gap: 20px;
 }
 
 .exam-box {
-    margin-top: 25px;
-    min-height: 300px;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
-    padding: 20px;
+    width: 300px;
+    height: 300px;
+    background-color: #ffffff;
+    box-shadow: 0 0px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
 }
 
     .exam-box:hover {
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 9px rgba(0, 0, 0, 0.3);
     }
 
 
@@ -375,7 +380,7 @@ span.validation-labels {
     font-size: 13px;
 }
 
-/* --------------------------------- */
+/* Profile pages custom css */
 .profile-container-cover {
     display: flex;
     align-items: center;
@@ -400,26 +405,28 @@ span.validation-labels {
 
 span.profile-acc-name {
     font-size: 32px;
-    color: #1b4061;
+    color: #010101;
     font-weight: bold;
 }
 
 span.profile-acc-username {
     font-size: 16px;
-    color: #1b4061;
+    color: #010101;
     font-weight: bold;
-    padding-bottom: 20px;
 }
 
 span.profile-acc-info {
     font-size: 14px;
     color: #1b4061;
-    padding-bottom: 20px;
 }
 
 div.profile-box {
-    margin-top: 20px;
     color: #1b4061;
     font-size: 12px;
     font-weight: 600;
+}
+
+.profile-edit-input {
+    background-color: #f8fcff;
+    color: #171717;
 }

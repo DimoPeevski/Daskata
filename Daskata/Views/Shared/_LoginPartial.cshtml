@@ -52,10 +52,8 @@
                 }
             }
 
-            <a asp-area="Identity" asp-page="/Account/Manage/Index">Профилът ми</a>
-            <a href="#">Минали изпити</a>
-            <a href="#">Бъдещи изпити</a>
-            <a href="#">Моите хора</a>
+            <a asp-controller="Profile" asp-action="Index">Моят профил</a>
+            <a href="#">Създадени от мен</a>
             <a asp-controller="User" asp-action="Logout" id="logoutLink">Изход</a>
         </div>
     </div>
