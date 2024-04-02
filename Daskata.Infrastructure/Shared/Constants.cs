@@ -42,6 +42,7 @@
         public const int PasswordLenghtMin = 6;
         public const int PasswordLenghtMax = 50;
 
+
         //Constants uses in: ProfileController
         public const string Admin = "Admin";
         public const string Manager = "Manager";

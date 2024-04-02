@@ -34,11 +34,11 @@ namespace Daskata.Infrastructure.Data.Models
         public string AdditionalInfo { get; set; } = string.Empty;
 
         [MaxLength(LocationLenghtMax)]
-        [Comment("Additional information about the user")]
+        [Comment("Information about user location")]
         public string Location { get; set; } = string.Empty;
 
         [MaxLength(SchoolLenghtMax)]
-        [Comment("Additional information about the user")]
+        [Comment("Information about user school")]
         public string School { get; set; } = string.Empty;
 
         [Comment("Property to store the user ID of the creator")]

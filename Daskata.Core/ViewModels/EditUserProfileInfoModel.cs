@@ -6,18 +6,6 @@ namespace Daskata.Core.ViewModels
     public class EditUserProfileInfoModel
     {
         [Required]
-        [StringLength(UsernameLenghtMax, MinimumLength = UsernameLenghtMin,
-            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
-        [Display(Name = "Потребителското име")]
-        public string Username { get; set; } = null!;
-
-        [Required]
-        [StringLength(EmailLenghtMax, MinimumLength = EmailLenghtMin,
-            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
-        [EmailAddress]
-        public string Email { get; set; } = null!;
-
-        [Required]
         [StringLength(FirstNameLenghtMax, MinimumLength = FirstNameLenghtMin,
           ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
         [Display(Name = "Името")]
@@ -29,21 +17,42 @@ namespace Daskata.Core.ViewModels
         [Display(Name = "Фамилията")]
         public string LastName { get; set; } = null!;
 
-        [MaxLength(PhoneNumberLenghtMax)]
-        [Phone]
+        [Required]
+        [StringLength(UsernameLenghtMax, MinimumLength = UsernameLenghtMin,
+         ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
+        [Display(Name = "Потребителското име")]
+        public string Username { get; set; } = null!;
+
+        [Required]
+        [StringLength(EmailLenghtMax, MinimumLength = EmailLenghtMin,
+            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
+        [EmailAddress]
+        public string Email { get; set; } = null!;
+
+        [StringLength(PhoneNumberLenghtMax, MinimumLength = PhoneNumberLenghtMin,
+            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
+        [Display(Name = "Телефонът")]
         public string PhoneNumber { get; set; } = null!;
 
-        [MaxLength(AdditionalInfoLenghtMax)]
-        [Phone]
+        [StringLength(SchoolLenghtMax, MinimumLength = SchoolLenghtMin,
+          ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
+        [Display(Name = "Учебното заведение")]
+        public string School { get; set; } = null!;
+
+        [StringLength(LocationLenghtMax, MinimumLength = LocationLenghtMin,
+            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
+        [Display(Name = "Местонахождението")]
+        public string Location { get; set; } = null!;
+
+        [StringLength(AdditionalInfoLenghtMax, MinimumLength = AdditionalInfoLenghtMin,
+          ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
+        [Display(Name = "Допълнителната информация")]
         public string AdditionalInfo { get; set; } = null!;
+
+        [Display(Name = "Датата на регистрация")]
+        public string RegistrationDate { get; set; } = null!;
 
         [DataType(DataType.ImageUrl)]
         public string ProfilePictureUrl { get; set; } = null!;
-
-        public string RegistrationDate { get; set; } = null!;
-
-        public string Location { get; set; } = null!;
-
-        public string School { get; set; } = null!;
     }
 }

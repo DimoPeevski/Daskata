@@ -1,12 +1,9 @@
 ﻿using Daskata.Core.ViewModels;
 using Daskata.Infrastructure.Data;
 using Daskata.Infrastructure.Data.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Controllers
@@ -76,9 +73,39 @@ namespace Daskata.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserProfileInfoModel model)
         {
-            var loggedUser = await _userManager.GetUserAsync(User);
+            ModelState.Remove(nameof(model.PhoneNumber));
+            ModelState.Remove(nameof(model.RegistrationDate));
+            ModelState.Remove(nameof(model.ProfilePictureUrl));
 
-            return RedirectToAction("User", "Index");
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var loggedUser = await _userManager.GetUserAsync(User);
+            if (loggedUser == null)
+            {
+                return NotFound();
+            }
+
+            loggedUser.FirstName = model.FirstName;
+            loggedUser.LastName = model.LastName;
+            loggedUser.UserName = model.Username;
+            loggedUser.Email = model.Email;
+            loggedUser.PhoneNumber = model.PhoneNumber;
+            loggedUser.School = model.School;
+            loggedUser.Location = model.Location;
+            loggedUser.AdditionalInfo = model.AdditionalInfo;
+            
+            var result = await _userManager.UpdateAsync(loggedUser);
+            if (!result.Succeeded)
+            {
+                return View("Error");
+            }
+
+            _logger.LogInformation($"User with id {loggedUser.Id} was edited.");
+
+            return RedirectToAction("Index", "Profile");
         }
 
         public static string GetRegistrationMonthYear(string registrationDate)
@@ -106,11 +133,6 @@ namespace Daskata.Controllers
                 default:
                     return roleName;
             }
-        }
-
-        public static bool IsUsernameMatch(string usernameFromModel, string usernameFromJS)
-        {
-            return usernameFromModel == usernameFromJS;
         }
     }
 }
