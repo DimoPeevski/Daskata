@@ -6,26 +6,25 @@
 @inject UserManager<UserProfile> _userManager
 @inject DaskataDbContext _context
 
+@{
+    var loggedUser = await _userManager.GetUserAsync(User);
+    var userRolesNames = await _userManager.GetRolesAsync(loggedUser!);
+    var loggedUserId = loggedUser?.Id.ToString();
+
+    var roleName = userRolesNames.FirstOrDefault() ?? "None";
+
+    var userFirstName = loggedUser?.FirstName ?? "Име";
+    var userLastName = loggedUser?.LastName ?? "Фамилия";
+}
+
 <div id="header">
     <div id="weather"></div>
 </div>
 <div class="navbar-nav">
     <div class="dropdown">
         <button class="dropbtn" id="profile-picture">
-            <img class="profile-pic" src="~/lib/default-profile-image.png" alt="Профил">
+            <img class="profile-pic" src="@loggedUser!.ProfilePictureUrl" alt="Профил">
         </button>
-
-        @{
-            var loggedUser = await _userManager.GetUserAsync(User);
-            var userRolesNames = await _userManager.GetRolesAsync(loggedUser!);
-            var loggedUserId = loggedUser?.Id.ToString();
-            
-            var roleName = userRolesNames.FirstOrDefault() ?? "None";
-
-            var userFirstName = loggedUser?.FirstName ?? "Име";
-            var userLastName = loggedUser?.LastName ?? "Фамилия";
-        }
-
         <div class="dropdown-content" id="dropdown-menu">
             <span class="profile-username">@@@loggedUser</span> <br />
             <span class="profile-names">@userFirstName @userLastName</span><br />

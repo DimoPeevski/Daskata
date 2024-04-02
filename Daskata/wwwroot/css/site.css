@@ -176,6 +176,9 @@ body {
     text-transform: uppercase;
     border-radius: 5px;
 }
+    .header-menu:hover {
+        background-color: #224f77;
+    }
 
 .links-header-menu {
     padding-left: 18px !important;
@@ -184,9 +187,33 @@ body {
     padding-bottom: 8px;
 }
 
-    .header-menu:hover {
-        background-color: #224f77;
+
+
+.profile-menu {
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    text-transform: uppercase;
+    border-radius: 5px;
+    color: #fafafa !important;
+    background-color: #327da4 !important;
+    margin-bottom: 6px;
+    margin-left: 70px;
+    margin-right: 70px;
+}
+
+    .profile-menu:hover {
+        background-color: #224f77 !important;
+        color: #fff !important;
     }
+
+.links-profile-menu {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 
 .header-container {
     background-color: #1f4263;
@@ -313,6 +340,13 @@ body {
     border-radius: 100px;
 }
 
+.profile-pic-edit {
+    border-radius: 300px;
+    width: 300px;
+    height: 300px;
+    max-width: 100%;
+}
+
 .dropdown:hover .dropdown-content {
     display: block;
 }
@@ -339,4 +373,53 @@ span.profile-role {
 span.validation-labels {
     color: #fe5963;
     font-size: 13px;
+}
+
+/* --------------------------------- */
+.profile-container-cover {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-image: url('/lib/cover-book.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.profile-container-info {
+    display: flex;
+    justify-content: center;
+    background-color: rgba(250, 250, 250, 0.9);
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    min-height: 200px;
+}
+
+
+span.profile-acc-name {
+    font-size: 32px;
+    color: #1b4061;
+    font-weight: bold;
+}
+
+span.profile-acc-username {
+    font-size: 16px;
+    color: #1b4061;
+    font-weight: bold;
+    padding-bottom: 20px;
+}
+
+span.profile-acc-info {
+    font-size: 14px;
+    color: #1b4061;
+    padding-bottom: 20px;
+}
+
+div.profile-box {
+    margin-top: 20px;
+    color: #1b4061;
+    font-size: 12px;
+    font-weight: 600;
 }

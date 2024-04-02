@@ -16,9 +16,9 @@ namespace Daskata.Controllers
         }
 
         [HttpGet]
-        public ActionResult AccessDenied()
+        public async Task<IActionResult> AccessDenied()
         {
-            var curentUserId = GetCurentUserId();
+            var curentUserId = await GetCurentUserId();
             _logger.LogInformation($"User with id {curentUserId} tried to access a denied resource.");
 
             return View();

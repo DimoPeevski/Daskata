@@ -30,8 +30,62 @@ namespace Daskata.Controllers
             _context = context;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
-
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var loggedUser = await _userManager.GetUserAsync(User);
+            var model = new EditUserProfileInfoModel
+            {
+                Username = loggedUser.UserName,
+                Email = loggedUser.Email,
+                FirstName = loggedUser.FirstName,
+                LastName = loggedUser.LastName,
+                PhoneNumber = loggedUser.PhoneNumber,
+                AdditionalInfo = loggedUser.AdditionalInfo,
+                ProfilePictureUrl = loggedUser.ProfilePictureUrl
+            };
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            return await EditUserProfileInfo();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> EditUserProfileInfo()
+        {
+            var loggedUser = await _userManager.GetUserAsync(User);
+            var model = new EditUserProfileInfoModel
+            {
+                Username = loggedUser.UserName,
+                Email = loggedUser.Email,
+                FirstName = loggedUser.FirstName,
+                LastName = loggedUser.LastName,
+                PhoneNumber = loggedUser.PhoneNumber,
+                AdditionalInfo = loggedUser.AdditionalInfo,
+                ProfilePictureUrl = loggedUser.ProfilePictureUrl
+            };
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EditUserProfileInfo(EditUserProfileInfoModel model)
+        {
+            var loggedUser = await _userManager.GetUserAsync(User);
+
+            return RedirectToAction("User","Index");
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> Logout()
@@ -47,7 +101,7 @@ namespace Daskata.Controllers
         {
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            LoginFormModel model = new ();
+            LoginFormModel model = new();
             {
                 model.ReturnUrl = returnUrl;
             };
@@ -64,6 +118,7 @@ namespace Daskata.Controllers
             }
 
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, lockoutOnFailure: false);
+            var loggedUser = await _userManager.GetUserAsync(User);
 
             if (!result.Succeeded)
             {
@@ -71,6 +126,9 @@ namespace Daskata.Controllers
 
                 return View(model);
             }
+
+            loggedUser!.LastLoginDate = DateTime.Now;
+            await _userManager.UpdateAsync(loggedUser);
 
             var curentUserId = GetCurentUserId();
             _logger.LogInformation($"User with id {curentUserId} logged in.");
@@ -103,7 +161,7 @@ namespace Daskata.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            UserProfile user = new ()
+            UserProfile user = new()
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -115,6 +173,7 @@ namespace Daskata.Controllers
                 PhoneNumberConfirmed = false,
                 TwoFactorEnabled = false,
                 LockoutEnabled = false,
+                ProfilePictureUrl = "/lib/profile-pictures/default-profile-image.png"
             };
 
             string userEmail = "no@email.xyz";
@@ -123,9 +182,9 @@ namespace Daskata.Controllers
             user.CreatedByUserId = await GetCurentUserId();
             await _userManager.SetUserNameAsync(user, uniqueUsername);
             await _userManager.SetEmailAsync(user, userEmail);
-            
+
             var result = await _userManager.CreateAsync(user, model.Password);
-            
+
             _logger.LogInformation
                 ($"New user with id {uniqueUsername} was created successfully by user with id {user.CreatedByUserId}.");
 
@@ -147,21 +206,26 @@ namespace Daskata.Controllers
         private async Task<string> GenerateUniqueUsernameAsync()
         {
             string username = string.Empty;
-            List<string> usernamesGenerated = new ();
+            List<string> usernamesGenerated = new();
             bool usernameExists = true;
             int counter = 0;
+            Random random = new();
 
             while (usernameExists)
             {
-                Random random = new ();
                 string randomNumbers = random.Next(100000, 999999).ToString();
                 username = $"user{randomNumbers}";
-                usernamesGenerated.Add(username);
 
-                usernameExists = await _context.UserProfiles.AnyAsync(u => u.UserName == username);
+                usernameExists = await _context.UserProfiles.AnyAsync(u => u.UserName == username)
+                    || usernamesGenerated.Contains(username);
                 counter++;
 
-                if (!usernamesGenerated.Contains(username) && counter > 1_000_000)
+                if (usernameExists)
+                {
+                    usernamesGenerated.Add(username);
+                }
+
+                if (counter == 999_999)
                 {
                     username = string.Empty;
                     break;
