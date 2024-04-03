@@ -2,7 +2,7 @@
 @using Daskata.Infrastructure.Data.Models
 @using Microsoft.AspNetCore.Identity
 @using static Daskata.Controllers.ProfileController
-@model Daskata.Core.ViewModels.EditUserFormModel
+@model Daskata.Core.ViewModels.UserProfileModel
 @inject UserManager<UserProfile> _userManager
 
 @{
@@ -33,7 +33,7 @@
                     <span class="profile-acc-name">@Model.FirstName @Model.LastName</span>
                 </div>
                 <div class="col-md-4 text-end">
-                    <a class="btn btn-primary button-connect" id="connectButton" href="#">🛠️ Редактирай!</a>
+                    <a class="btn btn-primary button-connect" id="connectButton" href="#">Редактирай</a>
                 </div>
                 <div class="mb-2">
                     <span class="profile-acc-username" id="username">@@@Model.Username</span>
@@ -83,10 +83,10 @@
     const connectButton = document.getElementById('connectButton');
 
     if (username === '@@@Model.Username') {
-        connectButton.textContent = '🛠️ Редактирай!';
+        connectButton.textContent = 'Редактирай';
         connectButton.href = '/Profile/Edit';
     } else {
-        connectButton.textContent = '👋 Свържете се!';
+        connectButton.textContent = 'Свържете се!';
         connectButton.href = '#';
     }
 </script>

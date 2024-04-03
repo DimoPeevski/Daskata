@@ -95,10 +95,10 @@ body {
 .button-connect {
     background-color: transparent;
     border: solid 1px #171717;
-    width: 80%;
+    width: 65%;
     color: #171717;
-    padding-top: 7px;
-    padding-bottom: 7px;
+    padding-top: 6px;
+    padding-bottom: 6px;
     border-radius: 20px;
     font-weight: bold;
 }
@@ -429,6 +429,9 @@ div.profile-box {
 .profile-edit-input {
     background-color: #f8fcff;
     color: #171717;
+    padding: 15px;
+    border-color: #d8def8;
+    border-radius: 5px;
 }
 
 /* Notification for user edit css */

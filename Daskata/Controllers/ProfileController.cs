@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Controllers
@@ -36,7 +35,7 @@ namespace Daskata.Controllers
         public async Task<IActionResult> Index()
         {
             var loggedUser = await _userManager.GetUserAsync(User);
-            var model = new EditUserFormModel
+            var model = new UserProfileModel
             {
                 Username = loggedUser!.UserName!,
                 Email = loggedUser.Email!,
@@ -75,7 +74,6 @@ namespace Daskata.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserFormModel model)
         {
-            ModelState.Remove(nameof(model.RegistrationDate));
             ModelState.Remove(nameof(model.ProfilePictureUrl));
 
             if (!ModelState.IsValid)
@@ -91,7 +89,7 @@ namespace Daskata.Controllers
 
             loggedUser.FirstName = model.FirstName;
             loggedUser.LastName = model.LastName;
-            
+
             if (model.School == null)
             {
                 model.School = string.Empty;
@@ -113,7 +111,7 @@ namespace Daskata.Controllers
             loggedUser.Location = model.Location;
             loggedUser.AdditionalInfo = model.AdditionalInfo;
 
-            if (loggedUser.UserName != model.Username) 
+            if (loggedUser.UserName != model.Username)
             {
                 if (await UsernameExistsAsync(model.Username))
                 {
@@ -134,7 +132,7 @@ namespace Daskata.Controllers
                     return View(model);
                 }
             }
-            
+
             loggedUser.Email = model.Email.ToLower();
 
             if (loggedUser.PhoneNumber != model.PhoneNumber
@@ -165,20 +163,42 @@ namespace Daskata.Controllers
         public async Task<IActionResult> ChangePassword()
         {
             var loggedUser = await _userManager.GetUserAsync(User);
-            var model = new EditUserFormModel
+            var model = new ChangePasswordModel
             {
-                Username = loggedUser!.UserName!,
-                Email = loggedUser.Email!,
-                FirstName = loggedUser.FirstName,
-                LastName = loggedUser.LastName,
-                PhoneNumber = loggedUser.PhoneNumber,
-                AdditionalInfo = loggedUser.AdditionalInfo,
-                ProfilePictureUrl = loggedUser.ProfilePictureUrl,
-                Location = loggedUser.Location,
-                School = loggedUser.School
+                ProfilePictureUrl = loggedUser!.ProfilePictureUrl,
             };
 
             return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "User");
+            }
+
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                foreach (var error in changePasswordResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(model);
+            }
+
+            await _signInManager.RefreshSignInAsync(user);
+
+            return RedirectToAction("Index", "Profile");
         }
 
         [Authorize]
@@ -186,21 +206,14 @@ namespace Daskata.Controllers
         public async Task<IActionResult> PersonalData()
         {
             var loggedUser = await _userManager.GetUserAsync(User);
-            var model = new EditUserFormModel
+            var model = new ChangePasswordModel
             {
-                Username = loggedUser!.UserName!,
-                Email = loggedUser.Email!,
-                FirstName = loggedUser.FirstName,
-                LastName = loggedUser.LastName,
-                PhoneNumber = loggedUser.PhoneNumber,
-                AdditionalInfo = loggedUser.AdditionalInfo,
-                ProfilePictureUrl = loggedUser.ProfilePictureUrl,
-                Location = loggedUser.Location,
-                School = loggedUser.School
+                ProfilePictureUrl = loggedUser!.ProfilePictureUrl,
             };
 
             return View(model);
         }
+
 
         public static string GetRegistrationMonthYear(string registrationDate)
         {

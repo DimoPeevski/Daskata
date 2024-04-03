@@ -1,7 +1,7 @@
-﻿@model Daskata.Core.ViewModels.EditUserFormModel
+﻿@model Daskata.Core.ViewModels.ChangePasswordModel
 
 @{
-    ViewData["Title"] = "Редакция на профил";
+    ViewData["Title"] = "Моите данни";
 }
 
 <div class="home-container-column">
@@ -13,13 +13,12 @@
             </label>
             <div class="mt-4">
                 <a class="nav-link profile-menu links-profile-menu" asp-area="" asp-controller="Profile" asp-action="Edit">Редакция на профил</a>
-                <a class="nav-link profile-menu links-profile-menu" asp-area="" asp-controller="Profile" asp-action="ChangePassword">Промени парола</a>
+                <a class="nav-link profile-menu links-profile-menu" asp-area="" asp-controller="Profile" asp-action="PersonalData">Моите лични данни</a>
             </div>
         </div>
         <div class="col-md-8">
-            <span class="row g-3">
-                This is the view for now! This is the view for now! This is the view for now! This is the view for now! This is the view for now! This is the view for now!
-            </span>
+                <p class="row g-3 mt-5">Here will be the text! Here will be the text! Here will be the text!Here will be the text!Here will be the text!Here will be the text!Here will be the text!Here will be the text!Here will be the text!Here will be the text!Here will be the text!Here will be the text!Here will be the text!Here will be the text!Here will be the text!Here will be the text!</p>
+            </div>
         </div>
     </div>
 </div>
@@ -36,9 +35,7 @@
                 reader.readAsDataURL(file);
             }
         });
-    </script>
 
-    <script>
         function showNotification() {
             var notification = document.getElementById("userEditedNotification");
             notification.classList.add("show");

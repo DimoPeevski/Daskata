@@ -17,64 +17,62 @@
             </div>
         </div>
         <div class="col-md-8">
-            <form asp-action="Edit" class="row g-3" id="editForm">
+            <form class="row g-3 mt-0" id="editForm" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
                 <input type="hidden" asp-for="ProfilePictureUrl" id="profilePictureUrl" />
-
                 <div class="col-12">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label asp-for="FirstName" class="form-label">Име</label>
-                            <input asp-for="FirstName" class="form-control profile-edit-input" />
+                            <label asp-for="FirstName" class="form-label" style="font-size: 15px;">Име</label>
+                            <input asp-for="FirstName" class="form-control profile-edit-input" aria-required="true" placeholder="Име" />
                             <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label asp-for="LastName" class="form-label">Фамилия</label>
-                            <input asp-for="LastName" class="form-control profile-edit-input" />
+                            <label asp-for="LastName" class="form-label" style="font-size: 15px;">Фамилия</label>
+                            <input asp-for="LastName" class="form-control profile-edit-input" aria-required="true" placeholder="Фалимия" />
                             <span asp-validation-for="LastName" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label asp-for="Username" class="form-label">Потребителско име</label>
-                    <input asp-for="Username" class="form-control profile-edit-input" />
+                    <label asp-for="Username" class="form-label" style="font-size: 15px;">Потребителско име</label>
+                    <input asp-for="Username" class="form-control profile-edit-input" aria-required="true" placeholder="Потребителско име" />
                     <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label asp-for="Email" class="form-label">Email</label>
-                    <input asp-for="Email" class="form-control profile-edit-input" />
+                    <label asp-for="Email" class="form-label" style="font-size: 15px;">Email</label>
+                    <input asp-for="Email" class="form-control profile-edit-input" aria-required="true" placeholder="Email" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label asp-for="PhoneNumber" class="form-label">Телефон</label>
-                    <input asp-for="PhoneNumber" class="form-control profile-edit-input" />
+                    <label asp-for="PhoneNumber" class="form-label" style="font-size: 15px;">Телефон</label>
+                    <input asp-for="PhoneNumber" class="form-control profile-edit-input" aria-required="false" placeholder="" />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
 
                 <div class="col-12">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label asp-for="School" class="form-label">Учебно заведение (пр. ОУ "Иван Вазов")</label>
-                            <input asp-for="School" class="form-control profile-edit-input" />
+                            <label asp-for="School" class="form-label" style="font-size: 15px;">Учебно заведение</label>
+                            <input asp-for="School" class="form-control profile-edit-input" aria-required="false" placeholder="пр. ОУ 'Иван Вазов'" />
                             <span asp-validation-for="School" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Location" class="form-label">Местоположение (град, държава)</label>
-                            <input asp-for="Location" class="form-control profile-edit-input" />
+                            <label asp-for="Location" class="form-label" style="font-size: 15px;">Местоположение</label>
+                            <input asp-for="Location" class="form-control profile-edit-input" aria-required="false" placeholder="град, държава" />
                             <span asp-validation-for="Location" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-12 mb-3">
-                    <label asp-for="AdditionalInfo" class="form-label">Допълнителна информация (биография, специализации и др.)</label>
-                    <textarea asp-for="AdditionalInfo" class="form-control profile-edit-input" rows="4"></textarea>
+                    <label asp-for="AdditionalInfo" class="form-label" style="font-size: 15px;">Допълнителна информация</label>
+                    <textarea asp-for="AdditionalInfo" class="form-control profile-edit-input" rows="4" aria-required="false" placeholder="биография, специализации и др."></textarea>
                     <span asp-validation-for="AdditionalInfo" class="text-danger"></span>
                 </div>
 
