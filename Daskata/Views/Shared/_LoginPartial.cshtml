@@ -79,40 +79,41 @@
     });
 </script>
 
+@section Scripts {
+    <script>
+        //Weather AJAX and API
+        $(document).ready(function () {
+            var apiKey = 'API-код-като-си-взема-абонамент';
+            var location = 'Sofia';
 
-<script>
-    //Weather AJAX and API
-    $(document).ready(function () {
-        var apiKey = 'API-код-като-си-взема-абонамент';
-        var location = 'Sofia';
+            $.ajax({
+                url: 'https://api.openweathermap.org/data/2.5/weather',
+                type: 'GET',
+                data: {
+                    q: location,
+                    appid: apiKey,
+                    units: 'metric'
+                },
+                success: function (response) {
+                    var temperature = response.main.temp;
+                    var condition = response.weather[0].main;
 
-        $.ajax({
-            url: 'https://api.openweathermap.org/data/2.5/weather',
-            type: 'GET',
-            data: {
-                q: location,
-                appid: apiKey,
-                units: 'metric'
-            },
-            success: function (response) {
-                var temperature = response.main.temp;
-                var condition = response.weather[0].main;
+                    $('#weather').text('Temperature: ' + temperature + '°C, Condition: ' + condition);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Failed to fetch weather data:', error);
+                }
+            })
+        });
+    </script>
 
-                $('#weather').text('Temperature: ' + temperature + '°C, Condition: ' + condition);
-            },
-            error: function (xhr, status, error) {
-                console.error('Failed to fetch weather data:', error);
+    <script>
+        //Logout confirm
+        document.getElementById("logoutLink").addEventListener("click", function (event) {
+            event.preventDefault();
+            if (confirm("Ще излезете от профила си.")) {
+                window.location.href = this.href;
             }
-        })
-    });
-</script>
-
-<script>
-    //Logout confirm
-    document.getElementById("logoutLink").addEventListener("click", function (event) {
-        event.preventDefault();
-        if (confirm("Ще излезете от профила си.")) {
-            window.location.href = this.href;
-        }
-    });
-</script>
+        });
+    </script>
+}

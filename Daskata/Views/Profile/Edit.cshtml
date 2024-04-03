@@ -1,4 +1,4 @@
-﻿@model Daskata.Core.ViewModels.EditUserProfileInfoModel
+﻿@model Daskata.Core.ViewModels.EditUserFormModel
 
 @{
     ViewData["Title"] = "Редакция на профил";
@@ -12,13 +12,15 @@
                 <input type="file" id="profilePicture" style="display: none;" accept="image/*" />
             </label>
             <div class="mt-4">
-                <a href="#" class="nav-link profile-menu links-profile-menu">Промени парола</a>
-                <a href="#" class="nav-link profile-menu links-profile-menu">Моите лични данни</a>
+                <a class="nav-link profile-menu links-profile-menu" asp-area="" asp-controller="Profile" asp-action="ChangePassword">Промени парола</a>
+                <a class="nav-link profile-menu links-profile-menu" asp-area="" asp-controller="Profile" asp-action="PersonalData">Моите лични данни</a>
             </div>
         </div>
         <div class="col-md-8">
             <form asp-action="Edit" class="row g-3" id="editForm">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="ProfilePictureUrl" id="profilePictureUrl" />
 
                 <div class="col-12">
                     <div class="row">
@@ -78,45 +80,45 @@
 
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary button-login">Запази</button>
-                    <div id="userEditedNotification" class="user-edited-notification">Профилът е актуализиран!</div>
+                    <div id="userEditedNotification" class="user-edited-notification">Актуализиране...</div>
                 </div>
-            </form>    
+            </form>
         </div>
     </div>
 </div>
 
-<script>
-    document.getElementById('profilePicture').addEventListener('change', function () {
-        var file = this.files[0];
-        if (file) {
-            var reader = new FileReader();
-            reader.onload = function () {
-                document.getElementById('profileImage').src = reader.result;
+@section Scripts {
+    <script>
+        document.getElementById('profilePicture').addEventListener('change', function () {
+            var file = this.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    document.getElementById('profileImage').src = reader.result;
+                }
+                reader.readAsDataURL(file);
             }
-            reader.readAsDataURL(file);
+        });
+
+        function showNotification() {
+            var notification = document.getElementById("userEditedNotification");
+            notification.classList.add("show");
+
+            setTimeout(function () {
+                notification.classList.remove("show");
+            }, 1000);
         }
-    });
-</script>
 
-<script>
-    function showNotification() {
-        var notification = document.getElementById("userEditedNotification");
-        notification.classList.add("show");
+        var form = document.getElementById("editForm");
 
-        setTimeout(function () {
-            notification.classList.remove("show");
-        }, 1000);
-    }
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
 
-    var form = document.getElementById("editForm");
+            showNotification();
 
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        showNotification();
-
-        setTimeout(function () {
-            form.submit();
-        }, 1000);
-    });
-</script>
+            setTimeout(function () {
+                form.submit();
+            }, 1000);
+        });
+    </script>
+}

@@ -32,27 +32,27 @@ namespace Daskata.Core.ViewModels
         [StringLength(PhoneNumberLenghtMax, MinimumLength = PhoneNumberLenghtMin,
             ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
         [Display(Name = "Телефонът")]
-        public string PhoneNumber { get; set; } = null!;
+        public string? PhoneNumber { get; set; }
 
         [StringLength(SchoolLenghtMax, MinimumLength = SchoolLenghtMin,
           ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
         [Display(Name = "Учебното заведение")]
-        public string School { get; set; } = null!;
+        public string? School { get; set; }
 
         [StringLength(LocationLenghtMax, MinimumLength = LocationLenghtMin,
             ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
         [Display(Name = "Местонахождението")]
-        public string Location { get; set; } = null!;
+        public string? Location { get; set; }
 
         [StringLength(AdditionalInfoLenghtMax, MinimumLength = AdditionalInfoLenghtMin,
           ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
         [Display(Name = "Допълнителната информация")]
-        public string AdditionalInfo { get; set; } = null!;
+        public string? AdditionalInfo { get; set; }
 
         [Display(Name = "Датата на регистрация")]
         public string RegistrationDate { get; set; } = null!;
 
         [DataType(DataType.ImageUrl)]
-        public string ProfilePictureUrl { get; set; } = null!;
+        public string? ProfilePictureUrl { get; set; }
     }
 }

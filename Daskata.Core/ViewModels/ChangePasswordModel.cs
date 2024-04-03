@@ -3,7 +3,7 @@ using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Core.ViewModels
 {
-    public class EditUserProfilePasswordModel
+    public class ChangePasswordModel
     {
 
     }

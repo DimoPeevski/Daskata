@@ -26,23 +26,23 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Indicates whether the user account is active or deactivated")]
         public bool IsActive { get; set; }
 
-        [Comment("URL for the user's profile picture")]
-        public string ProfilePictureUrl { get; set; } = string.Empty;
-
-        [MaxLength(AdditionalInfoLenghtMax)]
-        [Comment("Additional information about the user")]
-        public string AdditionalInfo { get; set; } = string.Empty;
+        [MaxLength(SchoolLenghtMax)]
+        [Comment("Information about user school")]
+        public string? School { get; set; } = string.Empty;
 
         [MaxLength(LocationLenghtMax)]
         [Comment("Information about user location")]
-        public string Location { get; set; } = string.Empty;
+        public string? Location { get; set; } = string.Empty;
 
-        [MaxLength(SchoolLenghtMax)]
-        [Comment("Information about user school")]
-        public string School { get; set; } = string.Empty;
+        [MaxLength(AdditionalInfoLenghtMax)]
+        [Comment("Additional information about the user")]
+        public string? AdditionalInfo { get; set; } = string.Empty;
 
         [Comment("Property to store the user ID of the creator")]
         public Guid? CreatedByUserId { get; set; }
+
+        [Comment("URL for the user's profile picture")]
+        public string ProfilePictureUrl { get; set; } = string.Empty;
 
         [Comment("Navigation property to refer to the user who created this profile")]
         public virtual UserProfile? CreatedByUser { get; set; }

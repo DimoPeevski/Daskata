@@ -2,7 +2,7 @@
 @using Daskata.Infrastructure.Data.Models
 @using Microsoft.AspNetCore.Identity
 @using static Daskata.Controllers.ProfileController
-@model Daskata.Core.ViewModels.EditUserProfileInfoModel
+@model Daskata.Core.ViewModels.EditUserFormModel
 @inject UserManager<UserProfile> _userManager
 
 @{
@@ -45,11 +45,11 @@
                     <span class="profile-acc-info">@Model.AdditionalInfo</span>
                 </div>
                 <div class="row">
-                    @if (@loggedUser.School != string.Empty)
+                    @if (@loggedUser.School != string.Empty && @loggedUser.School != null)
                     {
                         <div class="col-md-4"><div class="profile-box"><img src="~/lib/school.png" alt="Моето училище"> @loggedUser!.School</div></div>
                     }
-                    @if (@loggedUser.Location != string.Empty)
+                    @if (@loggedUser.Location != string.Empty && @loggedUser.Location != null)
                     {
                         <div class="col-md-4"><div class="profile-box"><img src="~/lib/location.png" alt="Моята локация"> @loggedUser!.Location</div></div>
                     }
