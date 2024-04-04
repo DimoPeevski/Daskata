@@ -17,15 +17,12 @@
     var userLastName = loggedUser?.LastName ?? "Фамилия";
 }
 
-<div id="header">
-    <div id="weather"></div>
-</div>
 <div class="navbar-nav">
     <div class="dropdown">
-        <button class="dropbtn" id="profile-picture">
+        <button class="dropbtn" id="profile-picture-desktop">
             <img class="profile-pic" src="@loggedUser!.ProfilePictureUrl" alt="Профил">
         </button>
-        <div class="dropdown-content" id="dropdown-menu">
+        <div class="dropdown-content" id="dropdown-menu-desktop">
             <span class="profile-username">@@@loggedUser</span> <br />
             <span class="profile-names">@userFirstName @userLastName</span><br />
 
@@ -60,34 +57,28 @@
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        //Profile menu dropdown
-        document.addEventListener("DOMContentLoaded", function () {
-            var profilePicture = document.getElementById("profile-picture");
-            var dropdownMenu = document.getElementById("dropdown-menu");
 
-            profilePicture.addEventListener("click", function (event) {
-                event.stopPropagation();
-                dropdownMenu.classList.toggle("show");
-            });
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var profilePictureDesktop = document.getElementById("profile-picture-desktop");
+        var dropdownMenuDesktop = document.getElementById("dropdown-menu-desktop");
 
-            window.addEventListener("click", function (event) {
-                if (!event.target.matches('#profile-picture')) {
-                    dropdownMenu.classList.remove("show");
-                }
-            });
-        });
-
-    </script>
-
-    <script>
-        //Logout confirm
-        document.getElementById("logoutLink").addEventListener("click", function (event) {
-            event.preventDefault();
-            if (confirm("Ще излезете от профила си.")) {
-                window.location.href = this.href;
+        profilePictureDesktop.addEventListener("click", function () {
+            if (dropdownMenuDesktop.style.display === "none" || dropdownMenuDesktop.style.display === "") {
+                dropdownMenuDesktop.style.display = "block";
+            } else {
+                dropdownMenuDesktop.style.display = "none";
             }
         });
-    </script>
-}
+    });
+</script>
+
+<script>
+    //Logout confirm
+    document.getElementById("logoutLink").addEventListener("click", function (event) {
+        event.preventDefault();
+        if (confirm("Ще излезете от профила си.")) {
+            window.location.href = this.href;
+        }
+    });
+</script>

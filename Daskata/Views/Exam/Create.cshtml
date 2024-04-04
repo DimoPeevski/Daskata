@@ -7,11 +7,11 @@
 <div class="home-container-column">
     <div class="row">
         <h2 class="page-title mb-5">Създай нов изпит</h2>
-        <div class="col-md-12">
+        <div class="col-md-12 p-3">
             <form class="row g-3 mt-0" id="editForm" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="col-8 mb-3">
+                <div class="col-md-8 mb-3">
                     <label asp-for="Title" class="form-label" style="font-size: 15px;">Заглавие</label>
                     <input asp-for="Title" class="form-control profile-edit-input" aria-required="true" placeholder="" />
                     <span asp-validation-for="Title" class="text-danger"></span>
@@ -35,7 +35,7 @@
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
-                <div class="col-12">
+                <div class="col-12 mt-4">
                     <button type="submit" class="btn btn-primary button-login">Създай</button>
                     <div id="userEditedNotification" class="user-edited-notification">Създаване...</div>
                 </div>

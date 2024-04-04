@@ -60,33 +60,27 @@
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        //Profile menu dropdown
-        document.addEventListener("DOMContentLoadedMobile", function () {
-            var profilePicture = document.getElementById("profile-picture-mobile");
-            var dropdownMenu = document.getElementById("dropdown-menu-mobile");
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var profilePictureMobile = document.getElementById("profile-picture-mobile");
+        var dropdownMenuMobile = document.getElementById("dropdown-menu-mobile");
 
-            profilePicture.addEventListener("click", function (event) {
-                event.stopPropagation();
-                dropdownMenu.classList.toggle("show");
-            });
-
-            window.addEventListener("click", function (event) {
-                if (!event.target.matches('#profile-picture-mobile')) {
-                    dropdownMenu.classList.remove("show");
-                }
-            });
-        });
-    </script>
-
-    <script>
-        //Logout confirm
-        document.getElementById("logoutLink").addEventListener("click", function (event) {
-            event.preventDefault();
-            if (confirm("Ще излезете от профила си.")) {
-                window.location.href = this.href;
+        profilePictureMobile.addEventListener("click", function () {
+            if (dropdownMenuMobile.style.display === "none" || dropdownMenuMobile.style.display === "") {
+                dropdownMenuMobile.style.display = "block";
+            } else {
+                dropdownMenuMobile.style.display = "none";
             }
         });
-    </script>
-}
+    });
+</script>
+
+<script>
+    //Logout confirm
+    document.getElementById("logoutLink").addEventListener("click", function (event) {
+        event.preventDefault();
+        if (confirm("Ще излезете от профила си.")) {
+            window.location.href = this.href;
+        }
+    });
+</script>

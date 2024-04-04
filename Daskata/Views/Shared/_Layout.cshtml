@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Daskata.styles.css" asp-append-version="true" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <meta name="description" content="Пригответе се за предстоящото ни приложение! Платформа, в която всички учители могат лесно да създават и администрират тестове на своите ученици.">
     <meta property="og:locale" content="bg_BG" />
@@ -27,24 +28,27 @@
     <header>
         @if (User?.Identity?.IsAuthenticated ?? false)
         {
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm header-container box-shadow pb-3 pt-3">
+            <nav class="navbar navbar-expand-xxl navbar-toggleable-xs header-container box-shadow pb-3 pt-3">
                 <div class="container-fluid">
+
                     <div class="d-flex align-items-center">
                         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                             <img class="header-logo" src="~/lib/logo-header-shadow.png" alt="Daskata">
                         </a>
-                        <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <button class="navbar-toggler d-xxl-none mob-responsive" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
                                 aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon">
                                 <partial name="_ToggleButtonSVGPartial" />
                             </span>
                         </button>
-                    </div>
-                    <div class="d-flex align-items-center">
                         <div class="login-partial-mobile">
                             <partial name="_LoginPartialMobile" />
                         </div>
-                    </div>
+                   </div>
+
                     <div class="navbar-collapse collapse" id="navbarCollapse">
                         <ul class="navbar-nav mx-auto mb-sm-0">
                             @if (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Teacher"))
@@ -56,17 +60,16 @@
                                 @await Component.InvokeAsync(nameof(HeaderStudentMenuComponent))
                             }
                         </ul>
-                       
                     </div>
+
                     <div class="login-partial-desktop">
                         <partial name="_LoginPartialDesktop" />
                     </div>
+
                 </div>
             </nav>
         }
     </header>
-
-
 
     <div class="container">
         <main role="main" class="pb-3">
