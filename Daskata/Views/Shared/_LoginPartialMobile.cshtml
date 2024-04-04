@@ -22,10 +22,10 @@
 </div>
 <div class="navbar-nav">
     <div class="dropdown">
-        <button class="dropbtn" id="profile-picture">
+        <button class="dropbtn" id="profile-picture-mobile">
             <img class="profile-pic" src="@loggedUser!.ProfilePictureUrl" alt="Профил">
         </button>
-        <div class="dropdown-content" id="dropdown-menu">
+        <div class="dropdown-content" id="dropdown-menu-mobile">
             <span class="profile-username">@@@loggedUser</span> <br />
             <span class="profile-names">@userFirstName @userLastName</span><br />
 
@@ -60,50 +60,23 @@
     </div>
 </div>
 
-<script>
-    //Profile menu dropdown
-    document.addEventListener("DOMContentLoaded", function () {
-        var profilePicture = document.getElementById("profile-picture");
-        var dropdownMenu = document.getElementById("dropdown-menu");
-
-        profilePicture.addEventListener("click", function (event) {
-            event.stopPropagation();
-            dropdownMenu.classList.toggle("show");
-        });
-
-        window.addEventListener("click", function (event) {
-            if (!event.target.matches('#profile-picture')) {
-                dropdownMenu.classList.remove("show");
-            }
-        });
-    });
-</script>
-
 @section Scripts {
     <script>
-        //Weather AJAX and API
-        $(document).ready(function () {
-            var apiKey = 'API-код-като-си-взема-абонамент';
-            var location = 'Sofia';
+        //Profile menu dropdown
+        document.addEventListener("DOMContentLoadedMobile", function () {
+            var profilePicture = document.getElementById("profile-picture-mobile");
+            var dropdownMenu = document.getElementById("dropdown-menu-mobile");
 
-            $.ajax({
-                url: 'https://api.openweathermap.org/data/2.5/weather',
-                type: 'GET',
-                data: {
-                    q: location,
-                    appid: apiKey,
-                    units: 'metric'
-                },
-                success: function (response) {
-                    var temperature = response.main.temp;
-                    var condition = response.weather[0].main;
+            profilePicture.addEventListener("click", function (event) {
+                event.stopPropagation();
+                dropdownMenu.classList.toggle("show");
+            });
 
-                    $('#weather').text('Temperature: ' + temperature + '°C, Condition: ' + condition);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Failed to fetch weather data:', error);
+            window.addEventListener("click", function (event) {
+                if (!event.target.matches('#profile-picture-mobile')) {
+                    dropdownMenu.classList.remove("show");
                 }
-            })
+            });
         });
     </script>
 

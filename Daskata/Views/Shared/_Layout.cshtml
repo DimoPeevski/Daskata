@@ -27,7 +27,7 @@
     <header>
         @if (User?.Identity?.IsAuthenticated ?? false)
         {
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm header-container box-shadow">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm header-container box-shadow pb-3 pt-3">
                 <div class="container-fluid">
                     <div class="d-flex align-items-center">
                         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
@@ -35,16 +35,18 @@
                         </a>
                         <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
                                 aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
+                            <span class="navbar-toggler-icon">
+                                <partial name="_ToggleButtonSVGPartial" />
+                            </span>
                         </button>
                     </div>
                     <div class="d-flex align-items-center">
                         <div class="login-partial-mobile">
-                            
+                            <partial name="_LoginPartialMobile" />
                         </div>
                     </div>
                     <div class="navbar-collapse collapse" id="navbarCollapse">
-                        <ul class="navbar-nav ms-auto mb-5 mb-sm-0">
+                        <ul class="navbar-nav mx-auto mb-sm-0">
                             @if (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Teacher"))
                             {
                                 @await Component.InvokeAsync(nameof(HeaderAdminMenuComponent))
@@ -54,9 +56,10 @@
                                 @await Component.InvokeAsync(nameof(HeaderStudentMenuComponent))
                             }
                         </ul>
-                        <div class="login-partial-desktop">
-                            <partial name="_LoginPartial" />
-                        </div>
+                       
+                    </div>
+                    <div class="login-partial-desktop">
+                        <partial name="_LoginPartialDesktop" />
                     </div>
                 </div>
             </nav>
