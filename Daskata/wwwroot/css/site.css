@@ -259,7 +259,7 @@ body {
 }
 
 .header-logo {
-    width: 40%;
+    width: 100%;
 }
 
 @media only screen and (max-width: 598px) {
@@ -508,4 +508,30 @@ div.profile-box {
     font-size: 36px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: #171717;
+}
+
+.navbar-brand {
+    padding: 0;
+    margin: 0;
+    max-width: 200px;
+}
+
+@media only screen and (max-width: 600px) {
+    .login-partial-mobile {
+        display: block;
+    }
+
+    .login-partial-desktop {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    .login-partial-mobile {
+        display: none;
+    }
+
+    .login-partial-desktop {
+        display: block;
+    }
 }

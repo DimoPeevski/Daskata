@@ -27,34 +27,43 @@
     <header>
         @if (User?.Identity?.IsAuthenticated ?? false)
         {
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm header-container border-bottom box-shadow mb-3">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm header-container box-shadow">
                 <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                        <img class="header-logo" src="~/lib/logo-header-shadow.png" alt="Daskata">
-                    </a>
-
-                    <div class="mobile-menu">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    <div class="d-flex align-items-center">
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                            <img class="header-logo" src="~/lib/logo-header-shadow.png" alt="Daskata">
+                        </a>
+                        <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
                                 aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                     </div>
-
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        @if (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Teacher"))
-                        {
-                            @await Component.InvokeAsync(nameof(HeaderAdminMenuComponent))
-                        }
-                        else
-                        {
-                            @await Component.InvokeAsync(nameof(HeaderStudentMenuComponent))
-                        }
-                        <partial name="_LoginPartial" />
+                    <div class="d-flex align-items-center">
+                        <div class="login-partial-mobile">
+                            
+                        </div>
+                    </div>
+                    <div class="navbar-collapse collapse" id="navbarCollapse">
+                        <ul class="navbar-nav ms-auto mb-5 mb-sm-0">
+                            @if (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Teacher"))
+                            {
+                                @await Component.InvokeAsync(nameof(HeaderAdminMenuComponent))
+                            }
+                            else
+                            {
+                                @await Component.InvokeAsync(nameof(HeaderStudentMenuComponent))
+                            }
+                        </ul>
+                        <div class="login-partial-desktop">
+                            <partial name="_LoginPartial" />
+                        </div>
                     </div>
                 </div>
             </nav>
         }
     </header>
+
+
 
     <div class="container">
         <main role="main" class="pb-3">
