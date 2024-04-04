@@ -13,21 +13,18 @@ namespace Daskata.Controllers
     {
         private readonly SignInManager<UserProfile> _signInManager;
         private readonly UserManager<UserProfile> _userManager;
-        private readonly ILogger<LoginFormModel> _logger;
+        private readonly ILogger<LoginUserFormModel> _logger;
         private readonly DaskataDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public ProfileController(SignInManager<UserProfile> signInManager,
                               UserManager<UserProfile> userManager,
                               DaskataDbContext context,
-                              ILogger<LoginFormModel> logger,
-                              IHttpContextAccessor httpContextAccessor)
+                              ILogger<LoginUserFormModel> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _context = context;
             _logger = logger;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         [Authorize]
@@ -214,41 +211,13 @@ namespace Daskata.Controllers
             return View(model);
         }
 
-
-        public static string GetRegistrationMonthYear(string registrationDate)
-        {
-            DateTime date = DateTime.Parse(registrationDate);
-            string rawMonth = date.ToString("MMMM", new System.Globalization.CultureInfo("bg-BG"));
-            string month = char.ToUpper(rawMonth[0]) + rawMonth.Substring(1);
-            string year = date.Year.ToString();
-
-            return $"{month} {year}";
-        }
-
-        public static string TranslateRoleInBG(string roleName)
-        {
-            switch (roleName)
-            {
-                case Admin:
-                    return "⭐⭐⭐⭐ Админ";
-                case Manager:
-                    return "⭐⭐⭐ Мениджър";
-                case Teacher:
-                    return "⭐⭐ Учител";
-                case Student:
-                    return "⭐ Ученик";
-                default:
-                    return roleName;
-            }
-        }
-
-        public async Task<bool> UsernameExistsAsync(string username)
+        private async Task<bool> UsernameExistsAsync(string username)
         {
             var context = _context.Users;
             return await context.AnyAsync(u => u.UserName == username);
         }
 
-        public async Task<bool> EmailExistsAsync(string email)
+        private async Task<bool> EmailExistsAsync(string email)
         {
             var context = _context.Users;
             if (email.ToLower() == "no@email.xyz")
@@ -259,7 +228,7 @@ namespace Daskata.Controllers
             return await context.AnyAsync(u => u.Email == email);
         }
 
-        public async Task<bool> PhoneNumberExistsAsync(string phoneNumber)
+        private async Task<bool> PhoneNumberExistsAsync(string phoneNumber)
         {
             var context = _context.Users;
             return await context.AnyAsync(u => u.PhoneNumber == phoneNumber);

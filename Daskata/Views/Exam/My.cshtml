@@ -1,0 +1,72 @@
+﻿@using static Daskata.Core.Shared.Methods;
+@model List<ExamCollectionViewModel>
+
+@{
+
+    ViewData["Title"] = "Създадени от мен изпити";
+}
+
+<div class="home-container-column">
+    <div class="row">
+        <h2 class="page-title mb-5">Моите изпити</h2>
+        @foreach (var exam in Model)
+        {
+            <div class="exam-box">
+                <div class="exam-status @(exam.IsPublished ? "active" : "non-active")"></div>
+                <p><span class="exam-title">@exam.Title</span></p>
+                <p><span class="exam-description">@exam.Description</span></p>
+                <div class="exam-box-inner">
+                    <div class="exam-box-sub"><span class="exam-sub-text">⌛ @FormatTimeSpanAsMinutes(exam.Duration)</span></div>
+                    <div class="exam-box-sub"><span class="exam-sub-text">⭐ @exam.TotalPoints</span></div>
+                    <div class="exam-box-sub"><span class="exam-sub-text">📅 @GetRegistrationMonthYearAsNumbers(exam.CreationDate.ToString())</span></div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Show a notification after save, edit, etc...
+        function showNotification() {
+            var notification = document.getElementById("userEditedNotification");
+            notification.classList.add("show");
+
+            setTimeout(function () {
+                notification.classList.remove("show");
+            }, 1000);
+        }
+
+        var form = document.getElementById("editForm");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            showNotification();
+
+            setTimeout(function () {
+                form.submit();
+            }, 1000);
+        });
+    </script>
+
+    <script>
+        // Show a notification after save, edit, etc...
+        document.addEventListener('DOMContentLoaded', function () {
+            var examTitles = document.querySelectorAll('.exam-title');
+            var examDescriptions = document.querySelectorAll('.exam-description');
+
+            for (var i = 0; i < examTitles.length; i++) {
+                examTitles[i].textContent = truncateText(examTitles[i].textContent, 40);
+            }
+
+            for (var j = 0; j < examDescriptions.length; j++) {
+                examDescriptions[j].textContent = truncateText(examDescriptions[j].textContent, 137);
+            }
+        });
+
+        function truncateText(text, maxLength) {
+            return text.length > maxLength ? text.slice(0, maxLength - 3) + '...' : text;
+        }
+    </script>
+}

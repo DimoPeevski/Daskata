@@ -1,7 +1,7 @@
 ﻿@using Daskata.Infrastructure.Data
 @using Daskata.Infrastructure.Data.Models
 @using Microsoft.AspNetCore.Identity
-@using static Daskata.Controllers.ProfileController
+@using static Daskata.Core.Shared.Methods;
 @model Daskata.Core.ViewModels.UserProfileModel
 @inject UserManager<UserProfile> _userManager
 
@@ -19,7 +19,7 @@
     var userSchool = loggedUser?.School ?? "ОУ 'Христо Смирненски'";
 
     var modifiedDate = loggedUser!.RegistrationDate.ToString();
-    var formattedRegistrationDate = GetRegistrationMonthYear(modifiedDate);
+    var formattedRegistrationDate = GetRegistrationMonthYearAsText(modifiedDate);
 }
 
 <div class="container-fluid">
@@ -59,22 +59,6 @@
         </div>
     </div>
 </div>
-
-<!-- Temporary content -->
-<div class="home-container exam-container">
-    <div class="exam-box">Тест 1</div>
-    <div class="exam-box">Тест 2</div>
-    <div class="exam-box">Тест 3</div>
-    <div class="exam-box">Тест 4</div>
-    <div class="exam-box">Тест 5</div>
-    <div class="exam-box">Тест 6</div>
-    <div class="exam-box">Тест 7</div>
-    <div class="exam-box">Тест 8</div>
-</div>
-<br />
-<br />
-<br />
-<br />
 
 <script>
     const usernameElement = document.getElementById('username');

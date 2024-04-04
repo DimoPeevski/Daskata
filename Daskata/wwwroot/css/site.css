@@ -16,7 +16,7 @@ html {
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     background-color: #fafafa;
     line-height: 1.6;
     letter-spacing: 0.5px;
@@ -27,11 +27,12 @@ body {
 /* This is a custom CSS */
 .home-container-column {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100%;
-    margin-top: 80px;
+    margin-top: 50px;
 }
 
 .home-container {
@@ -39,7 +40,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100%;
-    margin-top: 150px;
+    margin-top: 140px;
 }
 
 .left-home-box {
@@ -178,6 +179,7 @@ body {
     text-transform: uppercase;
     border-radius: 5px;
 }
+
     .header-menu:hover {
         background-color: #224f77;
     }
@@ -188,8 +190,6 @@ body {
     padding-top: 8px;
     padding-bottom: 8px;
 }
-
-
 
 .profile-menu {
     font-weight: bold;
@@ -216,11 +216,9 @@ body {
     padding-bottom: 5px;
 }
 
-
 .header-container {
     background-color: #1f4263;
 }
-
 
 .footer-container {
     display: flex;
@@ -277,22 +275,76 @@ body {
     gap: 20px;
 }
 
-.exam-box {
+.test-item {
     width: 300px;
     height: 300px;
-    background-color: #ffffff;
-    box-shadow: 0 0px 6px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* CSS used in the exam box */
+.exam-box {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    background-color: #fff;
+    background-image: linear-gradient(to bottom, #ffffff, #f8fcff);
+    box-shadow: 0 0px 6px rgba(54, 103, 147, 0.2);
     border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
+    margin: 10px;
+    padding: 20px;
 }
 
     .exam-box:hover {
-        box-shadow: 0 0 9px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 0 8px rgba(54, 103, 147, 0.3)
     }
 
+.exam-box-inner {
+    display: flex;
+}
+
+.exam-box-sub {
+    width: auto;
+}
+
+.exam-title {
+    font-size: 20px;
+    color: #1f4263;
+    max-width: 260px;
+}
+
+.exam-description {
+    font-size: 15px;
+    color: #1f4263;
+    max-width: 260px;
+}
+
+.exam-sub-text {
+    font-size: 12px;
+    color: #224f77;
+    padding-right: 15px;
+}
+
+.exam-status {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+    .exam-status.active {
+        background-color: rgba(11, 161, 46, 1);
+    }
+
+    .exam-status.non-active {
+        background-color: rgba(242, 85, 96, 1);
+    }
 
 /* Home profile drop-down menu */
 .dropbtn {
@@ -434,7 +486,7 @@ div.profile-box {
     border-radius: 5px;
 }
 
-/* Notification for user edit css */
+/* CSS used for the notification */
 .user-edited-notification {
     position: fixed;
     top: 50%;
@@ -450,4 +502,10 @@ div.profile-box {
 
 .show {
     opacity: 1;
+}
+
+.page-title {
+    font-size: 36px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: #171717;
 }

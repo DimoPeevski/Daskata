@@ -37,6 +37,9 @@
         public const int ExamTitleLenghtMin = 3;
         public const int ExamTitleLenghtMax = 100;
 
+        public const int ExamDescriptionLenghtMin = 0;
+        public const int ExamDescriptionLenghtMax = 500;
+
 
         //Constants uses in: RegisterFormModel and LoginFormModel
         public const int PasswordLenghtMin = 6;

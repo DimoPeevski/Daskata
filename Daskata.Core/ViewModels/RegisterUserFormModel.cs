@@ -4,25 +4,25 @@ using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Core.ViewModels
 {
-    public class RegisterFormModel
+    public class RegisterUserFormModel
     {
         [Required]
         [StringLength(FirstNameLenghtMax, MinimumLength = FirstNameLenghtMin,
-            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
-        [Display(Name = "Името")]
+            ErrorMessage = "Името да бъде между {2} и {1} символа.")]
+        [Display(Name = " ")]
         public string FirstName { get; set; } = null!;
 
         [Required]
         [StringLength(LastNameLenghtMax, MinimumLength = LastNameLenghtMin,
-            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
-        [Display(Name = "Фамилията")]
+            ErrorMessage = "Фамилията да бъде между {2} и {1} символа.")]
+        [Display(Name = " ")]
         public string LastName { get; set; } = null!;
 
         [Required]
         [StringLength(PasswordLenghtMax, MinimumLength = PasswordLenghtMin, 
-            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
+            ErrorMessage = "Паролата да бъде между {2} и {1} символа.")]
         [DataType(DataType.Password)]
-        [Display(Name = "Паролата")]
+        [Display(Name = "")]
         public string Password { get; set; } = null!;
 
         [DataType(DataType.Password)]

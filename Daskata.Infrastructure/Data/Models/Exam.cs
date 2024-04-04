@@ -17,8 +17,9 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Title of the exam")]
         public string Title { get; set; } = string.Empty;
 
+        [MaxLength(ExamDescriptionLenghtMax)]
         [Comment("Description of the exam")]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
 
         [Comment("Duration of the exam in minutes")]
         public TimeSpan Duration { get; set; }
@@ -37,15 +38,18 @@ namespace Daskata.Infrastructure.Data.Models
         public DateTime LastModifiedDate { get; set; }
 
         [Required]
-        [Comment("Foreign key referencing the user who created the exam")]
-        public Guid UserID { get; set; }
+        [Comment("Unique URL for the exam")]
+        public string ExamUrl { get; set; } = null!;
 
-        [ForeignKey(nameof(UserID))]
+        [Required]
+        [Comment("Foreign key referencing the user who created the exam")]
+        public Guid CreatedByUserId { get; set; }
+
+        [ForeignKey(nameof(CreatedByUserId))]
         [Comment("Reference to the user who created the exam")]
         public virtual UserProfile User { get; set; } = null!;
 
         [Comment("Navigation property for questions in the exam")]
         public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
     }
-
 }

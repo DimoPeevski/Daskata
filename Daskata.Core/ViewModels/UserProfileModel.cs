@@ -7,46 +7,46 @@ namespace Daskata.Core.ViewModels
     {
         [Required]
         [StringLength(FirstNameLenghtMax, MinimumLength = FirstNameLenghtMin,
-          ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
-        [Display(Name = "Името")]
+          ErrorMessage = "Името да бъде между {2} и {1} символа.")]
+        [Display(Name = " ")]
         public string FirstName { get; set; } = null!;
 
         [Required]
         [StringLength(LastNameLenghtMax, MinimumLength = LastNameLenghtMin,
-            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
-        [Display(Name = "Фамилията")]
+            ErrorMessage = "Фамилията да бъде между {2} и {1} символа.")]
+        [Display(Name = " ")]
         public string LastName { get; set; } = null!;
 
         [Required]
         [StringLength(UsernameLenghtMax, MinimumLength = UsernameLenghtMin,
-         ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
-        [Display(Name = "Потребителското име")]
+         ErrorMessage = "Потребителското име да бъде между {2} и {1} символа.")]
+        [Display(Name = " ")]
         public string Username { get; set; } = null!;
 
         [Required]
         [StringLength(EmailLenghtMax, MinimumLength = EmailLenghtMin,
-            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
+            ErrorMessage = "Email да бъде между {2} и {1} символа.")]
         [EmailAddress]
         public string Email { get; set; } = null!;
 
         [StringLength(PhoneNumberLenghtMax, MinimumLength = PhoneNumberLenghtMin,
-            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
-        [Display(Name = "Телефонът")]
+            ErrorMessage = "Телефонът да бъде между {2} и {1} символа.")]
+        [Display(Name = " ")]
         public string? PhoneNumber { get; set; }
 
         [StringLength(SchoolLenghtMax, MinimumLength = SchoolLenghtMin,
-          ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
-        [Display(Name = "Учебното заведение")]
+          ErrorMessage = "Учебното заведение да бъде между {2} и {1} символа.")]
+        [Display(Name = " ")]
         public string? School { get; set; }
 
         [StringLength(LocationLenghtMax, MinimumLength = LocationLenghtMin,
-            ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
-        [Display(Name = "Местонахождението")]
+            ErrorMessage = "Местонахождението да бъде между {2} и {1} символа.")]
+        [Display(Name = " ")]
         public string? Location { get; set; }
 
         [StringLength(AdditionalInfoLenghtMax, MinimumLength = AdditionalInfoLenghtMin,
-          ErrorMessage = "{0} да бъде между {2} и {1} символа.")]
-        [Display(Name = "Допълнителната информация")]
+          ErrorMessage = "Допълнителната информация да бъде между {2} и {1} символа.")]
+        [Display(Name = " ")]
         public string? AdditionalInfo { get; set; }
 
         [Display(Name = "Датата на регистрация")]

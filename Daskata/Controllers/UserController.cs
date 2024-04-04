@@ -15,14 +15,14 @@ namespace Daskata.Controllers
     {
         private readonly SignInManager<UserProfile> _signInManager;
         private readonly UserManager<UserProfile> _userManager;
-        private readonly ILogger<LoginFormModel> _logger;
+        private readonly ILogger<LoginUserFormModel> _logger;
         private readonly DaskataDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserController(SignInManager<UserProfile> signInManager,
                               UserManager<UserProfile> userManager,
                               DaskataDbContext context,
-                              ILogger<LoginFormModel> logger,
+                              ILogger<LoginUserFormModel> logger,
                               IHttpContextAccessor httpContextAccessor)
         {
             _signInManager = signInManager;
@@ -46,7 +46,7 @@ namespace Daskata.Controllers
         {
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            LoginFormModel model = new();
+            LoginUserFormModel model = new();
             {
                 model.ReturnUrl = returnUrl;
             };
@@ -55,7 +55,7 @@ namespace Daskata.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginFormModel model)
+        public async Task<IActionResult> Login(LoginUserFormModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace Daskata.Controllers
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterFormModel model)
+        public async Task<IActionResult> Register(RegisterUserFormModel model)
         {
             if (!ModelState.IsValid)
             {

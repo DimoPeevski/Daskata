@@ -4,6 +4,7 @@ using Daskata.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Daskata.Infrastructure.Migrations
 {
     [DbContext(typeof(DaskataDbContext))]
-    partial class DaskataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240403210056_ExamDbSetFix")]
+    partial class ExamDbSetFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,18 +71,12 @@ namespace Daskata.Infrastructure.Migrations
                         .HasComment("Date and time when the exam was created");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)")
+                        .HasColumnType("nvarchar(max)")
                         .HasComment("Description of the exam");
 
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time")
                         .HasComment("Duration of the exam in minutes");
-
-                    b.Property<string>("ExamUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasComment("Unique URL for the exam");
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("bit")
