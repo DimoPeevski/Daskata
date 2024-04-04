@@ -1,5 +1,4 @@
 ﻿using Daskata.Infrastructure.Data.Models;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using static Daskata.Infrastructure.Shared.Constants;
 
@@ -7,7 +6,7 @@ namespace Daskata.Core.ViewModels
 {
     public class CreateExamFormModel
     {
-        [Required]
+        [Key]
         public Guid Id { get; set; }
 
         [Required]
@@ -29,23 +28,18 @@ namespace Daskata.Core.ViewModels
         [Display(Name = " ")]
         public int TotalPoints { get; set; }
 
-        [Required]
         [Display(Name = " ")]
         public bool IsPublished { get; set; } = false;
 
-        [Required]
         [Display(Name = " ")]
         public DateTime CreationDate { get; set; }
 
-        [Required]
         [Display(Name = " ")]
         public DateTime LastModifiedDate { get; set; }
 
-        [Required]
         [Display(Name = " ")]
-        public string ExamUrl { get; set; } = null!;
+        public string? ExamUrl { get; set; }
 
-        [Required]
         [Display(Name = " ")]
         public Guid CreatedByUserId { get; set; }
 

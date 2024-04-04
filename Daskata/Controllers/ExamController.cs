@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using static Daskata.Core.Shared.Methods;
 
 namespace Daskata.Controllers
 {
@@ -39,9 +40,6 @@ namespace Daskata.Controllers
                 Description = string.Empty,
                 TotalPoints = 120,
                 Duration = TimeSpan.FromMinutes(60),
-                CreationDate = DateTime.Now,
-                LastModifiedDate = DateTime.Now,
-                IsPublished = false,
             };
 
             return View(model);
@@ -62,10 +60,11 @@ namespace Daskata.Controllers
                 Title = model.Title,
                 Description = model.Description,
                 TotalPoints = model.TotalPoints,
-                Duration = TimeSpan.FromMinutes(60),
+                Duration = model.Duration,
                 CreationDate = DateTime.Now,
                 LastModifiedDate = DateTime.Now,
                 IsPublished = false,
+                ExamUrl = GenerateExamUrl(),
                 CreatedByUserId = (Guid)await GetCurentUserId()
             };
 
@@ -73,8 +72,6 @@ namespace Daskata.Controllers
             {
                 exam.Description = string.Empty;
             }
-
-
 
             await _context.Exams.AddAsync(exam);
             await _context.SaveChangesAsync();

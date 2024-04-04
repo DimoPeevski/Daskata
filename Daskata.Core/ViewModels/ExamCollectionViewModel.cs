@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Core.ViewModels
@@ -32,17 +31,5 @@ namespace Daskata.Core.ViewModels
         [Required]
         [Display(Name = " ")]
         public DateTime CreationDate { get; set; }
-
-        [Required]
-        [Display(Name = " ")]
-        public DateTime LastModifiedDate { get; set; }
-
-        [Required]
-        [Display(Name = " ")]
-        public string ExamUrl { get; set; } = null!;
-
-        [Required]
-        [Display(Name = " ")]
-        public Guid CreatedByUserId { get; set; }
     }
 }
