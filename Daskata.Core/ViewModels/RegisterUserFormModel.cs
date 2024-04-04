@@ -22,11 +22,11 @@ namespace Daskata.Core.ViewModels
         [StringLength(PasswordLenghtMax, MinimumLength = PasswordLenghtMin, 
             ErrorMessage = "Паролата да бъде между {2} и {1} символа.")]
         [DataType(DataType.Password)]
-        [Display(Name = "")]
+        [Display(Name = " ")]
         public string Password { get; set; } = null!;
 
         [DataType(DataType.Password)]
-        [Display(Name = "Повторната парола")]
+        [Display(Name = " ")]
         [Compare("Password", ErrorMessage = "Въведените пароли не съвпадат")]
         public string ConfirmPassword { get; set; } = null!;
 

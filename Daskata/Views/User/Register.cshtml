@@ -33,9 +33,9 @@
                     <label asp-for="ConfirmPassword">Потвърди парола</label>
                     <span asp-validation-for="ConfirmPassword" class="validation-labels"></span>
                 </div>
-                <div class="form-group mb-3">
-                    <label asp-for="Role">Роля на потребителя:</label>
-                    <select asp-for="Role" class="form-control">
+                <div class="form-group mb-3">  
+                    <select asp-for="Role" class="form-control mt-5 mb-5">
+                        <option value="">Изберете роля на потребителя</option>
                         @if (User.Identity!.IsAuthenticated && User.IsInRole("Admin"))
                         {
                             <option value = "Admin" > Админ </option>

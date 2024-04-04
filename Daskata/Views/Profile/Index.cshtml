@@ -29,11 +29,11 @@
         </div>
         <div class="col-md-9">
             <div class="row profile-container-info">
-                <div class="col-md-8">
+                <div class="col profile-name-resp">
                     <span class="profile-acc-name">@Model.FirstName @Model.LastName</span>
                 </div>
                 <div class="col-md-4 text-end mt-2 mb-2 profile-button-resp-desktop">
-                    <a class="btn btn-primary button-connect" id="connectButton" href="#">Редактирай</a>
+                    <a class="btn btn-primary button-connect" id="connectButtonDesktop" href="#">Редактирай</a>
                 </div>
                 <div class="mb-2">
                     <span class="profile-acc-username" id="username">@@@Model.Username</span>
@@ -42,7 +42,7 @@
                     <span class="profile-acc-username">@TranslateRoleInBG(roleName)</span>
                 </div>
                 <div class="col-md-4 text-end mt-4 mb-4 profile-button-resp-mobile">
-                    <a class="btn btn-primary button-connect" id="connectButton" href="#">Редактирай</a>
+                    <a class="btn btn-primary button-connect" id="connectButtonMobile" href="#">Редактирай</a>
                 </div>
                 <div class="mb-4 mt-2">
                     <span class="profile-acc-info">@Model.AdditionalInfo</span>
@@ -67,13 +67,18 @@
     const usernameElement = document.getElementById('username');
     const username = usernameElement.textContent.trim();
 
-    const connectButton = document.getElementById('connectButton');
+    const connectButtonDesktop = document.getElementById('connectButtonDesktop');
+    const connectButtonMobile = document.getElementById('connectButtonMobile');
 
     if (username === '@@@Model.Username') {
-        connectButton.textContent = 'Редактирай';
-        connectButton.href = '/Profile/Edit';
+        connectButtonDesktop.textContent = 'Редактирай';
+        connectButtonDesktop.href = '/Profile/Edit';
+        connectButtonMobile.textContent = 'Редактирай';
+        connectButtonMobile.href = '/Profile/Edit';
     } else {
-        connectButton.textContent = 'Свържете се!';
-        connectButton.href = '#';
+        connectButtonDesktop.textContent = 'Свържете се!';
+        connectButtonDesktop.href = '#';
+        connectButtonMobile.textContent = 'Свържете се!';
+        connectButtonMobile.href = '#';
     }
 </script>

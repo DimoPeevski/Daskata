@@ -109,7 +109,7 @@ body {
         color: #fff !important;
     }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 1200px) {
     .button-connect {
         width: 100%;
         border-radius: 10px;
@@ -398,11 +398,17 @@ body {
     max-width: 100%;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 767px) {
     .profile-pic-edit {
         width: 200px;
         height: 200px;
-        max-width: 100%;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .profile-pic-edit {
+        width: 150px;
+        height: 150px;
     }
 }
 
@@ -459,6 +465,7 @@ span.validation-labels {
         margin-right: 0px;
         margin-top: 10px;
         margin-bottom: 10px;
+        padding: 15px;
     }
 }
 
@@ -537,7 +544,7 @@ div.profile-box {
     max-width: 200px;
 }
 
-@media only screen and (max-width: 1400px) {
+@media only screen and (max-width: 1399px) {
     .login-partial-mobile {
         display: block;
     }
@@ -547,7 +554,7 @@ div.profile-box {
     }
 }
 
-@media only screen and (min-width: 1401px) {
+@media only screen and (min-width: 1400px) {
     .login-partial-mobile {
         display: none;
     }
@@ -581,7 +588,7 @@ div.profile-box {
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 1200px) {
     .profile-button-resp-mobile {
         display: block;
     }
@@ -591,7 +598,7 @@ div.profile-box {
     }
 }
 
-@media (min-width: 501px) {
+@media (min-width: 1201px) {
     .profile-button-resp-desktop {
         display: block;
     }
@@ -603,26 +610,40 @@ div.profile-box {
 
 .dropdown-item {
     color: #fafafa !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 5px;
 }
 
 .dropdown-menu {
-    background-color: #224f77;
-    color: #fafafa !important;
+    background-color: #1f4263;
     border: 0;
     font-size: 16px;
-    margin: 10px;
+    min-width: 180px;
+    
 }
     .dropdown-menu a:hover {
-        background-color: #1f4263;
+        background-color: #224f77;
     }
 
 
 @media only screen and (max-width: 1400px) {
     .dropdown-menu {
-        padding-left: 30px;
-        padding-top: 10px;
+        padding-left: 20px;
     }
         .dropdown-menu a:hover {
-            background-color: #224f77;
+            background-color: #1f4263;
         }
 }
+
+.profile-name-resp {
+    width: 100%;
+}
+
+@media only screen and (max-width: 1200px) {
+    .profile-name-resp {
+        width: 66.66%;
+    }
+}
+
+
