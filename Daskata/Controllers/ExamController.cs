@@ -110,6 +110,8 @@ namespace Daskata.Controllers
             return View(myExamsCollection);
         }
 
+        // Methods used in class: ExamController
+
         private async Task<Guid?> GetCurentUserId()
         {
             var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);

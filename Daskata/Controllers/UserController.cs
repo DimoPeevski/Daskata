@@ -148,6 +148,8 @@ namespace Daskata.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        // Methods used in class: UserController
+
         private async Task<string> GenerateUniqueUsernameAsync()
         {
             string username = string.Empty;

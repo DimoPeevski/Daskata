@@ -17,8 +17,6 @@ namespace Daskata.Controllers
 
         public ActionResult Index()
         {
-
-
             return View();
         }
 

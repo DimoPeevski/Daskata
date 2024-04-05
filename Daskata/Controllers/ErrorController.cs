@@ -32,6 +32,8 @@ namespace Daskata.Controllers
             return View("NotFound");
         }
 
+        // Methods used in class: ErrorController
+
         private async Task<Guid?> GetCurentUserId()
         {
             var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);

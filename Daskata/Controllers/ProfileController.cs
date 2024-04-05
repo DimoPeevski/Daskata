@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Controllers
 {
@@ -112,7 +111,7 @@ namespace Daskata.Controllers
             {
                 if (await UsernameExistsAsync(model.Username))
                 {
-                    ModelState.AddModelError("Username", "Потребителското име вече съществува.");
+                    ModelState.AddModelError("UsernameExists", "Потребителското име вече съществува.");
                     return View(model);
                 }
             }
@@ -125,7 +124,7 @@ namespace Daskata.Controllers
                     && model.Email != "no@email.xyz"
                     && model.Email != string.Empty)
                 {
-                    ModelState.AddModelError("Email", "E-mail адресът име вече съществува.");
+                    ModelState.AddModelError("EmailExists", "E-mail адресът име вече съществува.");
                     return View(model);
                 }
             }
@@ -137,7 +136,7 @@ namespace Daskata.Controllers
             {
                 if (await PhoneNumberExistsAsync(model.PhoneNumber!))
                 {
-                    ModelState.AddModelError("PhoneNumber", "Телефонът вече съществува.");
+                    ModelState.AddModelError("PhoneNumberExists", "Телефонът вече съществува.");
                     return View(model);
                 }
             }
@@ -210,6 +209,8 @@ namespace Daskata.Controllers
 
             return View(model);
         }
+
+        // Methods used in class: ProfileController
 
         private async Task<bool> UsernameExistsAsync(string username)
         {

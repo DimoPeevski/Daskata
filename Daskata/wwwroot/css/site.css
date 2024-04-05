@@ -98,10 +98,13 @@ body {
     border: solid 1px #171717;
     width: 65%;
     color: #171717;
+    font-weight: bold;
     padding-top: 6px;
     padding-bottom: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
     border-radius: 20px;
-    font-weight: bold;
+    text-align: center;
 }
 
     .button-connect:hover {

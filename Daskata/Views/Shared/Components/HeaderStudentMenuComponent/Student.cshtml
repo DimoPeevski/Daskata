@@ -2,10 +2,19 @@
     <li class="nav-item">
         <a class="nav-link text-white header-menu links-header-menu" asp-area="" asp-controller="Home" asp-action="Index">Моята дъска</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link text-white header-menu links-header-menu" asp-area="" asp-controller="Home" asp-action="Index">Библиотека</a>
+    <li class="nav-item dropdown">
+        <a class="nav-link text-white header-menu links-header-menu dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Библиотека</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item links-header-menu" asp-area="" asp-controller="Exam" asp-action="My">Моите изпити</a>
+            <a class="dropdown-item links-header-menu" href="#">Всички изпити</a>
+        </div>
     </li>
-    <li class="nav-item">
-        <a class="nav-link text-white header-menu links-header-menu" asp-area="" asp-controller="Exam" asp-action="History">История на изпити</a>
+    <li class="nav-item dropdown">
+        <a class="nav-link text-white header-menu links-header-menu dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">История</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item links-header-menu" href="#">Минали изпити</a>
+            <a class="dropdown-item links-header-menu" href="#">Дневник на оценки</a>
+        </div>
     </li>
 </ul>
+

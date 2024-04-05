@@ -26,47 +26,6 @@
 </div>
 
 @section Scripts {
-    <script>
-        // Show a notification after save, edit, etc...
-        function showNotification() {
-            var notification = document.getElementById("userEditedNotification");
-            notification.classList.add("show");
-
-            setTimeout(function () {
-                notification.classList.remove("show");
-            }, 1000);
-        }
-
-        var form = document.getElementById("editForm");
-
-        form.addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            showNotification();
-
-            setTimeout(function () {
-                form.submit();
-            }, 1000);
-        });
-    </script>
-
-    <script>
-        // Show a notification after save, edit, etc...
-        document.addEventListener('DOMContentLoaded', function () {
-            var examTitles = document.querySelectorAll('.exam-title');
-            var examDescriptions = document.querySelectorAll('.exam-description');
-
-            for (var i = 0; i < examTitles.length; i++) {
-                examTitles[i].textContent = truncateText(examTitles[i].textContent, 40);
-            }
-
-            for (var j = 0; j < examDescriptions.length; j++) {
-                examDescriptions[j].textContent = truncateText(examDescriptions[j].textContent, 137);
-            }
-        });
-
-        function truncateText(text, maxLength) {
-            return text.length > maxLength ? text.slice(0, maxLength - 3) + '...' : text;
-        }
-    </script>
+    <script src="~/js/post-notification.js"></script>
+    <script src="~/js/reduce-title-description.js"></script>
 }

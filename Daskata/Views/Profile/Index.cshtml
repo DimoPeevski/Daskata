@@ -36,7 +36,8 @@
                     <a class="btn btn-primary button-connect" id="connectButtonDesktop" href="#">Редактирай</a>
                 </div>
                 <div class="mb-2">
-                    <span class="profile-acc-username" id="username">@@@Model.Username</span>
+                    <span class="profile-acc-username" id="viewUserUsername">@@@Model.Username</span>
+                    <input type="hidden" id="loggedUserUsername" value="@loggedUser.UserName" />
                 </div>
                 <div class="mb-2">
                     <span class="profile-acc-username">@TranslateRoleInBG(roleName)</span>
@@ -63,22 +64,6 @@
     </div>
 </div>
 
-<script>
-    const usernameElement = document.getElementById('username');
-    const username = usernameElement.textContent.trim();
-
-    const connectButtonDesktop = document.getElementById('connectButtonDesktop');
-    const connectButtonMobile = document.getElementById('connectButtonMobile');
-
-    if (username === '@@@Model.Username') {
-        connectButtonDesktop.textContent = 'Редактирай';
-        connectButtonDesktop.href = '/Profile/Edit';
-        connectButtonMobile.textContent = 'Редактирай';
-        connectButtonMobile.href = '/Profile/Edit';
-    } else {
-        connectButtonDesktop.textContent = 'Свържете се!';
-        connectButtonDesktop.href = '#';
-        connectButtonMobile.textContent = 'Свържете се!';
-        connectButtonMobile.href = '#';
-    }
-</script>
+@section Scripts {
+    <script src="~/js/buttons-edit-connect.js"></script>
+}

@@ -31,7 +31,7 @@ namespace Daskata.Core.Shared
 
         public static string GenerateExamUrl()
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             StringBuilder sb = new StringBuilder();
 
             Random random = new Random();
@@ -40,7 +40,7 @@ namespace Daskata.Core.Shared
                 sb.Append(chars[random.Next(chars.Length)]);
             }
 
-            return sb.ToString();
+            return sb.ToString().TrimEnd();
         }
 
 
