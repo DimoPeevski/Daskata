@@ -52,7 +52,7 @@
             <a asp-controller="Profile" asp-action="Index">Моят профил</a>
             <a href="#">Съобщения</a>
             <a href="#">Регистрър</a>
-            <a asp-controller="User" asp-action="Logout" id="logoutLink">Изход</a>
+            <a asp-controller="User" asp-action="Logout" id="logoutLinkDesktop">Изход</a>
         </div>
     </div>
 </div>
@@ -75,10 +75,11 @@
 
 <script>
     //Logout confirm
-    document.getElementById("logoutLink").addEventListener("click", function (event) {
-        event.preventDefault();
-        if (confirm("Ще излезете от профила си.")) {
-            window.location.href = this.href;
-        }
+    document.addEventListener("DOMContentLoaded", function () {
+        var logoutButton = document.getElementById("logoutLinkDesktop");
+
+        logoutButton.addEventListener("click", function () {
+            alert("Ще излезете от профила си!");
+        });
     });
 </script>
