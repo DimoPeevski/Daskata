@@ -67,7 +67,7 @@ namespace Daskata.Controllers
 
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("loginError", signInErrorMessage);
+                ModelState.AddModelError("", signInErrorMessage);
 
                 return View(model);
             }

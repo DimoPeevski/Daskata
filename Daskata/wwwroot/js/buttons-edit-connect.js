@@ -1,4 +1,4 @@
-﻿//Edit or connect bottons difference
+﻿//Edit or connect bottons difference on self profile page
 document.addEventListener('DOMContentLoaded', function () {
     var viewUserUsername = document.getElementById('viewUserUsername').innerText.trim();
     var loggedUserUsername = '@' + document.getElementById('loggedUserUsername').value;
@@ -15,8 +15,3 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('connectButtonMobile').setAttribute('href', '#');
     }
 });
-
-
-
-
-

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Daskata.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly SignInManager<UserProfile> _signInManager;
@@ -26,7 +27,6 @@ namespace Daskata.Controllers
             _logger = logger;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -39,13 +39,44 @@ namespace Daskata.Controllers
                 LastName = loggedUser.LastName,
                 PhoneNumber = loggedUser.PhoneNumber,
                 AdditionalInfo = loggedUser.AdditionalInfo,
-                ProfilePictureUrl = loggedUser.ProfilePictureUrl
+                ProfilePictureUrl = loggedUser.ProfilePictureUrl,
+                School = loggedUser.School,
+                RegistrationDate = loggedUser.RegistrationDate.ToString(),
+                Location = loggedUser.Location,
             };
 
             return View(model);
         }
 
-        [Authorize]
+        [Route("/Profile/Preview/{username}")]
+        [HttpGet]
+        public async Task<IActionResult> Preview (string username)
+        {
+            var currentUser = await _userManager.FindByNameAsync(username);
+
+            if (currentUser == null)
+            {
+                TempData["ErrorMessage"] = "Профил с това потребителско име не съществува";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var model = new UserProfileModel
+            {
+                Username = currentUser!.UserName!,
+                Email = currentUser.Email!,
+                FirstName = currentUser.FirstName,
+                LastName = currentUser.LastName,
+                PhoneNumber = currentUser.PhoneNumber,
+                AdditionalInfo = currentUser.AdditionalInfo,
+                ProfilePictureUrl = currentUser.ProfilePictureUrl,
+                School = currentUser.School,
+                RegistrationDate = currentUser.RegistrationDate.ToString(),
+                Location = currentUser.Location,
+            };
+
+            return View(model);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Edit()
         {
@@ -66,7 +97,6 @@ namespace Daskata.Controllers
             return View(model);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserFormModel model)
         {
@@ -154,7 +184,6 @@ namespace Daskata.Controllers
             return RedirectToAction("Index", "Profile");
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {
@@ -167,7 +196,6 @@ namespace Daskata.Controllers
             return View(model);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
@@ -197,7 +225,6 @@ namespace Daskata.Controllers
             return RedirectToAction("Index", "Profile");
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> PersonalData()
         {

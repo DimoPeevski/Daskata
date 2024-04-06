@@ -8,8 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using static Daskata.Core.Shared.Methods;
 
+
 namespace Daskata.Controllers
 {
+    [Authorize]
     public class ExamController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -28,13 +30,38 @@ namespace Daskata.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        [Authorize]
+        [Route("/Exam/Preview/{examUrl}")]
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Preview(string ExamUrl)
         {
-            var loggedUser = await _userManager.GetUserAsync(User);
+            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == ExamUrl);
 
-            var model = new CreateExamFormModel()
+            if (currentExam == null)
+            {
+                return RedirectToAction("My", "Exam");
+            }
+
+            var examPreview = new FullExamViewModel
+            {
+                Title = currentExam.Title,
+                Description = currentExam.Description,
+                TotalPoints = currentExam.TotalPoints,
+                Duration = currentExam.Duration,
+                CreationDate = currentExam.CreationDate,
+                CreatedByUserId = currentExam.CreatedByUserId,
+                LastModifiedDate = currentExam.LastModifiedDate,
+                IsPublished = currentExam.IsPublished,
+
+            };
+
+            return View(examPreview);
+        }
+
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var model = new FullExamViewModel()
             {
                 Title = string.Empty,
                 Description = string.Empty,
@@ -45,9 +72,9 @@ namespace Daskata.Controllers
             return View(model);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpPost]
-        public async Task<IActionResult> Create(CreateExamFormModel model)
+        public async Task<IActionResult> Create(FullExamViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -80,7 +107,7 @@ namespace Daskata.Controllers
             return RedirectToAction("My", "Exam");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpGet]
         public async Task<IActionResult> My()
         {
@@ -96,14 +123,16 @@ namespace Daskata.Controllers
                 .ToListAsync();
 
             var myExamsCollection = myExams
-                .Select(e => new ExamCollectionViewModel
+                .Select(e => new PartialExamViewModel
                 {
                     Title = e.Title,
                     Description = e.Description,
                     Duration = e.Duration,
                     TotalPoints = e.TotalPoints,
                     IsPublished = e.IsPublished,
-                    CreationDate = e.CreationDate
+                    CreationDate = e.CreationDate,
+                    ExamUrl = e.ExamUrl,
+                    CreatedByUserId = e.CreatedByUserId
 
                 }).ToList();
 

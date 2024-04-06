@@ -8,13 +8,12 @@
 
 @{
     var loggedUser = await _userManager.GetUserAsync(User);
-    var userRolesNames = await _userManager.GetRolesAsync(loggedUser!);
     var loggedUserId = loggedUser?.Id.ToString();
-
-    var roleName = userRolesNames.FirstOrDefault() ?? "None";
+    var userRolesNames = await _userManager.GetRolesAsync(loggedUser!);
 
     var userFirstName = loggedUser?.FirstName ?? "Име";
     var userLastName = loggedUser?.LastName ?? "Фамилия";
+    var roleName = userRolesNames.FirstOrDefault() ?? "None";
 }
 
 <div class="navbar-nav">

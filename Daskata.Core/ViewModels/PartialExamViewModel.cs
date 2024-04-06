@@ -3,7 +3,7 @@ using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Core.ViewModels
 {
-    public class ExamCollectionViewModel
+    public class PartialExamViewModel
     {
         [Required]
         [StringLength(ExamTitleLenghtMax, MinimumLength = ExamTitleLenghtMin,
@@ -31,5 +31,11 @@ namespace Daskata.Core.ViewModels
         [Required]
         [Display(Name = " ")]
         public DateTime CreationDate { get; set; }
+
+        [Display(Name = " ")]
+        public string ExamUrl { get; set; } = null!;
+
+        [Display(Name = " ")]
+        public Guid CreatedByUserId { get; set; }
     }
 }

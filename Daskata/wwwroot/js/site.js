@@ -1,8 +1,8 @@
-﻿/* *********************************************************************
- * Author: Dimo Peevski                                                *
- * Version: 1.0                                                        *
- * Date: 02.04.2024                                                    *
- * *********************************************************************/
+﻿/* ************************************************************************
+ * Author: Dimo Peevski                                                   *
+ * Version: 1.0                                                           *
+ * Date: 01.03.2024                                                       *
+ * ************************************************************************/
 
 //Logout notification pop-up desktop
 document.addEventListener("DOMContentLoaded", function () {
@@ -52,3 +52,4 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+

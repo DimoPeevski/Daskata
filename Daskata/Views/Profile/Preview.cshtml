@@ -6,12 +6,12 @@
 
 @{
     ViewData["Title"] = "Профил";
-
     var loggedUser = await _userManager.GetUserAsync(User);
-    var userRolesNames = await _userManager.GetRolesAsync(loggedUser!);
+    var currentUser = await _userManager.FindByNameAsync(Model.Username);
+    var userRolesNames = await _userManager.GetRolesAsync(currentUser!);
     var roleName = userRolesNames.FirstOrDefault();
 
-    var modifiedDate = @Model.RegistrationDate.ToString();
+    var modifiedDate = Model.RegistrationDate.ToString();
     var formattedRegistrationDate = GetRegistrationMonthYearAsText(modifiedDate);
 }
 
@@ -25,8 +25,12 @@
                 <div class="col profile-name-resp">
                     <span class="profile-acc-name">@Model.FirstName @Model.LastName</span>
                 </div>
-                <div class="col-md-4 text-end mt-2 mb-2 profile-button-resp-desktop">
-                    <a class="btn btn-primary button-connect" id="connectButtonDesktop" href="#">Свържете се!</a>
+                <div class="col-md-8 text-end mt-2 mb-2 profile-button-resp-desktop d-flex justify-content-end">
+                    @if (loggedUser != currentUser)
+                    {
+                        <a class="btn btn-primary button-connect me-2" href="#">Съобщение</a>
+                    }
+                    <a class="btn btn-primary button-connect" id="connectButtonDesktopPreview" href="#">Свържете се!</a>
                 </div>
                 <div class="mb-2">
                     <span class="profile-acc-username" id="viewUserUsername">@@@Model.Username</span>
@@ -35,20 +39,26 @@
                 <div class="mb-2">
                     <span class="profile-acc-username">@TranslateRoleInBG(roleName!)</span>
                 </div>
-                <div class="col-md-4 text-end mt-4 mb-4 profile-button-resp-mobile">
-                    <a class="btn btn-primary button-connect" id="connectButtonMobile" href="#">Свържете се!</a>
+                <div class="col-md-4 text-end mt-4 mb-2 profile-button-resp-mobile">
+                    <a class="btn btn-primary button-connect" id="connectButtonMobilePreview" href="#">Свържете се!</a>
                 </div>
+                @if (loggedUser != currentUser)
+                {
+                    <div class="col-md-4 text-end mt-2 mb-4 profile-button-resp-mobile">
+                        <a class="btn btn-primary button-connect" href="#">Съобщение</a>
+                    </div>
+                }
                 <div class="mb-4 mt-2">
                     <span class="profile-acc-info">@Model.AdditionalInfo</span>
                 </div>
                 <div class="row">
                     @if (@Model.School != string.Empty && @Model.School != null)
                     {
-                        <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/school.png" alt="Моето училище"> @loggedUser!.School</div></div>
+                        <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/school.png" alt="Моето училище"> @currentUser!.School</div></div>
                     }
                     @if (@Model.Location != string.Empty && @Model.Location != null)
                     {
-                        <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/location.png" alt="Моята локация"> @loggedUser!.Location</div></div>
+                        <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/location.png" alt="Моята локация"> @currentUser!.Location</div></div>
                     }
                     <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/calendar.png" alt="Дата на присъединяване"> Регистриран @formattedRegistrationDate</div></div>
                 </div>
@@ -58,5 +68,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/buttons-edit-connect.js"></script>
+    <script src="~/js/buttons-preview-connect.js"></script>
 }

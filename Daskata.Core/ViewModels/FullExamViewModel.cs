@@ -4,7 +4,7 @@ using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Core.ViewModels
 {
-    public class CreateExamFormModel
+    public class FullExamViewModel
     {
         [Key]
         public Guid Id { get; set; }
