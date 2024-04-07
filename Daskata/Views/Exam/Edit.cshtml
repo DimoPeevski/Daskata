@@ -1,12 +1,12 @@
 ﻿@model Daskata.Core.ViewModels.FullExamViewModel
 
 @{
-    ViewData["Title"] = "Създаване на изпит";
+    ViewData["Title"] = "Редакция на изпит";
 }
 
 <div class="home-container-column">
     <div class="row">
-        <h2 class="page-title mb-5">Създай нов изпит</h2>
+        <h2 class="page-title mb-5">Редакция на изпит</h2>
         <div class="col-md-12 p-3">
             <form class="row g-3 mt-0" id="editForm" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -36,8 +36,8 @@
                 </div>
 
                 <div class="col-12 mt-4">
-                    <button type="submit" class="btn btn-primary button-login">Създай</button>
-                    <div id="userEditedNotification" class="user-edited-notification">Създаване...</div>
+                    <button type="submit" class="btn btn-primary button-login">Редактирай</button>
+                    <div id="userEditedNotification" class="user-edited-notification">Обновяване...</div>
                 </div>
             </form>
         </div>

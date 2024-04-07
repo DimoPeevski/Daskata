@@ -51,6 +51,7 @@ namespace Daskata.Controllers
                 CreatedByUserId = currentExam.CreatedByUserId,
                 LastModifiedDate = currentExam.LastModifiedDate,
                 IsPublished = currentExam.IsPublished,
+                ExamUrl = currentExam.ExamUrl,
 
             };
 
@@ -103,8 +104,56 @@ namespace Daskata.Controllers
             await _context.Exams.AddAsync(exam);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("The exam was created successfully");
+            _logger.LogInformation("The exam was created successfully.");
             return RedirectToAction("My", "Exam");
+        }
+
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [Route("/Exam/Preview/{examUrl}/Edit")]
+        [HttpGet]
+        public async Task<IActionResult> Edit(string ExamUrl)
+        {
+            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == ExamUrl);
+            var model = new FullExamViewModel()
+            {
+                Title = currentExam!.Title,
+                Description = currentExam.Description,
+                TotalPoints = currentExam.TotalPoints,
+                Duration = currentExam.Duration,
+                LastModifiedDate = currentExam.LastModifiedDate,
+                ExamUrl = ExamUrl
+            };
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [Route("/Exam/Preview/{examUrl}/Edit")]
+        [HttpPost]
+        public async Task<IActionResult> Edit(FullExamViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var exam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == model.ExamUrl);
+
+            exam.Title = model.Title;
+            exam.Description = model.Description;
+            exam.TotalPoints = model.TotalPoints;
+            exam.Duration = model.Duration;
+            exam.LastModifiedDate = DateTime.Now;
+
+            if (exam.Description == null)
+            {
+                exam.Description = string.Empty;
+            }
+
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("The exam was edited successfully.");
+            return RedirectToAction("Preview", "Exam", new { examUrl = model.ExamUrl });
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]

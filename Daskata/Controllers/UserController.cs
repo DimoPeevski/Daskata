@@ -11,6 +11,7 @@ using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Controllers
 {
+
     public class UserController : Controller
     {
         private readonly SignInManager<UserProfile> _signInManager;

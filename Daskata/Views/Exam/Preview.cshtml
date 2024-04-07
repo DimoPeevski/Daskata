@@ -22,18 +22,19 @@
                     <p class="m-0">Последна промяна: @GetRegistrationMonthYearAsNumbers(Model.LastModifiedDate.ToString())</p>
                 </div>
                 <div class="col-md-6 mb-5">
-                    <p class="m-0">Статус: <span style="color: @(Model.IsPublished ? "green" : "red")"> @(Model.IsPublished ? "Активен" : "Чернова") </span> </p>                    <p class="m-0">Максимален брой точки: @Model.TotalPoints</p>
+                    <p class="m-0">Статус: <span style="color: @(Model.IsPublished ? "green" : "red")"> @(Model.IsPublished ? "Активен" : "Чернова") </span></p>
+                    <p class="m-0">Максимален брой точки: @Model.TotalPoints</p>
                     <p class="m-0">Продължителност: @FormatTimeSpanAsMinutes(@Model.Duration)</p>
                 </div>
             </div>
             <div class="exam-preview-button">
-                <a asp-area="" asp-controller="Exam" asp-action="Create" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Редактирай описание</a>
+                <a href="/Exam/Preview/@Model.ExamUrl/Edit" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Редактирай описание</a>
             </div>
             <div class ="exam-preview-button">
-                <a asp-area="" asp-controller="User" asp-action="Register" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Редактирай въпроси</a>
+                <a asp-area="" asp-controller="Exam" asp-action="Questions" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Редактирай въпроси</a>
             </div>
             <div class="exam-preview-button">
-                <a asp-area="" asp-controller="User" asp-action="Register" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Изпрати до ученик</a>
+                <a asp-area="" asp-controller="Exam" asp-action="Asign" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Изпрати до ученик</a>
             </div>
         </div>
     </div>
