@@ -46,7 +46,7 @@ namespace Daskata.Controllers
                 Title = currentExam.Title,
                 Description = currentExam.Description,
                 TotalPoints = currentExam.TotalPoints,
-                Duration = currentExam.Duration,
+                Duration = (int)currentExam.Duration.TotalMinutes,
                 CreationDate = currentExam.CreationDate,
                 CreatedByUserId = currentExam.CreatedByUserId,
                 LastModifiedDate = currentExam.LastModifiedDate,
@@ -62,12 +62,13 @@ namespace Daskata.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+
             var model = new FullExamViewModel()
             {
                 Title = string.Empty,
                 Description = string.Empty,
-                TotalPoints = 120,
-                Duration = TimeSpan.FromMinutes(60),
+                Duration = 30,
+                TotalPoints = 60,
             };
 
             return View(model);
@@ -82,13 +83,15 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
+            TimeSpan duration = TimeSpan.FromMinutes(model.Duration);
+
             Exam exam = new()
             {
                 Id = model.Id,
                 Title = model.Title,
                 Description = model.Description,
                 TotalPoints = model.TotalPoints,
-                Duration = model.Duration,
+                Duration = duration,
                 CreationDate = DateTime.Now,
                 LastModifiedDate = DateTime.Now,
                 IsPublished = false,
@@ -109,18 +112,20 @@ namespace Daskata.Controllers
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
-        [Route("/Exam/Preview/{examUrl}/Edit")]
+        [Route("/Exam/Preview/@{examUrl}/Edit")]
         [HttpGet]
         public async Task<IActionResult> Edit(string ExamUrl)
         {
             var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == ExamUrl);
+
             var model = new FullExamViewModel()
             {
                 Title = currentExam!.Title,
                 Description = currentExam.Description,
                 TotalPoints = currentExam.TotalPoints,
-                Duration = currentExam.Duration,
+                Duration = (int)currentExam.Duration.TotalHours,
                 LastModifiedDate = currentExam.LastModifiedDate,
+                IsPublished = currentExam.IsPublished,
                 ExamUrl = ExamUrl
             };
 
@@ -128,7 +133,7 @@ namespace Daskata.Controllers
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
-        [Route("/Exam/Preview/{examUrl}/Edit")]
+        [Route("/Exam/Preview/@{examUrl}/Edit")]
         [HttpPost]
         public async Task<IActionResult> Edit(FullExamViewModel model)
         {
@@ -139,11 +144,14 @@ namespace Daskata.Controllers
 
             var exam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == model.ExamUrl);
 
-            exam.Title = model.Title;
+            TimeSpan duration = TimeSpan.FromMinutes(model.Duration);
+
+            exam!.Title = model.Title;
             exam.Description = model.Description;
             exam.TotalPoints = model.TotalPoints;
-            exam.Duration = model.Duration;
+            exam.Duration = duration;
             exam.LastModifiedDate = DateTime.Now;
+            exam.IsPublished = model.IsPublished;
 
             if (exam.Description == null)
             {
@@ -156,7 +164,6 @@ namespace Daskata.Controllers
             return RedirectToAction("Preview", "Exam", new { examUrl = model.ExamUrl });
         }
 
-        [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpGet]
         public async Task<IActionResult> My()
         {
@@ -186,6 +193,29 @@ namespace Daskata.Controllers
                 }).ToList();
 
             return View(myExamsCollection);
+        }
+
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [HttpGet]
+        public async Task<IActionResult> All()
+        {
+            var allExams = await _context.Exams.ToListAsync();
+
+            var allExamsCollection = allExams
+                .Select(e => new PartialExamViewModel
+                {
+                    Title = e.Title,
+                    Description = e.Description,
+                    Duration = e.Duration,
+                    TotalPoints = e.TotalPoints,
+                    IsPublished = e.IsPublished,
+                    CreationDate = e.CreationDate,
+                    ExamUrl = e.ExamUrl,
+                    CreatedByUserId = e.CreatedByUserId
+
+                }).ToList();
+
+            return View(allExamsCollection);
         }
 
         // Methods used in class: ExamController

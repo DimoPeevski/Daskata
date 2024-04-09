@@ -52,13 +52,13 @@
                     <span class="profile-acc-info">@Model.AdditionalInfo</span>
                 </div>
                 <div class="row">
-                    @if (@Model.School != string.Empty && @Model.School != null)
+                    @if (!String.IsNullOrEmpty(@Model.School))
                     {
-                        <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/school.png" alt="Моето училище"> @currentUser!.School</div></div>
+                        <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/school.png" alt="Училище"> @currentUser!.School</div></div>
                     }
-                    @if (@Model.Location != string.Empty && @Model.Location != null)
+                    @if (!String.IsNullOrEmpty(@Model.Location))
                     {
-                        <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/location.png" alt="Моята локация"> @currentUser!.Location</div></div>
+                        <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/location.png" alt="Локация"> @currentUser!.Location</div></div>
                     }
                     <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/calendar.png" alt="Дата на присъединяване"> Регистриран @formattedRegistrationDate</div></div>
                 </div>

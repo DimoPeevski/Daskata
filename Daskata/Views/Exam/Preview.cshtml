@@ -17,14 +17,14 @@
             <p class="mb-5">@Model.Description</p>
             <div class="row">
                 <div class="col-md-6">
-                    <p class="m-0">Автор: <span style="cursor: pointer; color: #0093f5" onclick="previewUserProfile('@CreatedByUser!.UserName')">@@@CreatedByUser.UserName</span></p>
+                    <p class="m-0">Автор: <span style="cursor: pointer; color: #0767a3;" onclick="previewUserProfile('@CreatedByUser!.UserName')">@@@CreatedByUser.UserName</span></p>
                     <p class="m-0">Създаден на дата: @GetRegistrationMonthYearAsNumbers(Model.CreationDate.ToString())</p>
                     <p class="m-0">Последна промяна: @GetRegistrationMonthYearAsNumbers(Model.LastModifiedDate.ToString())</p>
                 </div>
                 <div class="col-md-6 mb-5">
-                    <p class="m-0">Статус: <span style="color: @(Model.IsPublished ? "green" : "red")"> @(Model.IsPublished ? "Активен" : "Чернова") </span></p>
+                    <p class="m-0">Статус: <span style="color: @(Model.IsPublished ? "green" : "red");"> @(Model.IsPublished ? "Активен" : "Чернова") </span></p>
                     <p class="m-0">Максимален брой точки: @Model.TotalPoints</p>
-                    <p class="m-0">Продължителност: @FormatTimeSpanAsMinutes(@Model.Duration)</p>
+                    <p class="m-0">Продължителност: @Model.Duration</p>
                 </div>
             </div>
             <div class="exam-preview-button">

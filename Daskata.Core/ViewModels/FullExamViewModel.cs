@@ -22,7 +22,7 @@ namespace Daskata.Core.ViewModels
 
         [Required]
         [Display(Name = " ")]
-        public TimeSpan Duration { get; set; }
+        public int Duration { get; set; }
 
         [Required]
         [Display(Name = " ")]

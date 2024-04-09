@@ -1,0 +1,96 @@
+﻿@using Daskata.Infrastructure.Data
+@using Microsoft.AspNetCore.Identity
+@using Daskata.Infrastructure.Data.Models
+@using Microsoft.EntityFrameworkCore
+@inject UserManager<UserProfile> _userManager
+@model Daskata.Core.ViewModels.EditUserFormModel
+
+@{
+    var loggedUser = await _userManager.GetUserAsync(User);
+}
+
+<div class="home-container-column">
+    <div class="row">
+        <div class="col-md-4 text-md-center mt-4">
+            <label for="profilePicture" style="cursor: pointer;">
+                <img id="profileImage" src="@Model.ProfilePictureUrl" class="profile-pic-edit" alt="Снимка на профила" />
+                <input type="file" id="profilePicture" style="display: none;" accept="image/*" />
+            </label>
+
+            @if (@Model.Username == loggedUser.UserName)
+            {
+                <div class="mt-4">
+                    <a class="nav-link profile-menu links-profile-menu" asp-area="" asp-controller="Profile" asp-action="ChangePassword">Промени парола</a>
+                    <a class="nav-link profile-menu links-profile-menu" asp-area="" asp-controller="Profile" asp-action="PersonalData">Лични данни</a>
+                </div>
+            }
+
+        </div>
+        <div class="col-md-8">
+            <form class="row g-3 mt-0" id="editForm" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ProfilePictureUrl" id="profilePictureUrl" />
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FirstName" class="form-label" style="font-size: 15px;">Име</label>
+                            <input asp-for="FirstName" class="form-control profile-edit-input" aria-required="true" placeholder="Име" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="LastName" class="form-label" style="font-size: 15px;">Фамилия</label>
+                            <input asp-for="LastName" class="form-control profile-edit-input" aria-required="true" placeholder="Фалимия" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Username" class="form-label" style="font-size: 15px;">Потребителско име</label>
+                    <input asp-for="Username" class="form-control profile-edit-input" aria-required="true" placeholder="Потребителско име" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Email" class="form-label" style="font-size: 15px;">Email</label>
+                    <input asp-for="Email" class="form-control profile-edit-input" aria-required="true" placeholder="Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="PhoneNumber" class="form-label" style="font-size: 15px;">Телефон</label>
+                    <input asp-for="PhoneNumber" class="form-control profile-edit-input" aria-required="false" placeholder="" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="School" class="form-label" style="font-size: 15px;">Учебно заведение</label>
+                            <input asp-for="School" class="form-control profile-edit-input" aria-required="false" placeholder="пр. ОУ 'Иван Вазов'" />
+                            <span asp-validation-for="School" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Location" class="form-label" style="font-size: 15px;">Местоположение</label>
+                            <input asp-for="Location" class="form-control profile-edit-input" aria-required="false" placeholder="град, държава" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label asp-for="AdditionalInfo" class="form-label" style="font-size: 15px;">Допълнителна информация</label>
+                    <textarea asp-for="AdditionalInfo" class="form-control profile-edit-input" rows="4" aria-required="false" placeholder="биография, специализации и др."></textarea>
+                    <span asp-validation-for="AdditionalInfo" class="text-danger"></span>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary button-login mb-3">Запази</button>
+                    <div id="userEditedNotification" class="user-edited-notification">Актуализиране...</div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

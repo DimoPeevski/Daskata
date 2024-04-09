@@ -80,7 +80,6 @@ body {
         flex: none;
         width: 100%;
         padding: 20px;
-        //margin-top: 30px;
     }
 
     .right-home-box {
@@ -138,7 +137,7 @@ body {
     }
 
 .exam-preview-button {
-    margin-top:10px;
+    margin-top: 10px;
 }
 
 .button-create-user {
@@ -151,12 +150,12 @@ body {
     font-size: 15px;
     color: #fafafa;
     text-shadow: 1px 1px 1px rgba(23, 23, 23, 0.5);
+    margin: 10px;
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 8px;
     padding-bottom: 8px;
     margin-left: 15px;
-    margin: 10px;
 }
 
     .button-create-user:hover {
@@ -173,17 +172,61 @@ body {
     font-size: 15px;
     color: #fafafa;
     text-shadow: 1px 1px 1px rgba(23, 23, 23, 0.5);
+    margin: 10px;
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 8px;
     padding-bottom: 8px;
     margin-left: 15px;
-    margin: 10px;
 }
+
 
     .button-create-test:hover {
         background-color: #4d81b0;
     }
+
+.button-profile-edit {
+    background-color: #366793;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-size: 15px;
+    color: #fafafa;
+    text-shadow: 1px 1px 1px rgba(23, 23, 23, 0.5);
+    margin: 10px;
+    padding-left: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.button-profile-edit:hover {
+    background-color: #4d81b0;
+}
+
+.button-profile-delete {
+    background-color: rgba(242, 85, 96, 1);
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-size: 15px;
+    color: #fafafa;
+    text-shadow: 1px 1px 1px rgba(23, 23, 23, 0.5);
+    margin: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.button-profile-delete:hover {
+    background-color: #f56c74;
+}
 
 .header-menu {
     font-weight: bold;
@@ -498,10 +541,35 @@ span.validation-labels {
     }
 }
 
+.profile-container-info-network {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(250, 250, 250, 0.9);
+    padding: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    min-height: 200px;
+    box-shadow: 0 0px 7px rgba(0, 0, 0, 0.3);
+}
+
+@media only screen and (max-width: 600px) {
+    .profile-container-info-network {
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 15px;
+    }
+}
+
 span.profile-acc-name {
     font-size: 32px;
     color: #010101;
-    font-weight: bold;;
+    font-weight: bold;
 }
 
 @media only screen and (max-width: 600px) {
@@ -649,8 +717,8 @@ div.profile-box {
     border: 0;
     font-size: 16px;
     min-width: 180px;
-    
 }
+
     .dropdown-menu a:hover {
         background-color: #224f77;
     }
@@ -661,6 +729,7 @@ div.profile-box {
         padding-left: 20px;
         margin-top: 0px;
     }
+
         .dropdown-menu a:hover {
             background-color: #1f4263;
         }
@@ -676,4 +745,33 @@ div.profile-box {
     }
 }
 
+.profile-box-network {
+    display: flex;
+    position: relative;
+    padding: 8px;
+    align-self: flex-start;
+    background-color: #fff;
+    background-image: linear-gradient(to bottom, #ffffff, #f8fcff);
+    border-radius: 8px;
+    box-shadow: 0 0px 6px rgba(54, 103, 147, 0.2);
+}
 
+.profile-card-link {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+.profile-items {
+    display: flex;
+    justify-content: space-between;
+}
+
+#leftSide {
+    flex: 90;
+}
+
+#profileButtons {
+    flex: 10;
+}

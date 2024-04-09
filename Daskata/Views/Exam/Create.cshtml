@@ -6,20 +6,20 @@
 
 <div class="home-container-column">
     <div class="row">
-        <h2 class="page-title mb-5">Създай нов изпит</h2>
+        <h2 class="page-title mb-5">Създаване на изпит</h2>
         <div class="col-md-12 p-3">
             <form class="row g-3 mt-0" id="editForm" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="col-md-8 mb-3">
+                <div class="col-md-7 mb-3">
                     <label asp-for="Title" class="form-label" style="font-size: 15px;">Заглавие</label>
                     <input asp-for="Title" class="form-control profile-edit-input" aria-required="true" placeholder="" />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-2 mb-3">
-                    <label asp-for="Duration" class="form-label" style="font-size: 15px;">Продължителност</label>
-                    <input asp-for="Duration" class="form-control profile-edit-input" aria-required="true" placeholder="" />
+                    <label asp-for="Duration" class="form-label" style="font-size: 15px;">Време /мин/</label>
+                    <input asp-for="Duration" type="number"  class="form-control profile-edit-input" aria-required="true" placeholder="" />
                     <span asp-validation-for="Duration" class="text-danger"></span>
                 </div>
 
@@ -28,6 +28,15 @@
                     <input asp-for="TotalPoints" class="form-control profile-edit-input" aria-required="true" placeholder="" />
                     <span asp-validation-for="TotalPoints" class="text-danger"></span>
                 </div>
+                <div class="col-md-1 mb-3">
+                    <label asp-for="IsPublished" class="form-label" style="font-size: 15px;">Активен?</label>
+                    <select asp-for="IsPublished" class="form-control profile-edit-input" aria-required="true">
+                        <option value="false">Не</option>
+                        <option value="true">Да</option>
+                    </select>
+                    <span asp-validation-for="TotalPoints" class="text-danger"></span>
+                </div>
+
 
                 <div class="col-md-12 mb-6">
                     <label asp-for="Description" class="form-label" style="font-size: 15px;">Описание</label>

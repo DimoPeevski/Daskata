@@ -237,6 +237,7 @@ namespace Daskata.Controllers
             return View(model);
         }
 
+
         // Methods used in class: ProfileController
 
         private async Task<bool> UsernameExistsAsync(string username)

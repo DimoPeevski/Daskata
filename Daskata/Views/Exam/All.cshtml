@@ -1,0 +1,31 @@
+﻿@using static Daskata.Core.Shared.Methods;
+@model List<PartialExamViewModel>
+
+@{
+
+    ViewData["Title"] = "Всички изпити";
+}
+
+<div class="home-container-column">
+    <div class="row">
+        <h2 class="page-title mb-5">Всички изпити на платформата</h2>
+        @foreach (var exam in Model)
+        {
+            <div class="exam-box" onclick="previewExam('@exam.ExamUrl')">
+                <div class="exam-status @(exam.IsPublished ? "active" : "non-active")" onclick="@exam.ExamUrl)"></div>
+                <p><span class="exam-title">@exam.Title</span></p>
+                <p><span class="exam-description">@exam.Description</span></p>
+                <div class="exam-box-inner">
+                    <div class="exam-box-sub"><span class="exam-sub-text">⌛ @FormatTimeSpanAsMinutes(exam.Duration)</span></div>
+                    <div class="exam-box-sub"><span class="exam-sub-text">✍️ @exam.TotalPoints т.</span></div>
+                    <div class="exam-box-sub"><span class="exam-sub-text">📅 @GetRegistrationMonthYearAsNumbers(exam.CreationDate.ToString())</span></div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/reduce-title-description.js"></script>
+    <script src="~/js/preview-id-fetch.js"></script>
+}
