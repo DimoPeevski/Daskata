@@ -54,15 +54,13 @@ namespace Daskata.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string username)
         {
-            var loggedUser = await _userManager.GetUserAsync(User);
+           var userToEdit = await _context.Users
+                .FirstOrDefaultAsync(u => u.UserName == username);
 
-            if (loggedUser == null)
+            if (userToEdit == null)
             {
                 return NotFound();
             }
-
-            var userToEdit = await _context.Users
-                .FirstOrDefaultAsync(u => u.UserName == username && u.CreatedByUserId == loggedUser.Id);
 
             var model = new EditUserFormModel
             {
@@ -80,11 +78,11 @@ namespace Daskata.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        
         [Route("/Network/@{username}/Edit")]
+        [HttpPost]
         public async Task<IActionResult> Edit(EditUserFormModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -159,39 +157,73 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
+            await _context.SaveChangesAsync();
+
             _logger.LogInformation($"User with id {userUnderEdit.Id} was edited.");
 
             return RedirectToAction("My", "Network");
         }
 
-        [Route("/Network/@{username}/Edit")]
+        [Route("/Network/@{username}/Delete")]
         [HttpGet]
         public async Task<IActionResult> Delete(string username)
         {
-            var loggedUser = await _userManager.GetUserAsync(User);
+            var userToDelete = await _context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == username);
 
-            if (loggedUser == null)
+
+            if (userToDelete == null)
             {
                 return NotFound();
             }
 
-            var userToEdit = await _context.Users
-                .FirstOrDefaultAsync(u => u.UserName == username && u.CreatedByUserId == loggedUser.Id);
-
-            var model = new EditUserFormModel
+            var model = new UserProfileModel
             {
-                Username = userToEdit.UserName,
-                Email = userToEdit.Email,
-                FirstName = userToEdit.FirstName,
-                LastName = userToEdit.LastName,
-                PhoneNumber = userToEdit.PhoneNumber,
-                AdditionalInfo = userToEdit.AdditionalInfo,
-                ProfilePictureUrl = userToEdit.ProfilePictureUrl,
-                Location = userToEdit.Location,
-                School = userToEdit.School
+                FirstName = userToDelete.FirstName,
+                LastName = userToDelete.LastName,
+                Username = userToDelete.UserName!,
+                ProfilePictureUrl = userToDelete.ProfilePictureUrl,
+                School = userToDelete.School,
+                Location = userToDelete.Location,
+                PhoneNumber = userToDelete.PhoneNumber,
+                RegistrationDate = userToDelete.RegistrationDate.ToString(),
+                Email = userToDelete.Email!
             };
 
             return View(model);
+        }
+
+        [Route("/Network/@{username}/Delete")]
+        [HttpPost]
+        public async Task<IActionResult> Delete(UserProfileModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userUnderDelete = await _context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == model.Username);
+
+            userUnderDelete!.FirstName = model.FirstName;
+            userUnderDelete.LastName = model.LastName;
+            userUnderDelete.ProfilePictureUrl = "/lib/profile-pictures/default-profile-image.png";
+            userUnderDelete.AdditionalInfo = string.Empty;
+            userUnderDelete.School = string.Empty;
+            userUnderDelete.Location = string.Empty;         
+            userUnderDelete.PhoneNumber = string.Empty;
+
+            userUnderDelete.UserName = model.Username;
+            userUnderDelete.Email = "no@email.xyz";
+            userUnderDelete.IsActive = false;
+
+            var result = await _userManager.UpdateAsync(userUnderDelete);
+            if (!result.Succeeded)
+            {
+                return View(model);
+            }
+
+            _logger.LogInformation($"User with id {userUnderDelete.Id} was delete (marked as inactive).");
+
+            return RedirectToAction("My", "Network");
         }
 
         // Methods used in class: NetworkController

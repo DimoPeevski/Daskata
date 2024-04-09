@@ -112,7 +112,7 @@ namespace Daskata.Controllers
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
-        [Route("/Exam/Preview/@{examUrl}/Edit")]
+        [Route("/Exam/Preview/{examUrl}/Edit")]
         [HttpGet]
         public async Task<IActionResult> Edit(string ExamUrl)
         {
@@ -133,7 +133,7 @@ namespace Daskata.Controllers
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
-        [Route("/Exam/Preview/@{examUrl}/Edit")]
+        [Route("/Exam/Preview/{examUrl}/Edit")]
         [HttpPost]
         public async Task<IActionResult> Edit(FullExamViewModel model)
         {

@@ -775,3 +775,9 @@ div.profile-box {
 #profileButtons {
     flex: 10;
 }
+
+.extra-bottom {
+   margin-bottom: 100px !important;
+}
+
+    

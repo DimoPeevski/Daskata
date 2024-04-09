@@ -1,0 +1,68 @@
+﻿@using static Daskata.Core.Shared.Methods;
+@model UserProfileModel
+
+@{
+    ViewData["Title"] = "Изтриване на потребител";
+}
+
+<div class="container mt-5 extra-bottom">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <div class="text-center">
+                        <img src="@Model.ProfilePictureUrl" class="rounded-circle img-fluid profile-pic-edit" style="max-width: 200px;" alt="Снимка на профила на @Model.FirstName @Model.LastName">
+                        <h3 class="mt-2">@Model.FirstName @Model.LastName</h3>
+                        <p class="text-muted">@@@Model.Username</p>
+                        @if (!String.IsNullOrEmpty(Model.School))
+                        {
+                            <p class="card-text m-1"><img src="~/lib/school.png" alt="Училище"><span style="font-size: 14px;"> @Model.School</span></p>
+                        }
+                        else
+                        {
+                            <p class="card-text m-1"><img src="~/lib/school.png" alt="Училище"><span style="font-size: 14px;"> (няма информация)</span></p>
+
+                        }
+                        @if (!String.IsNullOrEmpty(Model.Location))
+                        {
+                            <p class="card-text m-1"><img src="~/lib/location.png" alt="Локация"><span style="font-size: 14px;"> @Model.Location</span></p>
+                        }
+                        else
+                        {
+                            <p class="card-text m-1"><img src="~/lib/location.png" alt="Локация"><span style="font-size: 14px;"> (няма информация)</span></p>
+
+                        }
+                        <p class="card-text m-1"><img src="~/lib/calendar.png" alt="Дата на присъединяване"><span style="font-size: 14px;"> Регистриран @GetRegistrationMonthYearAsNumbers(@Model.RegistrationDate)</span></p>
+                    </div>
+                    <div class="alert alert-danger mt-4" role="alert">
+                        <h4 class="alert-heading">Внимание!</h4>
+                        <p>
+                            Изтриването на потребителя е необратимо действие, което ще премахне всички свързани данни и настройки. Моля, уверете се, че сте сигурни в решението си, преди да продължите. За да възстановите потребителския достъп, ще трябва да се свържете с администратор.
+                            Потвърдете изтриването само ако сте напълно сигурни в действието си.
+                        </p>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a href="/Network/My" class="btn btn-primary button-create-test m-2">Назад</a>
+                        @using (Html.BeginForm("Delete", "Network", new { username = Model.Username }, FormMethod.Post))
+                        {
+                            <button type="submit" class="btn btn-primary button-create-user m-2">Потвърждавам</button>
+                            <input type="hidden" name="FirstName" value="@Model.FirstName" />
+                            <input type="hidden" name="LastName" value="@Model.LastName" />
+                            <input type="hidden" name="ProfilePictureUrl" value="@Model.ProfilePictureUrl" />
+                            <input type="hidden" name="AdditionalInfo" value="@Model.AdditionalInfo" />
+                            <input type="hidden" name="School" value="@Model.School" />
+                            <input type="hidden" name="Location" value="@Model.Location" />
+                            <input type="hidden" name="RegistrationDate" value="@Model.RegistrationDate" />
+                            <input type="hidden" name="Email" value="@Model.Email" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/reduce-info-description.js"></script>
+    <script src="~/js/post-notification.js"></script>
+}
