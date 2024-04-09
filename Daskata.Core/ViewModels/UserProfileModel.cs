@@ -54,5 +54,7 @@ namespace Daskata.Core.ViewModels
 
         [DataType(DataType.ImageUrl)]
         public string? ProfilePictureUrl { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

@@ -66,6 +66,11 @@ namespace Daskata.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, lockoutOnFailure: false);
             var loggedUser = await _userManager.GetUserAsync(User);
 
+            if (loggedUser == null || !loggedUser.IsActive)
+            {
+                return NotFound();
+            }
+
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", signInErrorMessage);
@@ -95,8 +100,7 @@ namespace Daskata.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, signInErrorMessage);
-                return this.View(model);
+                return View(model);
             }
 
             string uniqueUsername = await GenerateUniqueUsernameAsync();

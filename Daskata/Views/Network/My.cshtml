@@ -1,4 +1,5 @@
-﻿@using static Daskata.Core.Shared.Methods;
+﻿@using Microsoft.EntityFrameworkCore
+@using static Daskata.Core.Shared.Methods;
 @model List<UserProfileModel>
 
 @{
@@ -10,50 +11,53 @@
     <div class="row">
         @foreach (var user in Model)
         {
-            <div class="col-md-6 col-lg-4 mb-5">
-                <div class="card h-100 border-0 profile-box-network position-relative">
-                    <div class="card-body d-flex flex-column">
-                        <div class="profile-card-link mb-3 d-flex align-items-left" onclick="openProfilePage('@user.Username')">
-                            <img src="@user.ProfilePictureUrl" class="profile-pic" alt="Потребител" onclick="@user.Username)" />
-                            <div>
-                                <h5 class="card-title mb-0">@user.FirstName @user.LastName</h5>
-                                <p class="card-subtitle text-muted">@@@user.Username</p>
+            if (user.IsActive)
+            {
+                <div class="col-md-6 col-lg-4 mb-5">
+                    <div class="card h-100 border-0 profile-box-network position-relative">
+                        <div class="card-body d-flex flex-column">
+                            <div class="profile-card-link mb-3 d-flex align-items-left" onclick="openProfilePage('@@@user.Username')">
+                                <img src="@user.ProfilePictureUrl" class="profile-pic" alt="Потребител" onclick="@@@user.Username)" />
+                                <div>
+                                    <h5 class="card-title mb-0">@user.FirstName @user.LastName</h5>
+                                    <p class="card-subtitle text-muted">@@@user.Username</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-flex profile-items justify-content-between w-100 align-items-left">
-                            <div id="leftSide">
-                                @if (!String.IsNullOrEmpty(user.School))
-                                {
-                                    <p class="card-text m-1"><img src="~/lib/school.png" alt="Училище"><span style="font-size: 14px;"> @user.School</span></p>
-                                }
-                                else
-                                {
-                                    <p class="card-text m-1"><img src="~/lib/school.png" alt="Училище"><span style="font-size: 14px;"> (няма информация)</span></p>
+                            <div class="d-flex profile-items justify-content-between w-100 align-items-left">
+                                <div id="leftSide">
+                                    @if (!String.IsNullOrEmpty(user.School))
+                                    {
+                                        <p class="card-text m-1"><img src="~/lib/school.png" alt="Училище"><span style="font-size: 14px;"> @user.School</span></p>
+                                    }
+                                    else
+                                    {
+                                        <p class="card-text m-1"><img src="~/lib/school.png" alt="Училище"><span style="font-size: 14px;"> (няма информация)</span></p>
 
-                                }
-                                @if (!String.IsNullOrEmpty(user.Location))
-                                {
-                                    <p class="card-text m-1"><img src="~/lib/location.png" alt="Локация"><span style="font-size: 14px;"> @user.Location</span></p>
-                                }
-                                else
-                                {
-                                    <p class="card-text m-1"><img src="~/lib/location.png" alt="Локация"><span style="font-size: 14px;"> (няма информация)</span></p>
+                                    }
+                                    @if (!String.IsNullOrEmpty(user.Location))
+                                    {
+                                        <p class="card-text m-1"><img src="~/lib/location.png" alt="Локация"><span style="font-size: 14px;"> @user.Location</span></p>
+                                    }
+                                    else
+                                    {
+                                        <p class="card-text m-1"><img src="~/lib/location.png" alt="Локация"><span style="font-size: 14px;"> (няма информация)</span></p>
 
-                                }
-                                <p class="card-text m-1"><img src="~/lib/calendar.png" alt="Дата на присъединяване"><span style="font-size: 14px;"> Регистриран @user.RegistrationDate</span></p>
-                            </div>
-                            <div class="d-flex flex-column align-items-center justify-content-center" id="profileButtons">
-                                <a href="/Network/@@@user.Username/Edit" class="m-2" alt="Редактиране на потребител">
-                                    <partial name="_EditButtonSVGPartial" />
-                                </a>
-                                <a href="/Network/@@@user.Username/Delete" class="m-2" alt="Редактиране на потребител">
-                                    <partial name="_DeleteButtonSVGPartial" />
-                                </a>
+                                    }
+                                    <p class="card-text m-1"><img src="~/lib/calendar.png" alt="Дата на присъединяване"><span style="font-size: 14px;"> Регистриран @user.RegistrationDate</span></p>
+                                </div>
+                                <div class="d-flex flex-column align-items-center justify-content-center" id="profileButtons">
+                                    <a href="/Network/@@@user.Username/Edit" class="m-2" alt="Редактиране на потребител">
+                                        <partial name="_EditButtonSVGPartial" />
+                                    </a>
+                                    <a href="/Network/@@@user.Username/Delete" class="m-2" alt="Редактиране на потребител">
+                                        <partial name="_DeleteButtonSVGPartial" />
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         }
     </div>
 </div>

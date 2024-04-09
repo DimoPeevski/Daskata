@@ -13,12 +13,10 @@ namespace Daskata.Controllers
     public class NetworkController : Controller
     {
         private readonly UserManager<UserProfile> _userManager;
-        private readonly ILogger<LoginUserFormModel> _logger;
         private readonly DaskataDbContext _context;
+        private readonly ILogger<LoginUserFormModel> _logger;
 
-        public NetworkController(UserManager<UserProfile> userManager,
-                              DaskataDbContext context,
-                              ILogger<LoginUserFormModel> logger)
+        public NetworkController(UserManager<UserProfile> userManager, DaskataDbContext context, ILogger<LoginUserFormModel> logger)
         {
             _userManager = userManager;
             _context = context;
@@ -29,6 +27,11 @@ namespace Daskata.Controllers
         public async Task<IActionResult> My()
         {
             var loggedUser = await _userManager.GetUserAsync(User);
+
+            if (loggedUser == null || !loggedUser.IsActive)
+            {
+                return NotFound();
+            }
 
             var usersCreatedByMe = await _context.Users
                 .Where(u => u.CreatedByUserId == loggedUser!.Id)
@@ -42,9 +45,9 @@ namespace Daskata.Controllers
                 Username = u.UserName!,
                 AdditionalInfo = u.AdditionalInfo,
                 School = u.School,
-                RegistrationDate = GetRegistrationMonthYearAsNumbers(
-                    u.RegistrationDate.ToString()),
-                Location = u.Location
+                RegistrationDate = GetRegistrationMonthYearAsNumbers(u.RegistrationDate.ToString()),
+                Location = u.Location,
+                IsActive = u.IsActive,
             }).ToList();
 
             return View(model);
@@ -54,18 +57,17 @@ namespace Daskata.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string username)
         {
-           var userToEdit = await _context.Users
-                .FirstOrDefaultAsync(u => u.UserName == username);
+            var userToEdit = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
 
-            if (userToEdit == null)
+            if (userToEdit == null || !userToEdit.IsActive)
             {
                 return NotFound();
             }
 
             var model = new EditUserFormModel
             {
-                Username = userToEdit.UserName,
-                Email = userToEdit.Email,
+                Username = userToEdit.UserName!,
+                Email = userToEdit.Email!,
                 FirstName = userToEdit.FirstName,
                 LastName = userToEdit.LastName,
                 PhoneNumber = userToEdit.PhoneNumber,
@@ -78,7 +80,6 @@ namespace Daskata.Controllers
             return View(model);
         }
 
-        
         [Route("/Network/@{username}/Edit")]
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserFormModel model)
@@ -128,9 +129,7 @@ namespace Daskata.Controllers
 
             if (userUnderEdit.Email != model.Email)
             {
-                if (await EmailExistsAsync(model.Email)
-                && model.Email != "no@email.xyz"
-                && model.Email != string.Empty)
+                if (await EmailExistsAsync(model.Email) && model.Email != "no@email.xyz" && model.Email != string.Empty)
                 {
                     ModelState.AddModelError("EmailExists", "E-mail адресът име вече съществува.");
                     return View(model);
@@ -139,8 +138,7 @@ namespace Daskata.Controllers
 
             userUnderEdit.Email = model.Email.ToLower();
 
-            if (userUnderEdit.PhoneNumber != model.PhoneNumber
-                && model.PhoneNumber != string.Empty)
+            if (userUnderEdit.PhoneNumber != model.PhoneNumber && model.PhoneNumber != string.Empty)
             {
                 if (await PhoneNumberExistsAsync(model.PhoneNumber!))
                 {
@@ -170,8 +168,7 @@ namespace Daskata.Controllers
         {
             var userToDelete = await _context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == username);
 
-
-            if (userToDelete == null)
+            if (userToDelete == null || !userToDelete.IsActive)
             {
                 return NotFound();
             }
@@ -208,7 +205,7 @@ namespace Daskata.Controllers
             userUnderDelete.ProfilePictureUrl = "/lib/profile-pictures/default-profile-image.png";
             userUnderDelete.AdditionalInfo = string.Empty;
             userUnderDelete.School = string.Empty;
-            userUnderDelete.Location = string.Empty;         
+            userUnderDelete.Location = string.Empty;
             userUnderDelete.PhoneNumber = string.Empty;
 
             userUnderDelete.UserName = model.Username;
@@ -252,3 +249,5 @@ namespace Daskata.Controllers
         }
     }
 }
+
+    

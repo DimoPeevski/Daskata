@@ -17,7 +17,7 @@
             <p class="mb-5">@Model.Description</p>
             <div class="row">
                 <div class="col-md-6">
-                    <p class="m-0">Автор: <span style="cursor: pointer; color: #0767a3;" onclick="previewUserProfile('@CreatedByUser!.UserName')">@@@CreatedByUser.UserName</span></p>
+                    <p class="m-0">Автор: <span style="cursor: pointer; color: #0767a3;" onclick="previewUserProfile('@@@CreatedByUser!.UserName')">@@@CreatedByUser.UserName</span></p>
                     <p class="m-0">Създаден на дата: @GetRegistrationMonthYearAsNumbers(Model.CreationDate.ToString())</p>
                     <p class="m-0">Последна промяна: @GetRegistrationMonthYearAsNumbers(Model.LastModifiedDate.ToString())</p>
                 </div>

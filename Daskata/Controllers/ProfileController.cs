@@ -48,16 +48,16 @@ namespace Daskata.Controllers
             return View(model);
         }
 
-        [Route("/Profile/Preview/{username}")]
+        [Route("/Profile/Preview/@{username}")]
         [HttpGet]
         public async Task<IActionResult> Preview (string username)
         {
             var currentUser = await _userManager.FindByNameAsync(username);
 
-            if (currentUser == null)
+            if (currentUser == null || !currentUser.IsActive)
             {
-                TempData["ErrorMessage"] = "Профил с това потребителско име не съществува";
-                return RedirectToAction("Index", "Home");
+                
+                return NotFound();
             }
 
             var model = new UserProfileModel
@@ -81,6 +81,12 @@ namespace Daskata.Controllers
         public async Task<IActionResult> Edit()
         {
             var loggedUser = await _userManager.GetUserAsync(User);
+
+            if (loggedUser == null || !loggedUser.IsActive)
+            {
+                return NotFound();
+            }
+
             var model = new EditUserFormModel
             {
                 Username = loggedUser!.UserName!,
@@ -108,7 +114,8 @@ namespace Daskata.Controllers
             }
 
             var loggedUser = await _userManager.GetUserAsync(User);
-            if (loggedUser == null)
+
+            if (loggedUser == null || !loggedUser.IsActive)
             {
                 return NotFound();
             }
@@ -188,6 +195,12 @@ namespace Daskata.Controllers
         public async Task<IActionResult> ChangePassword()
         {
             var loggedUser = await _userManager.GetUserAsync(User);
+
+            if (loggedUser == null || !loggedUser.IsActive)
+            {
+                return NotFound();
+            }
+
             var model = new ChangePasswordModel
             {
                 ProfilePictureUrl = loggedUser!.ProfilePictureUrl,
@@ -205,9 +218,10 @@ namespace Daskata.Controllers
             }
 
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+
+            if (user == null || !user.IsActive)
             {
-                return RedirectToAction("Login", "User");
+                return NotFound();
             }
 
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
@@ -229,6 +243,12 @@ namespace Daskata.Controllers
         public async Task<IActionResult> PersonalData()
         {
             var loggedUser = await _userManager.GetUserAsync(User);
+
+            if (loggedUser == null || !loggedUser.IsActive)
+            {
+                return NotFound();
+            }
+
             var model = new ChangePasswordModel
             {
                 ProfilePictureUrl = loggedUser!.ProfilePictureUrl,

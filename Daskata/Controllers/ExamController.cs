@@ -38,7 +38,13 @@ namespace Daskata.Controllers
 
             if (currentExam == null)
             {
-                return RedirectToAction("My", "Exam");
+                return NotFound();
+            }
+
+            var loggedUser = await _userManager.GetUserAsync(User);
+            if (currentExam.CreatedByUserId != loggedUser?.Id && !currentExam.IsPublished)
+            {
+                return NotFound();
             }
 
             var examPreview = new FullExamViewModel
@@ -123,7 +129,7 @@ namespace Daskata.Controllers
                 Title = currentExam!.Title,
                 Description = currentExam.Description,
                 TotalPoints = currentExam.TotalPoints,
-                Duration = (int)currentExam.Duration.TotalHours,
+                Duration = (int)currentExam.Duration.TotalMinutes,
                 LastModifiedDate = currentExam.LastModifiedDate,
                 IsPublished = currentExam.IsPublished,
                 ExamUrl = ExamUrl
