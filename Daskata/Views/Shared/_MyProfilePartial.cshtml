@@ -1,15 +1,10 @@
-﻿@using Daskata.Infrastructure.Data
-@using Daskata.Infrastructure.Data.Models
+﻿@using Daskata.Infrastructure.Data.Models
 @using Microsoft.AspNetCore.Identity
 @using static Daskata.Core.Shared.Methods;
-@using Microsoft.EntityFrameworkCore
 @model Daskata.Core.ViewModels.UserProfileModel
-@inject DaskataDbContext _context
 @inject UserManager<UserProfile> _userManager
 
 @{
-    ViewData["Title"] = "Моят профил";
-
     var loggedUser = await _userManager.GetUserAsync(User);
     var userRolesNames = await _userManager.GetRolesAsync(loggedUser!);
     var roleName = userRolesNames.FirstOrDefault();
@@ -18,7 +13,7 @@
     var formattedRegistrationDate = GetRegistrationMonthYearAsText(modifiedDate);
 }
 
-<div class="home-container-column mb-4">
+<div class="home-container-column">
     <div class="row profile-container-cover m-1">
         <div class="col-md-3">
             <img src="@Model.ProfilePictureUrl" class="profile-pic-edit" alt="Профилна снимка на @Model.FirstName @Model.LastName">
@@ -59,29 +54,3 @@
         </div>
     </div>
 </div>
-
-<div class="home-container-column profile-exams">
-    <div class="row">
-        @foreach (var exam in Model.Exams!)
-        {
-            if (exam.CreatedByUserId == loggedUser!.Id)
-            {
-                <div class="exam-box" onclick="previewExam('@exam.ExamUrl')">
-                    <div class="exam-status @(exam.IsPublished ? "active" : "non-active")" onclick="@exam.ExamUrl)"></div>
-                    <p><span class="exam-title">@exam.Title</span></p>
-                    <p><span class="exam-description">@exam.Description</span></p>
-                    <div class="exam-box-inner">
-                        <div class="exam-box-sub"><span class="exam-sub-text">⌛ @FormatTimeSpanAsMinutes(exam.Duration)</span></div>
-                        <div class="exam-box-sub"><span class="exam-sub-text">✍️ @exam.TotalPoints т.</span></div>
-                        <div class="exam-box-sub"><span class="exam-sub-text">📅 @GetRegistrationMonthYearAsNumbers(exam.CreationDate.ToString())</span></div>
-                    </div>
-                </div>
-            }
-        }
-    </div>
-</div>
-
-@section Scripts {
-    <script src="~/js/buttons-edit-connect.js"></script>
-    <script src="~/js/reduce-title-description.js"></script>
-}

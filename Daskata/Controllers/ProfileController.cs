@@ -43,6 +43,20 @@ namespace Daskata.Controllers
                 School = loggedUser.School,
                 RegistrationDate = loggedUser.RegistrationDate.ToString(),
                 Location = loggedUser.Location,
+
+                Exams = await _context.Exams
+                .Where(e => e.CreatedByUserId == loggedUser.Id)
+                .Select(e => new PartialExamViewModel
+                {
+                    Title = e.Title,
+                    Description = e.Description,
+                    Duration = e.Duration,
+                    TotalPoints = e.TotalPoints,
+                    IsPublished = e.IsPublished,
+                    CreationDate = e.CreationDate,
+                    ExamUrl = e.ExamUrl,
+                    CreatedByUserId = e.CreatedByUserId
+                }).ToListAsync()
             };
 
             return View(model);
@@ -72,6 +86,20 @@ namespace Daskata.Controllers
                 School = currentUser.School,
                 RegistrationDate = currentUser.RegistrationDate.ToString(),
                 Location = currentUser.Location,
+
+                Exams = await _context.Exams
+                .Where(e => e.CreatedByUserId == currentUser.Id)
+                .Select(e => new PartialExamViewModel
+                {
+                    Title = e.Title,
+                    Description = e.Description,
+                    Duration = e.Duration,
+                    TotalPoints = e.TotalPoints,
+                    IsPublished = e.IsPublished,
+                    CreationDate = e.CreationDate,
+                    ExamUrl = e.ExamUrl,
+                    CreatedByUserId = e.CreatedByUserId
+                }).ToListAsync()
             };
 
             return View(model);

@@ -68,7 +68,6 @@ namespace Daskata.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-
             var model = new FullExamViewModel()
             {
                 Title = string.Empty,
@@ -124,6 +123,11 @@ namespace Daskata.Controllers
         {
             var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == ExamUrl);
 
+            if(currentExam == null)
+            {
+                return NotFound();
+            }
+
             var model = new FullExamViewModel()
             {
                 Title = currentExam!.Title,
@@ -149,6 +153,11 @@ namespace Daskata.Controllers
             }
 
             var exam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == model.ExamUrl);
+
+            if (exam == null)
+            {
+                return NotFound();
+            }
 
             TimeSpan duration = TimeSpan.FromMinutes(model.Duration);
 
@@ -206,6 +215,11 @@ namespace Daskata.Controllers
         public async Task<IActionResult> All()
         {
             var allExams = await _context.Exams.ToListAsync();
+
+            if (allExams == null)
+            {
+                return NotFound();
+            }
 
             var allExamsCollection = allExams
                 .Select(e => new PartialExamViewModel

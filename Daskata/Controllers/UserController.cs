@@ -11,7 +11,6 @@ using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Controllers
 {
-
     public class UserController : Controller
     {
         private readonly SignInManager<UserProfile> _signInManager;
@@ -31,15 +30,6 @@ namespace Daskata.Controllers
             _context = context;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation("User logged out.");
-
-            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -66,15 +56,9 @@ namespace Daskata.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, lockoutOnFailure: false);
             var loggedUser = await _userManager.GetUserAsync(User);
 
-            if (loggedUser == null || !loggedUser.IsActive)
-            {
-                return NotFound();
-            }
-
             if (!result.Succeeded)
             {
-                ModelState.AddModelError("", signInErrorMessage);
-
+                ModelState.AddModelError(string.Empty, signInErrorMessage);
                 return View(model);
             }
 
@@ -149,6 +133,15 @@ namespace Daskata.Controllers
 
                 return View(model);
             }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation("User logged out.");
 
             return RedirectToAction("Index", "Home");
         }
