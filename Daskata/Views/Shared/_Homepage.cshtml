@@ -3,26 +3,28 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Daskata</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Daskata.styles.css" asp-append-version="true" />
-
-    <meta name="description" content="Пригответе се за предстоящото ни приложение! Платформа, в която всички учители могат лесно да създават и администрират тестове на своите ученици.">
+    <meta name="description" content="Открийте нашето ново образователно приложение! Това е иновативна платформа, предназначена за учители, която предлага лесен начин за създаване и управление на тестове за ученици. Променете начина, по който оценявате успеха на учениците си!">
+    <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
     <meta property="og:locale" content="bg_BG" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Daskata.eu" />
-    <meta property="og:description" content="Пригответе се за предстоящото ни приложение! Платформа, в която всички учители могат лесно да създават и администрират тестове на своите ученици." />
+    <meta property="og:description" content="Открийте нашето ново образователно приложение! Това е иновативна платформа, предназначена за учители, която предлага лесен начин за създаване и управление на тестове за ученици. Променете начина, по който оценявате успеха на учениците си!" />
     <meta property="og:url" content="https://daskata.eu/" />
     <meta property="og:site_name" content="Daskata" />
-    <meta property="og:image" content="https://daskata.eu/external-uploads/daskata-bg-desktop.jpg" />
+    <meta property="og:image" content="/lib/daskata-image.jpg" />
     <meta property="og:image:width" content="1920" />
     <meta property="og:image:height" content="1080" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="shortcut icon" href="https://daskata.eu/external-uploads/fav.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="https://daskata.eu/external-uploads/fav.png">
+    <title>@ViewData["Title"] - Daskata</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Daskata.styles.css" asp-append-version="true" />
+    <link rel="shortcut icon" href="/lib/fav.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/lib/apple-touch.png">
+    <link rel="canonical" href="https://daskata.eu/" />
 </head>
+
 <body>
     <header>
         @if (User?.Identity?.IsAuthenticated ?? false)
