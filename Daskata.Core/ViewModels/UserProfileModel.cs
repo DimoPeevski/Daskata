@@ -55,8 +55,8 @@ namespace Daskata.Core.ViewModels
         [DataType(DataType.ImageUrl)]
         public string? ProfilePictureUrl { get; set; }
 
-        public List<PartialExamViewModel>? Exams { get; set; }
-
         public bool IsActive { get; set; }
+
+        public List<PartialExamViewModel>? Exams { get; set; }
     }
 }

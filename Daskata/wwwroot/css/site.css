@@ -504,6 +504,11 @@ span.validation-labels {
     font-size: 13px;
 }
 
+span.warning-labels {
+    color: #fe5963;
+    font-size: 14px;
+}
+
 /* Profile pages custom css */
 .profile-container-cover {
     display: flex;
@@ -784,4 +789,12 @@ div.profile-box {
     flex-direction: row;
     justify-content: flex-start;
     margin-top: 0px;
+}
+
+#resp-exams {
+    justify-content: space-evenly;
+}
+
+#resp-exams-preview {
+   
 }

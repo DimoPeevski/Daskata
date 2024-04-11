@@ -61,12 +61,12 @@
 </div>
 
 <div class="home-container-column profile-exams">
-    <div class="row">
+    <div class="row" id="resp-exams">
         @foreach (var exam in Model.Exams!)
         {
             if (exam.CreatedByUserId == loggedUser!.Id)
             {
-                <div class="exam-box" onclick="previewExam('@exam.ExamUrl')">
+                <div class="exam-box" onclick="previewExamInProfile('/Exam/Preview/@exam.ExamUrl')">
                     <div class="exam-status @(exam.IsPublished ? "active" : "non-active")" onclick="@exam.ExamUrl)"></div>
                     <p><span class="exam-title">@exam.Title</span></p>
                     <p><span class="exam-description">@exam.Description</span></p>
@@ -84,4 +84,5 @@
 @section Scripts {
     <script src="~/js/buttons-edit-connect.js"></script>
     <script src="~/js/reduce-title-description.js"></script>
+    <script src="~/js/preview-id-fetch.js"></script>
 }

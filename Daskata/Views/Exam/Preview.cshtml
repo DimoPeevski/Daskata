@@ -7,7 +7,8 @@
 @{
     ViewData["Title"] = "Изпит";
     var userId = @Model.CreatedByUserId.ToString();
-    var CreatedByUser = await _userManager.FindByIdAsync(userId);
+    var createdByUser = await _userManager.FindByIdAsync(userId);
+    var loggedUser = await _userManager.GetUserAsync(User);
 }
 
 <div class="home-container-column">
@@ -17,7 +18,7 @@
             <p class="mb-5">@Model.Description</p>
             <div class="row">
                 <div class="col-md-6">
-                    <p class="m-0">Автор: <span style="cursor: pointer; color: #0767a3;" onclick="previewUserProfile('@@@CreatedByUser!.UserName')">@@@CreatedByUser.UserName</span></p>
+                    <p class="m-0">Автор: <span style="cursor: pointer; color: #0767a3;" onclick="previewUserProfile('@@@createdByUser!.UserName')">@@@createdByUser.UserName</span></p>
                     <p class="m-0">Създаден на дата: @GetRegistrationMonthYearAsNumbers(Model.CreationDate.ToString())</p>
                     <p class="m-0">Последна промяна: @GetRegistrationMonthYearAsNumbers(Model.LastModifiedDate.ToString())</p>
                 </div>
@@ -27,17 +28,36 @@
                     <p class="m-0">Продължителност: @Model.Duration</p>
                 </div>
             </div>
-            
-            <div class="exam-preview-button">
-                <a href="/Exam/Preview/@Model.ExamUrl/Edit" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Редактирай описание</a>
-            </div>
-            <div class ="exam-preview-button">
-                <a asp-area="" asp-controller="Exam" asp-action="Questions" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Редактирай въпроси</a>
-            </div>
-            <div class="exam-preview-button">
-                <a asp-area="" asp-controller="Exam" asp-action="Asign" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Изпрати до ученик</a>
-            </div>
-
+            @{
+                if (userId == loggedUser!.Id.ToString())
+                {
+                    <div class="exam-preview-button">
+                        <a href="/Exam/Preview/@Model.ExamUrl/Edit" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Редактирай описание</a>
+                    </div>
+                    <div class="exam-preview-button">
+                        <a asp-area="" asp-controller="Exam" asp-action="Open" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Прегледай съдържание</a>
+                    </div>
+                    <div class="exam-preview-button">
+                        <a asp-area="" asp-controller="Exam" asp-action="Asign" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Изпрати до ученик</a>
+                    </div>
+                }
+                else if (userId != loggedUser!.Id.ToString() && true)
+                {
+                    <div class="exam-preview-button">
+                        <a asp-area="" asp-controller="Exam" asp-action="Open" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Прегледай съдържание</a>
+                    </div>
+                    <div class="exam-preview-button">
+                        <a asp-area="" asp-controller="Exam" asp-action="Asign" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Изпрати до ученик</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="exam-preview-button text-center">
+                        <p><span class="warning-labels">За да ползвате изпита трябва да имате установена връзка със създателя!</span></p>
+                        <a href="/Profile/Preview/@@@createdByUser.UserName" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Свържи се със създателя</a>
+                    </div>
+                }
+            }
         </div>
     </div>
 </div>

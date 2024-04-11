@@ -238,6 +238,13 @@ namespace Daskata.Controllers
             return View(allExamsCollection);
         }
 
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [HttpGet]
+        public ActionResult Index()
+        {
+            return RedirectToAction("All","Exam");
+        }
+
         // Methods used in class: ExamController
 
         private async Task<Guid?> GetCurentUserId()

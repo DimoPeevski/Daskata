@@ -1,6 +1,7 @@
 ﻿using Daskata.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using YourNamespace;
 
 namespace Daskata.Infrastructure.Data
 {
@@ -12,6 +13,8 @@ namespace Daskata.Infrastructure.Data
         public DbSet<Question> Questions { get; set; }
         public DbSet<UserExamResponse> UserExamResponses { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<UserConnection> UserConnections { get; set; }
+        public DbSet<ConnectionRequest> ConnectionRequests { get; set; }
 
         public DaskataDbContext(DbContextOptions<DaskataDbContext> options)
             : base(options)
