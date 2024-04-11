@@ -17,7 +17,7 @@
                 <input type="file" id="profilePicture" style="display: none;" accept="image/*" />
             </label>
 
-            @if (@Model.Username == loggedUser.UserName)
+            @if (@Model.Username == loggedUser!.UserName)
             {
                 <div class="mt-4">
                     <a class="nav-link profile-menu links-profile-menu" asp-area="" asp-controller="Profile" asp-action="ChangePassword">Промени парола</a>

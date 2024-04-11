@@ -24,6 +24,51 @@ namespace Daskata.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var loggedUser = await _userManager.GetUserAsync(User);
+
+            if (loggedUser == null || !loggedUser.IsActive)
+            {
+                return NotFound();
+            }
+
+            var userConnections = await _context.UserConnections
+            .Include(uc => uc.FirstUser)
+            .Include(uc => uc.SecondUser)
+            .ToListAsync();
+
+            var connectedUsers = new List<UserProfile>();
+            foreach (var connection in userConnections)
+            {
+                if (!connectedUsers.Contains(connection.FirstUser))
+                {
+                    connectedUsers.Add(connection.FirstUser);
+                }
+                if (!connectedUsers.Contains(connection.SecondUser))
+                {
+                    connectedUsers.Add(connection.SecondUser);
+                }
+            }
+
+            var model = connectedUsers.Select(u => new UserProfileModel
+            {
+                ProfilePictureUrl = u.ProfilePictureUrl,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Username = u.UserName!,
+                AdditionalInfo = u.AdditionalInfo,
+                School = u.School,
+                RegistrationDate = GetRegistrationMonthYearAsNumbers(u.RegistrationDate.ToString()),
+                Location = u.Location,
+                IsActive = u.IsActive,
+            }).ToList();
+
+            return View(model);
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> My()
         {
             var loggedUser = await _userManager.GetUserAsync(User);

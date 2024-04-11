@@ -7,6 +7,11 @@ namespace Daskata.Infrastructure.Data
 {
     public class DaskataDbContext : IdentityDbContext<UserProfile, UserRole, Guid>
     {
+        public DaskataDbContext(DbContextOptions<DaskataDbContext> options)
+            : base(options)
+        {
+        }
+
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Exam> Exams { get; set; }
         public DbSet<ExamAttempt> ExamAttempts { get; set; }
@@ -15,11 +20,6 @@ namespace Daskata.Infrastructure.Data
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<UserConnection> UserConnections { get; set; }
         public DbSet<ConnectionRequest> ConnectionRequests { get; set; }
-
-        public DaskataDbContext(DbContextOptions<DaskataDbContext> options)
-            : base(options)
-        {
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
