@@ -34,13 +34,14 @@ namespace Daskata.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, comment: "First name of the user"),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Last name of the user"),
-                    Role = table.Column<int>(type: "int", nullable: false, comment: "Role assigned to the user within the system (e.g., Admin, Manager, Teacher, Student)"),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date and time when the user account was registered"),
                     LastLoginDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date and time of the user's last login"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates whether the user account is active or deactivated"),
-                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "URL for the user's profile picture"),
-                    AdditionalInfo = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false, comment: "Additional information about the user"),
+                    School = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true, comment: "Information about user school"),
+                    Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true, comment: "Information about user location"),
+                    AdditionalInfo = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true, comment: "Additional information about the user"),
                     CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true, comment: "Property to store the user ID of the creator"),
+                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "URL for the user's profile picture"),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -175,30 +176,83 @@ namespace Daskata.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ConnectionRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the user connection request"),
+                    RequestStatus = table.Column<int>(type: "int", nullable: false, comment: "Status of the connection request ('Pending', 'Accepted', 'Rejected', 'Blocked')"),
+                    FromUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "User ID who sent the connection request"),
+                    ToUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "User ID who received the connection request")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConnectionRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConnectionRequests_AspNetUsers_FromUserId",
+                        column: x => x.FromUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ConnectionRequests_AspNetUsers_ToUserId",
+                        column: x => x.ToUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                },
+                comment: "Connection request between users");
+
+            migrationBuilder.CreateTable(
                 name: "Exams",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the exam"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false, comment: "Title of the exam"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Description of the exam"),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true, comment: "Description of the exam"),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: false, comment: "Duration of the exam in minutes"),
                     TotalPoints = table.Column<int>(type: "int", nullable: false, comment: "Total points available in the exam"),
                     IsPublished = table.Column<bool>(type: "bit", nullable: false, comment: "Indicates if the exam is published and available for students"),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date and time when the exam was created"),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date and time when the exam was last modified"),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the user who created the exam")
+                    ExamUrl = table.Column<string>(type: "nvarchar(max)", nullable: false, comment: "Unique URL for the exam"),
+                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Foreign key referencing the user who created the exam")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Exams", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Exams_AspNetUsers_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Exams_AspNetUsers_CreatedByUserId",
+                        column: x => x.CreatedByUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 },
                 comment: "Exam to be passed");
+
+            migrationBuilder.CreateTable(
+                name: "UserConnections",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Unique identifier for the relationship"),
+                    EstablishedDate = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "Date when the relationship was established"),
+                    FirstUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The first user in the relationship"),
+                    SecondUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "The second user in the relationship")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserConnections", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserConnections_AspNetUsers_FirstUserId",
+                        column: x => x.FirstUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserConnections_AspNetUsers_SecondUserId",
+                        column: x => x.SecondUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                },
+                comment: "Established relationship connection between users");
 
             migrationBuilder.CreateTable(
                 name: "ExamAttempts",
@@ -366,6 +420,16 @@ namespace Daskata.Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConnectionRequests_FromUserId",
+                table: "ConnectionRequests",
+                column: "FromUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConnectionRequests_ToUserId",
+                table: "ConnectionRequests",
+                column: "ToUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ExamAttempts_ExamID",
                 table: "ExamAttempts",
                 column: "ExamID");
@@ -376,14 +440,24 @@ namespace Daskata.Infrastructure.Migrations
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Exams_UserID",
+                name: "IX_Exams_CreatedByUserId",
                 table: "Exams",
-                column: "UserID");
+                column: "CreatedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_ExamID",
                 table: "Questions",
                 column: "ExamID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserConnections_FirstUserId",
+                table: "UserConnections",
+                column: "FirstUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserConnections_SecondUserId",
+                table: "UserConnections",
+                column: "SecondUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserExamResponses_AnswerID",
@@ -423,6 +497,12 @@ namespace Daskata.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "ConnectionRequests");
+
+            migrationBuilder.DropTable(
+                name: "UserConnections");
 
             migrationBuilder.DropTable(
                 name: "UserExamResponses");

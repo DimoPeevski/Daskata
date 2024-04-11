@@ -59,7 +59,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 if (!await roleManager.RoleExistsAsync(roleName))
                 {
                     await roleManager.CreateAsync(new UserRole { Name = roleName });
-                }  
+                }
             }
         }
     }

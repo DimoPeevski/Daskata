@@ -721,7 +721,7 @@ namespace Daskata.Infrastructure.Migrations
                     b.HasOne("Daskata.Infrastructure.Data.Models.UserProfile", "SecondUser")
                         .WithMany()
                         .HasForeignKey("SecondUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("FirstUser");
@@ -734,7 +734,7 @@ namespace Daskata.Infrastructure.Migrations
                     b.HasOne("Daskata.Infrastructure.Data.Models.UserProfile", "FromUser")
                         .WithMany()
                         .HasForeignKey("FromUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Daskata.Infrastructure.Data.Models.UserProfile", "ToUser")

@@ -74,6 +74,7 @@ namespace Daskata.Controllers
                 Description = string.Empty,
                 Duration = 30,
                 TotalPoints = 60,
+                IsPublished = false,
             };
 
             return View(model);
@@ -99,7 +100,7 @@ namespace Daskata.Controllers
                 Duration = duration,
                 CreationDate = DateTime.Now,
                 LastModifiedDate = DateTime.Now,
-                IsPublished = false,
+                IsPublished = model.IsPublished,
                 ExamUrl = GenerateExamUrl(),
                 CreatedByUserId = (Guid)await GetCurentUserId()
             };

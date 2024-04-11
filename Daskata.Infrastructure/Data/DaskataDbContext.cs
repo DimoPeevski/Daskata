@@ -23,6 +23,17 @@ namespace Daskata.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            ConfigureExamAttemptEntity(modelBuilder);
+            ConfigureUserProfileEntity(modelBuilder);
+            ConfigureConnectionRequestEntity(modelBuilder);
+            ConfigureUserConnectionEntity(modelBuilder);
+            ConfigureUserExamResponseEntity(modelBuilder);
+
+            base.OnModelCreating(modelBuilder);
+        }
+
+        private void ConfigureExamAttemptEntity(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<ExamAttempt>()
                 .HasOne(ea => ea.User)
                 .WithMany(u => u.ExamAttempts)
@@ -34,13 +45,49 @@ namespace Daskata.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(ea => ea.ExamID)
                 .OnDelete(DeleteBehavior.Cascade);
+        }
 
+        private void ConfigureUserProfileEntity(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<UserProfile>()
                 .HasOne(u => u.CreatedByUser)
                 .WithMany()
                 .HasForeignKey(u => u.CreatedByUserId)
                 .OnDelete(DeleteBehavior.Restrict);
+        }
 
+        private void ConfigureConnectionRequestEntity(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ConnectionRequest>()
+                .HasOne(cr => cr.FromUser)
+                .WithMany()
+                .HasForeignKey(cr => cr.FromUserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<ConnectionRequest>()
+                .HasOne(cr => cr.ToUser)
+                .WithMany()
+                .HasForeignKey(cr => cr.ToUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
+
+        private void ConfigureUserConnectionEntity(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserConnection>()
+                .HasOne(uc => uc.FirstUser)
+                .WithMany()
+                .HasForeignKey(uc => uc.FirstUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserConnection>()
+                .HasOne(uc => uc.SecondUser)
+                .WithMany()
+                .HasForeignKey(uc => uc.SecondUserId)
+                .OnDelete(DeleteBehavior.NoAction);
+        }
+
+        private void ConfigureUserExamResponseEntity(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<UserExamResponse>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -60,8 +107,6 @@ namespace Daskata.Infrastructure.Data
                     .HasForeignKey(d => d.AttemptID)
                     .OnDelete(DeleteBehavior.Restrict);
             });
-
-            base.OnModelCreating(modelBuilder);
         }
     }
 }

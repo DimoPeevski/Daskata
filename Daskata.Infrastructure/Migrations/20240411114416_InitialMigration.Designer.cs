@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Daskata.Infrastructure.Migrations
 {
     [DbContext(typeof(DaskataDbContext))]
-    [Migration("20240401135625_LayoutsFix")]
-    partial class LayoutsFix
+    [Migration("20240411114416_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,18 +62,27 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Unique identifier for the exam");
 
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Foreign key referencing the user who created the exam");
+
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2")
                         .HasComment("Date and time when the exam was created");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
                         .HasComment("Description of the exam");
 
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time")
                         .HasComment("Duration of the exam in minutes");
+
+                    b.Property<string>("ExamUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasComment("Unique URL for the exam");
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("bit")
@@ -93,13 +102,9 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasComment("Total points available in the exam");
 
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Foreign key referencing the user who created the exam");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("CreatedByUserId");
 
                     b.ToTable("Exams", t =>
                         {
@@ -250,7 +255,6 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AdditionalInfo")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)")
                         .HasComment("Additional information about the user");
@@ -290,6 +294,11 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasComment("Last name of the user");
 
+                    b.Property<string>("Location")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Information about user location");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -321,6 +330,11 @@ namespace Daskata.Infrastructure.Migrations
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2")
                         .HasComment("Date and time when the user account was registered");
+
+                    b.Property<string>("School")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Information about user school");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -493,6 +507,68 @@ namespace Daskata.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("UserConnection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Unique identifier for the relationship");
+
+                    b.Property<DateTime>("EstablishedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date when the relationship was established");
+
+                    b.Property<Guid>("FirstUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("The first user in the relationship");
+
+                    b.Property<Guid>("SecondUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("The second user in the relationship");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FirstUserId");
+
+                    b.HasIndex("SecondUserId");
+
+                    b.ToTable("UserConnections", t =>
+                        {
+                            t.HasComment("Established relationship connection between users");
+                        });
+                });
+
+            modelBuilder.Entity("YourNamespace.ConnectionRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Unique identifier for the user connection request");
+
+                    b.Property<Guid>("FromUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("User ID who sent the connection request");
+
+                    b.Property<int>("RequestStatus")
+                        .HasColumnType("int")
+                        .HasComment("Status of the connection request ('Pending', 'Accepted', 'Rejected', 'Blocked')");
+
+                    b.Property<Guid>("ToUserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("User ID who received the connection request");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromUserId");
+
+                    b.HasIndex("ToUserId");
+
+                    b.ToTable("ConnectionRequests", t =>
+                        {
+                            t.HasComment("Connection request between users");
+                        });
+                });
+
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Answer", b =>
                 {
                     b.HasOne("Daskata.Infrastructure.Data.Models.Question", "Question")
@@ -508,7 +584,7 @@ namespace Daskata.Infrastructure.Migrations
                 {
                     b.HasOne("Daskata.Infrastructure.Data.Models.UserProfile", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("CreatedByUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -635,6 +711,44 @@ namespace Daskata.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("UserConnection", b =>
+                {
+                    b.HasOne("Daskata.Infrastructure.Data.Models.UserProfile", "FirstUser")
+                        .WithMany()
+                        .HasForeignKey("FirstUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Daskata.Infrastructure.Data.Models.UserProfile", "SecondUser")
+                        .WithMany()
+                        .HasForeignKey("SecondUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("FirstUser");
+
+                    b.Navigation("SecondUser");
+                });
+
+            modelBuilder.Entity("YourNamespace.ConnectionRequest", b =>
+                {
+                    b.HasOne("Daskata.Infrastructure.Data.Models.UserProfile", "FromUser")
+                        .WithMany()
+                        .HasForeignKey("FromUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Daskata.Infrastructure.Data.Models.UserProfile", "ToUser")
+                        .WithMany()
+                        .HasForeignKey("ToUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FromUser");
+
+                    b.Navigation("ToUser");
                 });
 
             modelBuilder.Entity("Daskata.Infrastructure.Data.Models.Exam", b =>
