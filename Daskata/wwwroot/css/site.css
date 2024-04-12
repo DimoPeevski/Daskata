@@ -203,9 +203,9 @@ body {
     padding-bottom: 5px;
 }
 
-.button-profile-edit:hover {
-    background-color: #4d81b0;
-}
+    .button-profile-edit:hover {
+        background-color: #4d81b0;
+    }
 
 .button-profile-delete {
     background-color: rgba(242, 85, 96, 1);
@@ -224,9 +224,9 @@ body {
     padding-bottom: 5px;
 }
 
-.button-profile-delete:hover {
-    background-color: #f56c74;
-}
+    .button-profile-delete:hover {
+        background-color: #f56c74;
+    }
 
 .header-menu {
     font-weight: bold;
@@ -782,7 +782,7 @@ div.profile-box {
 }
 
 .extra-bottom {
-   margin-bottom: 100px !important;
+    margin-bottom: 100px !important;
 }
 
 .profile-exams {
@@ -796,5 +796,40 @@ div.profile-box {
 }
 
 #resp-exams-preview {
-   
 }
+
+.page-title-box {
+    background-color: #fafafa;
+    color: #fafafa;
+    background-image: url('/lib/title-bg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    border-radius: 10px;
+    margin-bottom: 50px;
+    text-align: center;
+    padding-right: 30px;
+}
+
+.button-title {
+    background-color: rgba(54, 103, 147, 0.8);
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-size: 15px;
+    color: #fafafa;
+    text-shadow: 1px 1px 1px rgba(23, 23, 23, 0.5);
+    margin: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-left: 15px;
+}
+
+
+    .button-title:hover {
+        background-color: rgba(77, 129, 176, 0.8);
+    }

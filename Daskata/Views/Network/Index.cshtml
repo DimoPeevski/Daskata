@@ -10,8 +10,24 @@
     var loggedUser = await _userManager.GetUserAsync(User);
 }
 
-<div class="container mt-5 mb-5">
-    <h2 class="mb-4">Моята мрежа</h2>
+<div class="container mt-2 mb-5">
+
+    <div class="row page-title-box align-items-center">
+        <div class="col-sm-6">
+            <h1 class="p-3" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Моята мрежа</h1>
+        </div>
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-12">
+                    <a asp-area="" asp-controller="Network" asp-action="Index" class="btn btn-primary w-100 button-title">Моята мрежа</a>
+                </div>
+                <div class="col-sm-12">
+                    <a asp-area="" asp-controller="Network" asp-action="My" class="btn btn-primary w-100 button-title">Регистрирани от мен</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         @foreach (var user in Model)
         {

@@ -6,9 +6,25 @@
     ViewData["Title"] = "Всички изпити";
 }
 
-<div class="home-container-column">
+<div class="container mt-5 mb-5">
+
+    <div class="row page-title-box align-items-center">
+        <div class="col-sm-6">
+            <h1 class="p-3" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Всички изпити</h1>
+        </div>
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-12">
+                    <a asp-area="" asp-controller="Exam" asp-action="All" class="btn btn-primary w-100 button-title">Всички изпити</a>
+                </div>
+                <div class="col-sm-12">
+                    <a asp-area="" asp-controller="Exam" asp-action="My" class="btn btn-primary w-100 button-title">Моите изпити</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
-        <h2 class="page-title mb-5">Всички изпити на платформата</h2>
         @foreach (var exam in Model)
         {
             if (exam.IsPublished)
