@@ -136,6 +136,7 @@ namespace Daskata.Controllers
 
             var userUnderEdit = await _context.UserProfiles.FirstOrDefaultAsync(e => e.UserName == model.Username);
 
+
             userUnderEdit!.FirstName = model.FirstName;
             userUnderEdit.LastName = model.LastName;
             userUnderEdit.ProfilePictureUrl = model.ProfilePictureUrl;
