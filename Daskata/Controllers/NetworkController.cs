@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using static Daskata.Core.Shared.Methods;
 
 namespace Daskata.Controllers
@@ -111,8 +112,8 @@ namespace Daskata.Controllers
 
             var model = new EditUserFormModel
             {
-                Username = userToEdit.UserName!,
-                Email = userToEdit.Email!,
+                Username = userToEdit.UserName,
+                Email = userToEdit.Email,
                 FirstName = userToEdit.FirstName,
                 LastName = userToEdit.LastName,
                 PhoneNumber = userToEdit.PhoneNumber,
@@ -122,6 +123,7 @@ namespace Daskata.Controllers
                 School = userToEdit.School
             };
 
+            HttpContext.Session.SetString("CurrentUsername", userToEdit.UserName);
             return View(model);
         }
 
@@ -134,10 +136,15 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            var userUnderEdit = await _context.UserProfiles.FirstOrDefaultAsync(e => e.UserName == model.Username);
+            var currentUsername = HttpContext.Session.GetString("CurrentUsername");
+            var userUnderEdit = await _context.UserProfiles.FirstOrDefaultAsync(e => e.UserName == currentUsername);
 
+            if (userUnderEdit == null)
+            {
+                return NotFound();
+            }
 
-            userUnderEdit!.FirstName = model.FirstName;
+            userUnderEdit.FirstName = model.FirstName;
             userUnderEdit.LastName = model.LastName;
             userUnderEdit.ProfilePictureUrl = model.ProfilePictureUrl;
 
@@ -186,7 +193,7 @@ namespace Daskata.Controllers
 
             if (userUnderEdit.PhoneNumber != model.PhoneNumber && model.PhoneNumber != string.Empty)
             {
-                if (await PhoneNumberExistsAsync(model.PhoneNumber!))
+                if (await PhoneNumberExistsAsync(model.PhoneNumber))
                 {
                     ModelState.AddModelError("PhoneNumberExists", "Телефонът вече съществува.");
                     return View(model);
