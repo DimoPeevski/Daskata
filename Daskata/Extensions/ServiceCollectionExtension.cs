@@ -37,6 +37,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+ 
         public static async Task<IServiceCollection> RolesSeedAsync(this IServiceCollection services, IConfiguration config)
         {
             var serviceProvider = services.BuildServiceProvider();

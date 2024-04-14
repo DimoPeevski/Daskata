@@ -17,6 +17,8 @@ builder.Services.ConfigureApplicationCookie(config =>
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddSession();
+
 builder.Services.AddRazorPages();
 
 
@@ -38,6 +40,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();

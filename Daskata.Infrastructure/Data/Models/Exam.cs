@@ -30,6 +30,18 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Indicates if the exam is published and available for students")]
         public bool IsPublished { get; set; } = false;
 
+        [Comment("Indicates if the exam is public and visible for user's network")]
+        public bool IsPublic { get; set; } = false;
+
+        [Comment("Indicates the study subject of the exam")]
+        public SubjectCategory StudySubject { get; set; }
+
+        [Comment("Indicates the grade level of the student")]
+        public GradeCategory StudentGrade { get; set; }
+
+        [Comment("Total times the exam was passed by user")]
+        public int TimesPassed { get; set; }
+
         [Required]
         [Comment("Date and time when the exam was created")]
         public DateTime CreationDate { get; set; }

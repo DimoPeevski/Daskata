@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Core.Shared
@@ -27,7 +28,6 @@ namespace Daskata.Core.Shared
             int totalMinutes = (int)timeSpan.TotalMinutes;
             return $"{totalMinutes} мин";
         }
-
 
         public static string GenerateExamUrl()
         {
@@ -58,6 +58,47 @@ namespace Daskata.Core.Shared
                     return "⭐ Ученик";
                 default:
                     return roleName;
+            }
+        }
+
+        public static string TranslateExamSubjectInBG(string subjectName)
+        {
+            switch (subjectName)
+            {
+                case "Mathematics":
+                    return "Математика";
+                case "BulgarianLanguage":
+                    return "Български език";
+                case "Literature":
+                    return "Литература";
+                case "History":
+                    return "История";
+                case "Biology":
+                    return "Биология";
+                case "Chemistry":
+                    return "Химия";
+                case "Physics":
+                    return "Физика";
+                case "Geography":
+                    return "География";
+                case "EnglishLanguage":
+                    return "Английски език";
+                default:
+                    return "Неопределен";
+            }
+        }
+
+
+        public static string GradeNumberExtract(string grade)
+        {
+            var match = Regex.Match(grade, @"\d+");
+            if (match.Success)
+            {
+                return match.Value;
+            }
+            else
+            {
+                return string.Empty;
             }
         }
     }

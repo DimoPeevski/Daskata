@@ -1,0 +1,64 @@
+﻿@using static Daskata.Core.Shared.Methods
+@model List<string>
+
+@{
+    ViewData["Title"] = "Създаване на изпит";
+}
+
+<div class="home-container-column">
+    <h2 class="mt-4 text-center">Стъпка 2/3 : Избери клас</h2>
+    <div class="row">
+        <form asp-controller="Exam" asp-action="Details" method="post">
+            <div class="exam-preview">
+                <div class="form-group">
+                    <div class="row justify-content-center">
+                        @foreach (var grade in Model)
+                        {
+                            if (grade != null && grade != "Undefined")
+                            {
+                                <div class="col">
+                                    <button type="button" class="btn btn-primary button-create-test circle m-2" data-value="@grade">@GradeNumberExtract(grade)</button>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                <input type="hidden" name="subject" value="@ViewData["Subject"]" />
+                <input type="hidden" id="gradeSelect" name="grade" />
+            </div>
+            <div class="mt-5 text-center">
+                <a asp-controller="Exam" asp-action="Create" type="submit" class="btn btn-primary button-create-user">Назад</a>
+                <button type="submit" class="btn btn-primary button-create-user" id="submitButton">Напред</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/post-notification.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var circles = document.querySelectorAll('.circle');
+            var gradeSelect = document.querySelector('#gradeSelect');
+            var submitButton = document.querySelector('#submitButton');
+
+            submitButton.disabled = true;
+
+            circles.forEach(function (circle) {
+                circle.addEventListener('click', function () {
+                    circles.forEach(function (c) {
+                        c.classList.remove('button-create-user');
+                        c.classList.add('button-create-test');
+                    });
+
+                    circle.classList.remove('button-create-test');
+                    circle.classList.add('button-create-user');
+                    gradeSelect.value = circle.getAttribute('data-value');
+
+                    submitButton.disabled = false;
+                });
+            });
+        });
+    </script>
+}

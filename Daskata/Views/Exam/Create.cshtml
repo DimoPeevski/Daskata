@@ -1,58 +1,63 @@
-﻿@model Daskata.Core.ViewModels.FullExamViewModel
+﻿@using static Daskata.Core.Shared.Methods
+@model List<string>
 
 @{
     ViewData["Title"] = "Създаване на изпит";
 }
 
 <div class="home-container-column">
+    <h2 class="mt-4 text-center">Стъпка 1/3 : Избери предмет</h2>
     <div class="row">
-        <h2 class="page-title mb-5">Създаване на изпит</h2>
-        <div class="col-md-12 p-3">
-            <form class="row g-3 mt-0" id="editForm" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                <div class="col-md-7 mb-3">
-                    <label asp-for="Title" class="form-label" style="font-size: 15px;">Заглавие</label>
-                    <input asp-for="Title" class="form-control profile-edit-input" aria-required="true" placeholder="" />
-                    <span asp-validation-for="Title" class="text-danger"></span>
+        <form asp-controller="Exam" asp-action="Grade" method="post">
+            <div class="exam-preview">
+                <div class="form-group">
+                    <div class="row justify-content-center">
+                        @foreach (var subject in Model)
+                        {
+                            if (subject != null && subject != "Undefied")
+                            {
+                                <div class="col">
+                                    <button type="button" class="btn btn-primary button-create-test subject-button m-2" data-value="@subject">@TranslateExamSubjectInBG(subject)</button>
+                                </div>
+                            }
+                        }
+                    </div>
                 </div>
-
-                <div class="col-md-2 mb-3">
-                    <label asp-for="Duration" class="form-label" style="font-size: 15px;">Време /мин/</label>
-                    <input asp-for="Duration" type="number"  class="form-control profile-edit-input" aria-required="true" placeholder="" />
-                    <span asp-validation-for="Duration" class="text-danger"></span>
-                </div>
-
-                <div class="col-md-2 mb-3">
-                    <label asp-for="TotalPoints" class="form-label" style="font-size: 15px;">Брой точки</label>
-                    <input asp-for="TotalPoints" class="form-control profile-edit-input" aria-required="true" placeholder="" />
-                    <span asp-validation-for="TotalPoints" class="text-danger"></span>
-                </div>
-                <div class="col-md-1 mb-3">
-                    <label asp-for="IsPublished" class="form-label" style="font-size: 15px;">Активен?</label>
-                    <select asp-for="IsPublished" class="form-control profile-edit-input" aria-required="true">
-                        <option value="false">Не</option>
-                        <option value="true">Да</option>
-                    </select>
-                    <span asp-validation-for="TotalPoints" class="text-danger"></span>
-                </div>
-
-
-                <div class="col-md-12 mb-6">
-                    <label asp-for="Description" class="form-label" style="font-size: 15px;">Описание</label>
-                    <textarea asp-for="Description" class="form-control profile-edit-input" placeholder="" rows="5"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-
-                <div class="col-12 mt-4">
-                    <button type="submit" class="btn btn-primary button-login">Създай</button>
-                    <div id="userEditedNotification" class="user-edited-notification">Създаване...</div>
-                </div>
-            </form>
-        </div>
+                <input type="hidden" id="subjectInput" name="subject" value="@ViewData["Subject"]" />
+            </div>
+            <div class="mt-5 text-center">
+                <a asp-controller="Exam" asp-action="All" type="submit" class="btn btn-primary button-create-user">Назад</a>
+                <button type="submit" class="btn btn-primary button-create-user" id="submitButton">Напред</button>
+            </div>
+        </form>
     </div>
 </div>
 
+
 @section Scripts {
     <script src="~/js/post-notification.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var subjectButtons = document.querySelectorAll('.subject-button');
+            var subjectInput = document.querySelector('#subjectInput');
+            var submitButton = document.querySelector('#submitButton');
+
+            submitButton.disabled = true;
+
+            subjectButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    subjectButtons.forEach(function (b) {
+                        b.classList.remove('button-create-user');
+                        b.classList.add('button-create-test');
+                    });
+
+                    button.classList.remove('button-create-test');
+                    button.classList.add('button-create-user');
+                    subjectInput.value = button.getAttribute('data-value');
+
+                    submitButton.disabled = false;
+                });
+            });
+        });
+    </script>
 }

@@ -14,12 +14,12 @@ namespace Daskata.Controllers
     [Authorize]
     public class ExamController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<ExamController> _logger;
         private readonly UserManager<UserProfile> _userManager;
         private readonly DaskataDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ExamController(ILogger<HomeController> logger,
+        public ExamController(ILogger<ExamController> logger,
                               IHttpContextAccessor httpContextAccessor,
                               UserManager<UserProfile> userManager,
                               DaskataDbContext context)
@@ -30,43 +30,42 @@ namespace Daskata.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        [Route("/Exam/Preview/{examUrl}")]
-        [HttpGet]
-        public async Task<IActionResult> Preview(string ExamUrl)
-        {
-            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == ExamUrl);
-
-            if (currentExam == null)
-            {
-                return NotFound();
-            }
-
-            var loggedUser = await _userManager.GetUserAsync(User);
-            if (currentExam.CreatedByUserId != loggedUser?.Id && !currentExam.IsPublished)
-            {
-                return NotFound();
-            }
-
-            var examPreview = new FullExamViewModel
-            {
-                Title = currentExam.Title,
-                Description = currentExam.Description,
-                TotalPoints = currentExam.TotalPoints,
-                Duration = (int)currentExam.Duration.TotalMinutes,
-                CreationDate = currentExam.CreationDate,
-                CreatedByUserId = currentExam.CreatedByUserId,
-                LastModifiedDate = currentExam.LastModifiedDate,
-                IsPublished = currentExam.IsPublished,
-                ExamUrl = currentExam.ExamUrl,
-
-            };
-
-            return View(examPreview);
-        }
-
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpGet]
         public IActionResult Create()
+        {
+            var subjects = Enum.GetValues(typeof(SubjectCategory));
+            var subjectList = new List<string>();
+
+            foreach (var subject in subjects)
+            {
+                subjectList.Add(subject.ToString());
+            }
+
+            return View(subjectList);
+        }
+
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [Route("/Exam/Create/Grade")]
+        [HttpPost]
+        public IActionResult Grade([FromForm] string subject)
+        {
+            var grades = Enum.GetValues(typeof(GradeCategory));
+            var gradeList = new List<string>();
+
+            foreach (var grade in grades)
+            {
+                gradeList.Add(grade.ToString());
+            }
+
+            HttpContext.Session.SetString("Subject", subject);
+            return View(gradeList);
+        }
+
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [Route("/Exam/Create/Grade/Details")]
+        [HttpPost]
+        public IActionResult Details(string grade)
         {
             var model = new FullExamViewModel()
             {
@@ -75,14 +74,19 @@ namespace Daskata.Controllers
                 Duration = 30,
                 TotalPoints = 60,
                 IsPublished = false,
+                IsPublic = false,
+                StudySubject = 0,
+                StudentGrade = 0,
             };
 
+            HttpContext.Session.SetString("Grade", grade);
             return View(model);
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
+        [Route("/Exam/Create/Grade/Details/Publish")]
         [HttpPost]
-        public async Task<IActionResult> Create(FullExamViewModel model)
+        public async Task<IActionResult> Publish(FullExamViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -90,6 +94,9 @@ namespace Daskata.Controllers
             }
 
             TimeSpan duration = TimeSpan.FromMinutes(model.Duration);
+
+            var studySubject = (SubjectCategory)Enum.Parse(typeof(SubjectCategory), HttpContext.Session.GetString("Subject"));
+            var studentGrade = (GradeCategory)Enum.Parse(typeof(GradeCategory), HttpContext.Session.GetString("Grade"));
 
             Exam exam = new()
             {
@@ -102,7 +109,10 @@ namespace Daskata.Controllers
                 LastModifiedDate = DateTime.Now,
                 IsPublished = model.IsPublished,
                 ExamUrl = GenerateExamUrl(),
-                CreatedByUserId = (Guid)await GetCurentUserId()
+                CreatedByUserId = (Guid)await GetCurentUserId(),
+                IsPublic = model.IsPublic,
+                StudentGrade = studentGrade,
+                StudySubject = studySubject
             };
 
             if (exam.Description == null)
@@ -124,7 +134,7 @@ namespace Daskata.Controllers
         {
             var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == ExamUrl);
 
-            if(currentExam == null)
+            if (currentExam == null)
             {
                 return NotFound();
             }
@@ -239,11 +249,45 @@ namespace Daskata.Controllers
             return View(allExamsCollection);
         }
 
+        [Route("/Exam/Preview/{examUrl}")]
+        [HttpGet]
+        public async Task<IActionResult> Preview(string ExamUrl)
+        {
+            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == ExamUrl);
+
+            if (currentExam == null)
+            {
+                return NotFound();
+            }
+
+            var loggedUser = await _userManager.GetUserAsync(User);
+            if (currentExam.CreatedByUserId != loggedUser?.Id && !currentExam.IsPublished)
+            {
+                return NotFound();
+            }
+
+            var examPreview = new FullExamViewModel
+            {
+                Title = currentExam.Title,
+                Description = currentExam.Description,
+                TotalPoints = currentExam.TotalPoints,
+                Duration = (int)currentExam.Duration.TotalMinutes,
+                CreationDate = currentExam.CreationDate,
+                CreatedByUserId = currentExam.CreatedByUserId,
+                LastModifiedDate = currentExam.LastModifiedDate,
+                IsPublished = currentExam.IsPublished,
+                ExamUrl = currentExam.ExamUrl,
+
+            };
+
+            return View(examPreview);
+        }
+
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpGet]
         public ActionResult Index()
         {
-            return RedirectToAction("All","Exam");
+            return RedirectToAction("All", "Exam");
         }
 
         // Methods used in class: ExamController
