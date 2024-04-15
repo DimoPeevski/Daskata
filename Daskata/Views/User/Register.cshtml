@@ -3,13 +3,13 @@
 @{
     ViewData["Title"] = "Регистрирай се";
 }
-<div class="home-container">
-    <div class="left-home-box">
+<div class="home-container register">
+    <div class="left-home-box logged">
         <a asp-controller="Home" asp-action="Index">
             <img class="home-logo-register" src="~/lib/welcome-logo-transparent.png" alt="Daskata - Добре дошли">
         </a>
     </div>
-    <div class="right-home-box">
+    <div class="right-home-box logged">
         <div class="login-container">
             <form id="registerForm" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
