@@ -214,8 +214,8 @@ namespace Daskata.Controllers
                     IsPublished = e.IsPublished,
                     CreationDate = e.CreationDate,
                     ExamUrl = e.ExamUrl,
-                    CreatedByUserId = e.CreatedByUserId
-
+                    CreatedByUserId = e.CreatedByUserId,
+                    IsPublic = e.IsPublic
                 }).ToList();
 
             return View(myExamsCollection);
