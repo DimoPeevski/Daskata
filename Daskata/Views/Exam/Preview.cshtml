@@ -21,18 +21,22 @@
                     <p class="m-0">Автор: <span style="cursor: pointer; color: #0767a3;" onclick="previewUserProfile('@@@createdByUser!.UserName')">@@@createdByUser.UserName</span></p>
                     <p class="m-0">Създаден на дата: @GetRegistrationMonthYearAsNumbers(Model.CreationDate.ToString())</p>
                     <p class="m-0">Последна промяна: @GetRegistrationMonthYearAsNumbers(Model.LastModifiedDate.ToString())</p>
+                    <p class="m-0">Предмет: @TranslateExamSubjectInBG(Model.StudySubject.ToString())</p>
+                    <p class="m-0">Публичен: <span style="color: @(Model.IsPublic ? "green" : "red");"> @(Model.IsPublic ? "Да" : "Не")</span></p>
                 </div>
                 <div class="col-md-6 mb-5">
-                    <p class="m-0">Статус: <span style="color: @(Model.IsPublished ? "green" : "red");"> @(Model.IsPublished ? "Активен" : "Чернова") </span></p>
                     <p class="m-0">Максимален брой точки: @Model.TotalPoints</p>
-                    <p class="m-0">Продължителност: @Model.Duration</p>
+                    <p class="m-0">Продължителност: @Model.Duration мин</p>
+                    <p class="m-0">Подходяща възраст: @GradeNumberExtract(Model.StudentGrade.ToString()) клас</p>
+                    <p class="m-0">Брой успешно издържан: @Model.TimesPassed</p>
+                    <p class="m-0">Статус: <span style="color: @(Model.IsPublished ? "green" : "red");"> @(Model.IsPublished ? "Активен" : "Чернова") </span></p>
                 </div>
             </div>
             @{
                 if (userId == loggedUser!.Id.ToString())
                 {
                     <div class="exam-preview-button">
-                        <a href="/Exam/Preview/@Model.ExamUrl/Edit" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Редактирай описание</a>
+                        <a href="/Exam/Preview/@Model.ExamUrl/Edit" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Редактирай информация</a>
                     </div>
                     <div class="exam-preview-button">
                         <a asp-area="" asp-controller="Exam" asp-action="Open" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Прегледай съдържание</a>

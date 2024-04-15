@@ -1,5 +1,4 @@
 ﻿using Daskata.Infrastructure.Data.Models;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using static Daskata.Infrastructure.Shared.Constants;
 
@@ -52,6 +51,10 @@ namespace Daskata.Core.ViewModels
 
         [Display(Name = " ")]
         public GradeCategory StudentGrade { get; set; }
+
+        [Required]
+        [Display(Name = " ")]
+        public int TimesPassed { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
     }

@@ -73,8 +73,7 @@ namespace Daskata.Controllers
                 Description = string.Empty,
                 Duration = 30,
                 TotalPoints = 60,
-                IsPublished = false,
-                IsPublic = false,
+                IsPublic = true,
                 StudySubject = 0,
                 StudentGrade = 0,
             };
@@ -107,12 +106,11 @@ namespace Daskata.Controllers
                 Duration = duration,
                 CreationDate = DateTime.Now,
                 LastModifiedDate = DateTime.Now,
-                IsPublished = model.IsPublished,
                 ExamUrl = GenerateExamUrl(),
                 CreatedByUserId = (Guid)await GetCurentUserId(),
                 IsPublic = model.IsPublic,
                 StudentGrade = studentGrade,
-                StudySubject = studySubject
+                StudySubject = studySubject,
             };
 
             if (exam.Description == null)
@@ -147,6 +145,7 @@ namespace Daskata.Controllers
                 Duration = (int)currentExam.Duration.TotalMinutes,
                 LastModifiedDate = currentExam.LastModifiedDate,
                 IsPublished = currentExam.IsPublished,
+                IsPublic = currentExam.IsPublic,
                 ExamUrl = ExamUrl
             };
 
@@ -178,6 +177,7 @@ namespace Daskata.Controllers
             exam.Duration = duration;
             exam.LastModifiedDate = DateTime.Now;
             exam.IsPublished = model.IsPublished;
+            exam.IsPublic = model.IsPublic;
 
             if (exam.Description == null)
             {
@@ -205,11 +205,11 @@ namespace Daskata.Controllers
                 .ToListAsync();
 
             var myExamsCollection = myExams
-                .Select(e => new PartialExamViewModel
+                .Select(e => new FullExamViewModel
                 {
                     Title = e.Title,
                     Description = e.Description,
-                    Duration = e.Duration,
+                    Duration = (int)e.Duration.TotalMinutes,
                     TotalPoints = e.TotalPoints,
                     IsPublished = e.IsPublished,
                     CreationDate = e.CreationDate,
@@ -233,16 +233,17 @@ namespace Daskata.Controllers
             }
 
             var allExamsCollection = allExams
-                .Select(e => new PartialExamViewModel
+                .Select(e => new FullExamViewModel
                 {
                     Title = e.Title,
                     Description = e.Description,
-                    Duration = e.Duration,
+                    Duration = (int)e.Duration.TotalMinutes,
                     TotalPoints = e.TotalPoints,
                     IsPublished = e.IsPublished,
                     CreationDate = e.CreationDate,
                     ExamUrl = e.ExamUrl,
-                    CreatedByUserId = e.CreatedByUserId
+                    CreatedByUserId = e.CreatedByUserId,
+                    IsPublic = e.IsPublic
 
                 }).ToList();
 
@@ -277,7 +278,10 @@ namespace Daskata.Controllers
                 LastModifiedDate = currentExam.LastModifiedDate,
                 IsPublished = currentExam.IsPublished,
                 ExamUrl = currentExam.ExamUrl,
-
+                IsPublic = currentExam.IsPublic,
+                StudySubject = currentExam.StudySubject,
+                StudentGrade = currentExam.StudentGrade,
+                TimesPassed = currentExam.TimesPassed,
             };
 
             return View(examPreview);

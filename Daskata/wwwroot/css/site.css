@@ -380,9 +380,10 @@ body {
     position: absolute;
     top: 8px;
     right: 8px;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
+    animation: pulse 2s infinite;
 }
 
     .exam-status.active {
@@ -393,17 +394,47 @@ body {
         background-color: rgba(242, 85, 96, 1);
     }
 
-.exam-preview {
-    max-width: 750px;
-    padding: 40px;
-    margin-top: 50px;
-    margin-bottom: 50px;
-    margin-left: 10px;
-    margin-right: 10px;
-    border-radius: 8px;
-    box-shadow: 0 .1875rem .4375rem 0 rgba(0,0,0,.13),0 .0625rem .125rem 0 rgba(0,0,0,.11);
-    background-color: #fff;
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
+
+.exam-status-eye {
+    position: absolute;
+    top: 5px;
+    right: 40px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    color: #000;
+    text-align: center;
+    line-height: 8px;
+}
+
+    .exam-status-eye.all {
+        right: 20px;
+    }
+
+    .exam-preview {
+        max-width: 750px;
+        padding: 40px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-radius: 8px;
+        box-shadow: 0 .1875rem .4375rem 0 rgba(0,0,0,.13),0 .0625rem .125rem 0 rgba(0,0,0,.11);
+        background-color: #fff;
+    }
 
 @media only screen and (max-width: 600px) {
     .exam-preview {
@@ -411,6 +442,7 @@ body {
         padding: 20px;
     }
 }
+
 
 
 /* Home profile drop-down menu */
@@ -829,7 +861,6 @@ div.profile-box {
     margin-left: 15px;
 }
 
-
     .button-title:hover {
         background-color: rgba(77, 129, 176, 0.8);
     }
@@ -842,7 +873,6 @@ div.profile-box {
     align-items: center;
     justify-content: center;
     font-size: 24px;
-
 }
 
 .subject-button {
@@ -853,4 +883,8 @@ div.profile-box {
     padding: 7px;
     border-radius: 10px;
     font-size: 16px;
+}
+
+btn-primary:focus {
+    background-color: #f25560;
 }

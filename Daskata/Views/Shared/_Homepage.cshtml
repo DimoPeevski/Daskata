@@ -46,9 +46,9 @@
                             </span>
                         </button>
                         <div class="login-partial-mobile">
-                            <partial name="_LoginPartialMobile" />
+                            @await Html.PartialAsync("_LoginPartialMobile");>
                         </div>
-                   </div>
+                    </div>
 
                     <div class="navbar-collapse collapse" id="navbarCollapse">
                         <ul class="navbar-nav mx-auto mb-sm-0">
@@ -64,7 +64,7 @@
                     </div>
 
                     <div class="login-partial-desktop">
-                        <partial name="_LoginPartialDesktop" />
+                        @await Html.PartialAsync("_LoginPartialDesktop");>
                     </div>
 
                 </div>
