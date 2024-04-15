@@ -5,7 +5,7 @@
     ViewData["Title"] = "Създаване на изпит";
 }
 
-<div class="home-container-column">
+<div class="home-container-column mt-5">
     <h2 class="mt-4 text-center">Стъпка 1/3 : Избери предмет</h2>
     <div class="row">
         <form asp-controller="Exam" asp-action="Grade" method="post">
@@ -35,29 +35,5 @@
 
 
 @section Scripts {
-    <script src="~/js/post-notification.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var subjectButtons = document.querySelectorAll('.subject-button');
-            var subjectInput = document.querySelector('#subjectInput');
-            var submitButton = document.querySelector('#submitButton');
-
-            submitButton.disabled = true;
-
-            subjectButtons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    subjectButtons.forEach(function (b) {
-                        b.classList.remove('button-create-user');
-                        b.classList.add('button-create-test');
-                    });
-
-                    button.classList.remove('button-create-test');
-                    button.classList.add('button-create-user');
-                    subjectInput.value = button.getAttribute('data-value');
-
-                    submitButton.disabled = false;
-                });
-            });
-        });
-    </script>
+    <script src="~/js/hide-next-subject.js"></script>
 }

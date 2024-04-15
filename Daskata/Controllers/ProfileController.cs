@@ -46,16 +46,17 @@ namespace Daskata.Controllers
 
                 Exams = await _context.Exams
                 .Where(e => e.CreatedByUserId == loggedUser.Id)
-                .Select(e => new PartialExamViewModel
+                .Select(e => new FullExamViewModel
                 {
                     Title = e.Title,
                     Description = e.Description,
-                    Duration = e.Duration,
+                    Duration = (int)e.Duration.TotalMinutes,
                     TotalPoints = e.TotalPoints,
                     IsPublished = e.IsPublished,
                     CreationDate = e.CreationDate,
                     ExamUrl = e.ExamUrl,
-                    CreatedByUserId = e.CreatedByUserId
+                    CreatedByUserId = e.CreatedByUserId,
+                    IsPublic = e.IsPublic,
                 }).ToListAsync()
             };
 
@@ -89,11 +90,11 @@ namespace Daskata.Controllers
 
                 Exams = await _context.Exams
                 .Where(e => e.CreatedByUserId == currentUser.Id)
-                .Select(e => new PartialExamViewModel
+                .Select(e => new FullExamViewModel
                 {
                     Title = e.Title,
                     Description = e.Description,
-                    Duration = e.Duration,
+                    Duration = (int)e.Duration.TotalMinutes,
                     TotalPoints = e.TotalPoints,
                     IsPublished = e.IsPublished,
                     CreationDate = e.CreationDate,

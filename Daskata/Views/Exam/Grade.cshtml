@@ -36,29 +36,5 @@
 
 
 @section Scripts {
-    <script src="~/js/post-notification.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var circles = document.querySelectorAll('.circle');
-            var gradeSelect = document.querySelector('#gradeSelect');
-            var submitButton = document.querySelector('#submitButton');
-
-            submitButton.disabled = true;
-
-            circles.forEach(function (circle) {
-                circle.addEventListener('click', function () {
-                    circles.forEach(function (c) {
-                        c.classList.remove('button-create-user');
-                        c.classList.add('button-create-test');
-                    });
-
-                    circle.classList.remove('button-create-test');
-                    circle.classList.add('button-create-user');
-                    gradeSelect.value = circle.getAttribute('data-value');
-
-                    submitButton.disabled = false;
-                });
-            });
-        });
-    </script>
+    <script src="~/js/hide-next-grade.js"></script>
 }

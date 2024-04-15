@@ -57,6 +57,6 @@ namespace Daskata.Core.ViewModels
 
         public bool IsActive { get; set; }
 
-        public List<PartialExamViewModel>? Exams { get; set; }
+        public List<FullExamViewModel>? Exams { get; set; }
     }
 }

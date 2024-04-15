@@ -70,8 +70,8 @@
     </div>
 </div>
 
-<div class="home-container-column profile-exams">
-    <div class="row" id="resp-exams-preview">
+<div class="container mt-5 floor">
+    <div class="row">
         @{
             var users = await _context.UserProfiles.ToDictionaryAsync(u => u.Id);
         }
@@ -80,11 +80,11 @@
             if (users.TryGetValue(exam.CreatedByUserId, out var user) && exam.IsPublished && user.Id == exam.CreatedByUserId)
             {
                 <div class="exam-box" onclick="previewExamInProfile('/Exam/Preview/@exam.ExamUrl')">
-                    <div class="exam-status @(exam.IsPublished ? "active" : "non-active")" onclick="@exam.ExamUrl)"></div>
+                    <div class="exam-status-eye all">@await Html.PartialAsync(exam.IsPublic ? "_PublicEyePartial" : "_PrivateEyePartial")</div>
                     <p><span class="exam-title">@exam.Title</span></p>
                     <p><span class="exam-description">@exam.Description</span></p>
                     <div class="exam-box-inner">
-                        <div class="exam-box-sub"><span class="exam-sub-text">⌛ @FormatTimeSpanAsMinutes(exam.Duration)</span></div>
+                        <div class="exam-box-sub"><span class="exam-sub-text">⌛ @exam.Duration мин</span></div>
                         <div class="exam-box-sub"><span class="exam-sub-text">✍️ @exam.TotalPoints т.</span></div>
                         <div class="exam-box-sub"><span class="exam-sub-text">📅 @GetRegistrationMonthYearAsNumbers(exam.CreationDate.ToString())</span></div>
                     </div>

@@ -40,7 +40,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 98vh;
+    min-height: 100%;
 }
 
 .left-home-box {
@@ -49,6 +49,7 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+    margin-top: 130px;
 }
 
 .right-home-box {
@@ -59,6 +60,17 @@ body {
     text-align: center;
     padding-left: 120px;
     padding-right: 120px;
+    margin-top: 120px;
+}
+
+.header-responsive {
+    max-width: 1330px;
+}
+
+@media only screen and (max-width: 1400px) {
+    .header-responsive {
+        max-width: 1200px;
+    }
 }
 
 .login-container {
@@ -327,10 +339,13 @@ body {
 /* CSS used in the exam box */
 .exam-box {
     position: relative;
-    width: 300px;
+    width: 24% !important;
     height: 300px;
-    margin: 10px;
     padding: 20px;
+    margin-left: 10px;
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -344,6 +359,27 @@ body {
     -webkit-user-select: none;
     -moz-user-select: none;
 }
+
+@media only screen and (max-width: 1399px) {
+    .exam-box {
+        width: 32% !important;
+    }
+}
+
+@media only screen and (max-width: 996px) {
+    .exam-box {
+        width: 48% !important;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .exam-box {
+        width: 100% !important;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+}
+
 
     .exam-box:hover {
         box-shadow: 0 .1875rem .4375rem 0 rgba(0,0,0,.23),0 .0625rem .125rem 0 rgba(0,0,0,.21)
@@ -424,26 +460,23 @@ body {
         right: 20px;
     }
 
-    .exam-preview {
-        max-width: 750px;
-        padding: 40px;
-        margin-top: 50px;
-        margin-bottom: 50px;
-        margin-left: 10px;
-        margin-right: 10px;
-        border-radius: 8px;
-        box-shadow: 0 .1875rem .4375rem 0 rgba(0,0,0,.13),0 .0625rem .125rem 0 rgba(0,0,0,.11);
-        background-color: #fff;
-    }
-
-@media only screen and (max-width: 600px) {
-    .exam-preview {
-        max-width: calc(100% - 50px);
-        padding: 20px;
-    }
+.exam-preview {
+    max-width: 750px;
+    padding: 40px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 8px;
+    box-shadow: 0 .1875rem .4375rem 0 rgba(0,0,0,.13),0 .0625rem .125rem 0 rgba(0,0,0,.11);
+    background-color: #fff;
 }
 
-
+@media only screen and (max-width: 576px) {
+    .exam-preview {
+        max-width: 95%;
+    }
+}
 
 /* Home profile drop-down menu */
 .dropbtn {
@@ -716,9 +749,13 @@ div.profile-box {
     }
 }
 
+.container.floor {
+    margin-bottom: 100px;
+}
+
 @media only screen and (max-width: 772px) {
     .row {
-        justify-content: center;
+        justify-content: center; 
     }
 }
 
@@ -875,6 +912,15 @@ div.profile-box {
     font-size: 24px;
 }
 
+@media only screen and (max-width: 500px) {
+    .circle {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+
 .subject-button {
     display: flex;
     align-items: center;
@@ -883,6 +929,20 @@ div.profile-box {
     padding: 7px;
     border-radius: 10px;
     font-size: 16px;
+}
+
+@media only screen and (max-width: 767px) {
+    .subject-button {
+        width: 100% !important;
+        min-width: 190px !important;
+    }
+}
+
+@media only screen and (max-width: 990px) {
+    .subject-button {
+        width: 33%;
+        min-width: 150px;
+    }
 }
 
 btn-primary:focus {
