@@ -56,6 +56,6 @@ namespace Daskata.Core.ViewModels
         [Display(Name = " ")]
         public int TimesPassed { get; set; }
 
-        public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+        public virtual ICollection<QuestionViewModel> Questions { get; set; } = new List<QuestionViewModel>();
     }
 }

@@ -9,7 +9,7 @@ namespace Daskata.Infrastructure.Data.Models
     {
         [Key]
         [Comment("Unique identifier for the answer")]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
 
         [Comment("Text of the answer")]
         public string AnswerText { get; set; } = string.Empty;
@@ -19,9 +19,9 @@ namespace Daskata.Infrastructure.Data.Models
 
         [Required]
         [Comment("Foreign key referencing the associated question")]
-        public Guid QuestionID { get; set; }
+        public Guid QuestionId { get; set; }
 
-        [ForeignKey(nameof(QuestionID))]
+        [ForeignKey(nameof(QuestionId))]
         [Comment("Reference to the associated question")]
         public virtual Question Question { get; set; } = null!;
     }

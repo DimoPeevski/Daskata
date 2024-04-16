@@ -1,0 +1,61 @@
+﻿@model QuestionViewModel
+
+@{
+    ViewData["Title"] = "Създаване на въпрос към изпит";
+}
+
+<div class="home-container-column">
+    <div class="row mt-4">
+        <h2 class="mt-4 text-center">Създаване на въпрос към изпит : "@TempData["ExamQuestionTitle"]"</h2>
+        <div class="col-md-12 p-3">
+            <form class="row g-3 mt-4" id="editForm" asp-controller="Question" asp-action="Create" method="post">
+                <input type="hidden" asp-for="ExamId" />                
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="col-md-12 mb-3">
+                    <label asp-for="QuestionText" class="form-label" style="font-size: 15px;">Опишете обстойно въпросът, който желаете да добавите към конкретния изпит</label>
+                    <textarea asp-for="QuestionText" class="form-control profile-edit-input" aria-required="true" placeholder="" rows="3"></textarea>
+                    <span asp-validation-for="QuestionText" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mb-1">
+                    <label asp-for="Explanation" class="form-label" style="font-size: 15px;">Добавете допълнително пояснение, ако е въпросът го изисква</label>
+                    <textarea asp-for="Explanation" class="form-control profile-edit-input" aria-required="false" placeholder="" rows="2"></textarea>
+                    <span asp-validation-for="Explanation" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-5 mb-3">
+                    <label asp-for="QuestionType" class="form-label" style="font-size: 15px;">Какъв тип въпрос е това?</label>
+                    <select asp-for="QuestionType" type="number" class="form-control profile-edit-input" aria-required="true" placeholder="" >
+                        <option value="Multiple">Ще трябва да се посочи правилния орговор</option>
+                        <option value="TrueFalse">Ще е от тип "правилно" или "грешно"</option>
+                    </select>
+                    <span asp-validation-for="QuestionType" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-5 mb-3">
+                    <label asp-for="IsMultipleCorrect" class="form-label" style="font-size: 15px;">Колко ще са правилните отговори?</label>
+                    <select asp-for="IsMultipleCorrect" type="number" class="form-control profile-edit-input" aria-required="true" placeholder="">
+                        <option value="true">Ще има няколко правилни орговора</option>
+                        <option value="false">Ще има само един правилен орговор</option>
+                    </select>
+                    <span asp-validation-for="QuestionType" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <label asp-for="Points" class="form-label" style="font-size: 15px;">Точки</label>
+                    <input asp-for="Points" class="form-control profile-edit-input" aria-required="true"/>
+                    <span asp-validation-for="Points" class="text-danger"></span>
+                </div>
+
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary button-login">Добави въпроса</button>
+                    <div id="userEditedNotification" class="user-edited-notification">Добавяне...</div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/post-notification.js"></script>
+}

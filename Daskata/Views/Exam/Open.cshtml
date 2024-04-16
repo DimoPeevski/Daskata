@@ -1,0 +1,100 @@
+﻿@using Daskata.Infrastructure.Data.Models
+@using Microsoft.AspNetCore.Identity
+@using static Daskata.Core.Shared.Methods;
+@model FullExamViewModel;
+@inject UserManager<UserProfile> _userManager
+
+@{
+    ViewData["Title"] = "Изпит";
+    var userId = @Model.CreatedByUserId.ToString();
+    var createdByUser = await _userManager.FindByIdAsync(userId);
+    var loggedUser = await _userManager.GetUserAsync(User);
+}
+
+<div class="home-container-column">
+    <div class="row">
+        <div class="exam-preview open">
+            <h2 class="mb-5">@Model.Title</h2>
+            <p class="mb-5">@Model.Description</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="m-0">Автор: <span style="cursor: pointer; color: #0767a3;" onclick="previewUserProfile('@@@createdByUser!.UserName')">@@@createdByUser.UserName</span></p>
+                    <p class="m-0">Създаден на дата: @GetRegistrationMonthYearAsNumbers(Model.CreationDate.ToString())</p>
+                    <p class="m-0">Последна промяна: @GetRegistrationMonthYearAsNumbers(Model.LastModifiedDate.ToString())</p>
+                    <p class="m-0">Предмет: @TranslateExamSubjectInBG(Model.StudySubject.ToString())</p>
+                    <p class="m-0">Публичен: <span style="color: @(Model.IsPublic ? "green" : "red");"> @(Model.IsPublic ? "Да" : "Не")</span></p>
+                </div>
+                <div class="col-md-6 mb-5">
+                    <p class="m-0">Максимален брой точки: @Model.TotalPoints</p>
+                    <p class="m-0">Продължителност: @Model.Duration мин</p>
+                    <p class="m-0">Подходяща възраст: @GradeNumberExtract(Model.StudentGrade.ToString()) клас</p>
+                    <p class="m-0">Брой успешно издържан: @Model.TimesPassed</p>
+                    <p class="m-0">Статус: <span style="color: @(Model.IsPublished ? "green" : "red");"> @(Model.IsPublished ? "Активен" : "Чернова") </span></p>
+                </div>
+            </div>
+
+            <!-- Block saparator-->
+            @if (Model.Questions.Any())
+            {
+                <ol>
+                    @foreach (var question in Model.Questions)
+                    {
+                        <li>
+                            <strong>@question.QuestionText</strong>
+
+                            @if (!string.IsNullOrEmpty(question.Explanation))
+                            {
+                                <p style="font-size: 14px;">Допълнително пояснение: @question.Explanation</p>
+                            }
+
+                            <p>Точки: @question.Points</p>
+
+                            <p>@(question.IsMultipleCorrect ? "Има няколко правилни орговора" : "Има само един правилен орговор")</p>
+
+                            <p>Орговори:</p>
+                            <ul>
+                                @foreach (var answer in question.Answers)
+                                {
+                                    <li class="@(answer.IsCorrect ? "correct-answer" : "")">@answer.AnswerText</li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ol>
+            }
+            else
+            {
+                <p>Все още няма въпроси към този изпит.</p>
+            }
+            <!-- Block saparator-->
+            @{
+                if (userId == loggedUser!.Id.ToString())
+                {
+                    <div class="exam-preview-button">
+                        <a href="/Question/@TempData["ExamQuestionUrl"]/Create" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Добави въпрос</a>
+                    </div>
+                    <div class="exam-preview-button">
+                        <a asp-area="" asp-controller="Exam" asp-action="Asign" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Изпрати до ученик</a>
+                    </div>
+                    <div class="exam-preview-button">
+                        <a href="/Exam/Preview/@Model.ExamUrl/" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Назад</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="exam-preview-button">
+                        <a asp-area="" asp-controller="Exam" asp-action="Asign" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Изпрати до ученик</a>
+                    </div>
+                    <div class="exam-preview-button">
+                        <a href="/Exam/Preview/@Model.ExamUrl/" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Назад</a>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/user-profile-fetch.js"></script>
+}
+

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Infrastructure.Data.Models
 {
@@ -11,26 +12,32 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Unique identifier for the question")]
         public Guid Id { get; set; }
 
+        [Required]
         [Comment("Text of the question")]
+        [MaxLength(QuestionTextLenghtMax)]
         public string QuestionText { get; set; } = string.Empty;
 
+        [Required]
         [Comment("Type of the question (e.g., multiple choice, true/false)")]
-        public string QuestionType { get; set; } = string.Empty;
+        public string QuestionType { get; set; } = null!;
 
+        [Required]
         [Comment("Indicates if multiple correct answers are allowed")]
         public bool IsMultipleCorrect { get; set; }
 
         [Comment("Explanation or additional information for the question")]
         public string Explanation { get; set; } = string.Empty;
 
+        [Required]
+        [MaxLength(QuestionPointsMax)]
         [Comment("Points assigned to the question")]
         public int Points { get; set; }
 
         [Required]
         [Comment("Foreign key referencing the associated exam")]
-        public Guid ExamID { get; set; }
+        public Guid ExamId { get; set; }
 
-        [ForeignKey(nameof(ExamID))]
+        [ForeignKey(nameof(ExamId))]
         [Comment("Reference to the associated exam")]
         public virtual Exam Exam { get; set; } = null!;
 

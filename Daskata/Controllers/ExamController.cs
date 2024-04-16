@@ -294,6 +294,70 @@ namespace Daskata.Controllers
             return RedirectToAction("All", "Exam");
         }
 
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [Route("/Exam/Preview/{examUrl}/Open")]
+        [HttpGet]
+        public async Task<IActionResult> Open(string examUrl)
+        {
+            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == examUrl);
+
+            if (currentExam == null)
+            {
+                return NotFound();
+            }
+
+            var model = new FullExamViewModel()
+            {
+                Title = currentExam.Title,
+                Description = currentExam.Description,
+                TotalPoints = currentExam.TotalPoints,
+                Duration = (int)currentExam.Duration.TotalMinutes,
+                CreationDate = currentExam.CreationDate,
+                LastModifiedDate = currentExam.LastModifiedDate,
+                IsPublished = currentExam.IsPublished,
+                IsPublic = currentExam.IsPublic,
+                ExamUrl = examUrl,
+                CreatedByUserId = currentExam.CreatedByUserId,
+                TimesPassed = currentExam.TimesPassed,
+                StudySubject = currentExam.StudySubject,
+                StudentGrade = currentExam.StudentGrade,
+
+                Questions = (await _context.Questions
+                    .Where(q => q.ExamId == currentExam.Id)
+                    .Include(q => q.Answers)
+                    .ToListAsync())
+                    .Select(q => new QuestionViewModel
+                    {
+                        Id = q.Id,
+                        QuestionText = q.QuestionText,
+                        QuestionType = q.QuestionType,
+                        IsMultipleCorrect = q.IsMultipleCorrect,
+                        Points = q.Points,
+                        ExamId = q.ExamId,
+                        Explanation = q.Explanation,
+
+                        Answers = q.Answers
+                            .Select(a => new AnswerViewModel
+                            {
+                                Id = a.Id,
+                                AnswerText = a.AnswerText,
+                                IsCorrect = a.IsCorrect,
+                                QuestionId = a.QuestionId,
+                            }).ToList()
+                    }).ToList()
+            };
+
+           
+
+
+            TempData["ExamQuestionTitle"] = currentExam.Title;
+            TempData["ExamQuestionId"] = currentExam.Id;
+            TempData["ExamQuestionUrl"] = currentExam.ExamUrl;
+
+            return View(model);
+        }
+
+
         // Methods used in class: ExamController
 
         private async Task<Guid?> GetCurentUserId()

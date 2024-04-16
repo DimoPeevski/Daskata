@@ -56,7 +56,7 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    margin-top: 120px;
+    margin-top: 150px;
 }
 
 .right-home-box {
@@ -67,21 +67,29 @@ body {
     text-align: center;
     padding-left: 120px;
     padding-right: 120px;
-    margin-top: 120px;
+    margin-top: 150px;
 }
 
 @media only screen and (max-width: 1024px) {
-    .home-container.register {
+    .home-container {
         flex-direction: column;
         align-items: stretch;
+        min-height: 100%;
+    }
+
+    .home-container.register {
         min-height: 950px;
     }
 
     .left-home-box, .right-home-box {
-        margin-top: 0px;
+        margin-top: 40px;
         flex: none;
         width: 100%;
         padding: 15px;
+    }
+
+    .left-home-box.logged, .right-home-box.logged {
+        margin-top: 0px;
     }
 }
 
@@ -479,8 +487,16 @@ body {
     background-color: #fff;
 }
 
+.exam-preview.open {
+    max-width: 1200px;
+}
+
 @media only screen and (max-width: 576px) {
     .exam-preview {
+        max-width: 95%;
+    }
+
+    .exam-preview.open {
         max-width: 95%;
     }
 }
