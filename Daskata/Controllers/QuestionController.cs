@@ -89,6 +89,84 @@ namespace Daskata.Controllers
 
             return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl });
         }
+
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [Route("/Question/{parentExamUrl}/{questionId}/Edit")]
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid questionId)
+        {
+            var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == questionId);
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            var model = new QuestionViewModel
+            {
+                Id = question.Id,
+                QuestionText = question.QuestionText,
+                QuestionType = question.QuestionType,
+                IsMultipleCorrect = question.IsMultipleCorrect,
+                Points = question.Points,
+                ExamId = question.ExamId,
+                Explanation = question.Explanation,
+            };
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [HttpPost]
+        [Route("/Question/{parentExamUrl}/{questionId}/Edit")]
+        public async Task<IActionResult> EditQuestion(QuestionViewModel model, string parentExamUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == parentExamUrl);
+
+            if (currentExam == null)
+            {
+                return NotFound();
+            }
+
+            var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == model.Id);
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            question.QuestionText = model.QuestionText;
+            question.QuestionType = model.QuestionType;
+            question.IsMultipleCorrect = model.IsMultipleCorrect;
+            question.Points = model.Points;
+            question.ExamId = currentExam.Id;
+            question.Explanation = model.Explanation;
+
+            _context.Questions.Update(question);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl });
+        }
+
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [Route("/Question/{parentExamUrl}/{questionId}/Delete")]
+        [HttpPost]
+        public async Task<IActionResult> Delete(string parentExamUrl, Guid questionId)
+        {
+            var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == questionId);
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            _context.Questions.Remove(question);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl });
+        }
     }
 }
 

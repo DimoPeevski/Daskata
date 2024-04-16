@@ -496,6 +496,7 @@ body {
 @media only screen and (max-width: 576px) {
     .exam-preview {
         max-width: 95%;
+        padding: 20px;
     }
 
     .exam-preview.open {
@@ -980,4 +981,8 @@ btn-primary:focus {
     border-radius: 7px;
     padding: 20px;
     margin: 0px;
+}
+
+.correct-answer {
+    color: #11b014;
 }

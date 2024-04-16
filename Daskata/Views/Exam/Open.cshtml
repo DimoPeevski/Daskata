@@ -26,7 +26,6 @@
                     <p class="m-0">Максимален брой точки: @Model.TotalPoints</p>
                 </div>
             </div>
-
             <!-- Block saparator-->
             @if (Model.Questions.Any())
             {
@@ -34,7 +33,7 @@
                     @foreach (var question in Model.Questions)
                     {
                         <li>
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <p><strong>@question.QuestionText</strong></p>
                                     @if (!string.IsNullOrEmpty(question.Explanation))
@@ -45,24 +44,43 @@
                                         <p class="m-0">Брой точки: <span>@question.Points т.</span></p>
                                         <p class="m-0">Правилни отговори: @(question.IsMultipleCorrect ? "Няколко" : "Един")</p>
                                     </div>
-                                    <div class="col-md-12 mt-3 mb-5">
+                                    <div class="col-md-12 mt-3 mb-3">
                                         <p><strong>Отговори:</strong></p>
                                         <ul>
                                             @foreach (var answer in question.Answers)
                                             {
-                                                <li class="@(answer.IsCorrect ? "correct-answer" : "")">@answer.AnswerText</li>
+                                                <div class="d-flex align-items-center @(answer.IsCorrect ? "correct-answer" : "")">
+                                                    <a href="/Answer/@Model.ExamUrl/@question.Id/@answer.Id/Edit" class="text-decoration-none">
+                                                        <img src="~/lib/edit-answer.png" width="24px" />
+                                                    </a>
+                                                    <form class="delete-answer" asp-controller="Answer" asp-action="Delete" method="post" asp-route-parentExamUrl="@Model.ExamUrl" asp-route-parentQuestionId="@question.Id" asp-route-answerId="@answer.Id">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="border-0 p-0 m-2" style="background-color: transparent" alt="Delete Answer">
+                                                            <img src="~/lib/remove-answer.png" width="24px" />
+                                                        </button>
+                                                    </form>
+                                                    <p class="mb-0">@answer.AnswerText</p>
+                                                </div>
                                             }
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="d-flex flex-column align-items-end justify-content-center" id="profileButtons">
-                                    <a href="#" class="m-2" alt="Редактиране на въпрос">
+                                <div class="d-flex flex-column align-items-end justify-content-start">
+                                    <a href="/Question/@Model.ExamUrl/@question.Id/Edit" class="m-2" alt="Редактиране на въпрос">
                                         <partial name="_EditButtonSVGPartial" />
                                     </a>
-                                    <a href="#" class="m-2" alt="Изтриване на въпрос">
-                                        <partial name="_DeleteButtonSVGPartial" />
-                                    </a>
+                                    <form class="delete-question border-0 p-0" asp-controller="Question" asp-action="Delete" method="post" asp-route-questionId="@question.Id" asp-route-parentExamUrl="@Model.ExamUrl">
+                                        <input type="hidden" name="questionId" value="@question.Id" />
+                                        <input type="hidden" name="parentExamUrl" value="@Model.ExamUrl" />
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="border-0 p-0 m-2" style="background-color: transparent" alt="Изтриване на въпрос">
+                                            <partial name="_DeleteButtonSVGPartial" />
+                                        </button>
+                                    </form>
                                 </div>
+                            </div>
+                            <div>
+                                <a href="/Answer/@Model.ExamUrl/@question.Id/Add" class="text-decoration-none"><img src="~/lib/add-answer.png" style="width:32px" /> </a>
                             </div>
                             <hr />
                         </li>
@@ -73,13 +91,12 @@
             {
                 <p>Все още няма въпроси към този изпит.</p>
             }
-
-            <!-- Block saparator-->
+            <p></p>
             @{
                 if (userId == loggedUser!.Id.ToString())
                 {
                     <div class="exam-preview-button">
-                        <a href="/Question/@TempData["ExamQuestionUrl"]/Create" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Добави въпрос</a>
+                        <a href="/Question/@Model.ExamUrl/Create" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Добави въпрос</a>
                     </div>
                     <div class="exam-preview-button">
                         <a asp-area="" asp-controller="Exam" asp-action="Asign" class="button-create-test btn btn-primary d-flex justify-content-center align-items-center m-0">Изпрати до ученик</a>
@@ -104,5 +121,25 @@
 
 @section Scripts {
     <script src="~/js/user-profile-fetch.js"></script>
-}
+    <script>
+        // Confirmation for question deletion
+        document.querySelectorAll(".delete-question").forEach(function (form) {
+            form.addEventListener("submit", function (event) {
+                var confirmation = confirm("Сигурни ли сте, че искате да изтриете този въпрос?");
+                if (!confirmation) {
+                    event.preventDefault();
+                }
+            });
+        });
 
+        // Confirmation for answer deletion
+        document.querySelectorAll(".delete-answer").forEach(function (form) {
+            form.addEventListener("submit", function (event) {
+                var confirmation = confirm("Сигурни ли сте, че искате да изтриете този отговор?");
+                if (!confirmation) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+}
