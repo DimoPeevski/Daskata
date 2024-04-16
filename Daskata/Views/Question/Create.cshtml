@@ -6,10 +6,11 @@
 
 <div class="home-container-column">
     <div class="row mt-4">
-        <h2 class="mt-4 text-center">Създаване на въпрос към изпит : "@TempData["ExamQuestionTitle"]"</h2>
+        <h2 class="mt-4 text-center">Създаване на въпрос към изпит</h2>
+        <h5 class="mt-4 text-center">"@TempData["ExamQuestionTitle"]"</h5>
         <div class="col-md-12 p-3">
             <form class="row g-3 mt-4" id="editForm" asp-controller="Question" asp-action="Create" method="post">
-                <input type="hidden" asp-for="ExamId" />                
+                <input type="hidden" asp-for="ExamId" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="col-md-12 mb-3">
                     <label asp-for="QuestionText" class="form-label" style="font-size: 15px;">Опишете обстойно въпросът, който желаете да добавите към конкретния изпит</label>
@@ -17,15 +18,9 @@
                     <span asp-validation-for="QuestionText" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-12 mb-1">
-                    <label asp-for="Explanation" class="form-label" style="font-size: 15px;">Добавете допълнително пояснение, ако е въпросът го изисква</label>
-                    <textarea asp-for="Explanation" class="form-control profile-edit-input" aria-required="false" placeholder="" rows="2"></textarea>
-                    <span asp-validation-for="Explanation" class="text-danger"></span>
-                </div>
-
                 <div class="col-md-5 mb-3">
                     <label asp-for="QuestionType" class="form-label" style="font-size: 15px;">Какъв тип въпрос е това?</label>
-                    <select asp-for="QuestionType" type="number" class="form-control profile-edit-input" aria-required="true" placeholder="" >
+                    <select asp-for="QuestionType" type="number" class="form-control profile-edit-input" aria-required="true" placeholder="">
                         <option value="Multiple">Ще трябва да се посочи правилния орговор</option>
                         <option value="TrueFalse">Ще е от тип "правилно" или "грешно"</option>
                     </select>
@@ -43,12 +38,21 @@
 
                 <div class="col-md-2 mb-3">
                     <label asp-for="Points" class="form-label" style="font-size: 15px;">Точки</label>
-                    <input asp-for="Points" class="form-control profile-edit-input" aria-required="true"/>
+                    <input asp-for="Points" class="form-control profile-edit-input" aria-required="true" />
                     <span asp-validation-for="Points" class="text-danger"></span>
                 </div>
 
-                <div class="col-12 mt-4">
-                    <button type="submit" class="btn btn-primary button-login">Добави въпроса</button>
+                <div class="col-md-12 mb-1">
+                    <label asp-for="Explanation" class="form-label" style="font-size: 15px;">Добавете допълнително пояснение, ако е въпросът го изисква</label>
+                    <textarea asp-for="Explanation" class="form-control profile-edit-input" aria-required="false" placeholder="" rows="2"></textarea>
+                    <span asp-validation-for="Explanation" class="text-danger"></span>
+                </div>
+
+                <div class="col-6 mt-4">
+                    <a href="/Exam/Preview/@TempData["ExamQuestionUrl"]/Open" class="btn btn-primary button-create-test m-0 p-3 w-100">Върни ме назад</a>
+                </div>
+                <div class="col-6 mt-4">
+                    <button type="submit" class="btn btn-primary button-create-user m-0 p-3 w-100">Добави въпроса</button>
                     <div id="userEditedNotification" class="user-edited-notification">Добавяне...</div>
                 </div>
             </form>
@@ -56,6 +60,8 @@
     </div>
 </div>
 
+
 @section Scripts {
-    <script src="~/js/post-notification.js"></script>
+    <script src="~/js/question-types-fix.js"></script>
 }
+

@@ -487,9 +487,11 @@ body {
     background-color: #fff;
 }
 
-.exam-preview.open {
-    max-width: 1200px;
-}
+    .exam-preview.open {
+        max-width: 878px;
+        background: #ffffff;
+        box-shadow: 0px 0px 7px 0px rgba(48, 101, 144, 0.3) inset;
+    }
 
 @media only screen and (max-width: 576px) {
     .exam-preview {
@@ -970,4 +972,12 @@ div.profile-box {
 
 btn-primary:focus {
     background-color: #f25560;
+}
+
+.preview-box {
+    background: #ffffff;
+    box-shadow: 0 .2rem .4rem 0 rgba(0,0,0,0.15),0 .1rem .1rem 0 rgba(0,0,0,0.15);    
+    border-radius: 7px;
+    padding: 20px;
+    margin: 0px;
 }

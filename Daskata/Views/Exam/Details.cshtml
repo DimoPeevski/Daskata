@@ -29,6 +29,7 @@
                     <input asp-for="TotalPoints" class="form-control profile-edit-input" aria-required="true" placeholder="" />
                     <span asp-validation-for="TotalPoints" class="text-danger"></span>
                 </div>
+
                 <div class="col-md-1 mb-3">
                     <label asp-for="IsPublic" class="form-label" style="font-size: 15px;">Публичен?</label>
                     <select asp-for="IsPublic" class="form-control profile-edit-input" aria-required="true">
@@ -44,10 +45,14 @@
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
-                <div class="col-12 mt-4">
+                <div class="col-6 mt-4">
+                    <a href="/Exam/Create" class="btn btn-primary button-create-test m-0 p-3 w-100">Започни отначало</a>
+                </div>
+                <div class="col-6 mt-4">
                     <button type="submit" class="btn btn-primary button-login">Създай</button>
                     <div id="userEditedNotification" class="user-edited-notification">Създаване...</div>
                 </div>
+
             </form>
         </div>
     </div>

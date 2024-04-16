@@ -9,6 +9,7 @@
     <h2 class="mt-4 text-center">Стъпка 1/3 : Избери предмет</h2>
     <div class="row">
         <form asp-controller="Exam" asp-action="Grade" method="post">
+            <input type="hidden" id="subjectInput" name="subject" value="@ViewData["Subject"]" />
             <div class="exam-preview">
                 <div class="form-group">
                     <div class="row justify-content-center">
@@ -23,7 +24,7 @@
                         }
                     </div>
                 </div>
-                <input type="hidden" id="subjectInput" name="subject" value="@ViewData["Subject"]" />
+                
             </div>
             <div class="mt-5 text-center">
                 <a asp-controller="Exam" asp-action="All" type="submit" class="btn btn-primary button-create-user">Назад</a>

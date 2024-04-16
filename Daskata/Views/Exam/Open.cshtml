@@ -14,22 +14,16 @@
 <div class="home-container-column">
     <div class="row">
         <div class="exam-preview open">
-            <h2 class="mb-5">@Model.Title</h2>
+            <h2 class="mb-5 mt-3 text-center">@Model.Title</h2>
             <p class="mb-5">@Model.Description</p>
-            <div class="row">
+            <div class="row text-center" style="font-size: 15px; color:#424242">
                 <div class="col-md-6">
-                    <p class="m-0">Автор: <span style="cursor: pointer; color: #0767a3;" onclick="previewUserProfile('@@@createdByUser!.UserName')">@@@createdByUser.UserName</span></p>
-                    <p class="m-0">Създаден на дата: @GetRegistrationMonthYearAsNumbers(Model.CreationDate.ToString())</p>
-                    <p class="m-0">Последна промяна: @GetRegistrationMonthYearAsNumbers(Model.LastModifiedDate.ToString())</p>
                     <p class="m-0">Предмет: @TranslateExamSubjectInBG(Model.StudySubject.ToString())</p>
-                    <p class="m-0">Публичен: <span style="color: @(Model.IsPublic ? "green" : "red");"> @(Model.IsPublic ? "Да" : "Не")</span></p>
+                    <p class="m-0">Подходяща възраст: @GradeNumberExtract(Model.StudentGrade.ToString()) клас</p>
                 </div>
                 <div class="col-md-6 mb-5">
-                    <p class="m-0">Максимален брой точки: @Model.TotalPoints</p>
                     <p class="m-0">Продължителност: @Model.Duration мин</p>
-                    <p class="m-0">Подходяща възраст: @GradeNumberExtract(Model.StudentGrade.ToString()) клас</p>
-                    <p class="m-0">Брой успешно издържан: @Model.TimesPassed</p>
-                    <p class="m-0">Статус: <span style="color: @(Model.IsPublished ? "green" : "red");"> @(Model.IsPublished ? "Активен" : "Чернова") </span></p>
+                    <p class="m-0">Максимален брой точки: @Model.TotalPoints</p>
                 </div>
             </div>
 
@@ -40,24 +34,37 @@
                     @foreach (var question in Model.Questions)
                     {
                         <li>
-                            <strong>@question.QuestionText</strong>
-
-                            @if (!string.IsNullOrEmpty(question.Explanation))
-                            {
-                                <p style="font-size: 14px;">Допълнително пояснение: @question.Explanation</p>
-                            }
-
-                            <p>Точки: @question.Points</p>
-
-                            <p>@(question.IsMultipleCorrect ? "Има няколко правилни орговора" : "Има само един правилен орговор")</p>
-
-                            <p>Орговори:</p>
-                            <ul>
-                                @foreach (var answer in question.Answers)
-                                {
-                                    <li class="@(answer.IsCorrect ? "correct-answer" : "")">@answer.AnswerText</li>
-                                }
-                            </ul>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p><strong>@question.QuestionText</strong></p>
+                                    @if (!string.IsNullOrEmpty(question.Explanation))
+                                    {
+                                        <p style="font-size: 15px;">Допълнително пояснение: @question.Explanation</p>
+                                    }
+                                    <div class="col-md-12">
+                                        <p class="m-0">Брой точки: <span>@question.Points т.</span></p>
+                                        <p class="m-0">Правилни отговори: @(question.IsMultipleCorrect ? "Няколко" : "Един")</p>
+                                    </div>
+                                    <div class="col-md-12 mt-3 mb-5">
+                                        <p><strong>Отговори:</strong></p>
+                                        <ul>
+                                            @foreach (var answer in question.Answers)
+                                            {
+                                                <li class="@(answer.IsCorrect ? "correct-answer" : "")">@answer.AnswerText</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column align-items-end justify-content-center" id="profileButtons">
+                                    <a href="#" class="m-2" alt="Редактиране на въпрос">
+                                        <partial name="_EditButtonSVGPartial" />
+                                    </a>
+                                    <a href="#" class="m-2" alt="Изтриване на въпрос">
+                                        <partial name="_DeleteButtonSVGPartial" />
+                                    </a>
+                                </div>
+                            </div>
+                            <hr />
                         </li>
                     }
                 </ol>
@@ -66,6 +73,7 @@
             {
                 <p>Все още няма въпроси към този изпит.</p>
             }
+
             <!-- Block saparator-->
             @{
                 if (userId == loggedUser!.Id.ToString())

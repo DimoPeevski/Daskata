@@ -26,7 +26,7 @@ namespace Daskata.Infrastructure.Data.Models
         public bool IsMultipleCorrect { get; set; }
 
         [Comment("Explanation or additional information for the question")]
-        public string Explanation { get; set; } = string.Empty;
+        public string? Explanation { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(QuestionPointsMax)]

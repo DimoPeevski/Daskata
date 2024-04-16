@@ -4,6 +4,7 @@ using Daskata.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Daskata.Infrastructure.Migrations
 {
     [DbContext(typeof(DaskataDbContext))]
-    partial class DaskataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240416071845_QuestionsImplementation")]
+    partial class QuestionsImplementation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,6 +187,7 @@ namespace Daskata.Infrastructure.Migrations
                         .HasComment("Foreign key referencing the associated exam");
 
                     b.Property<string>("Explanation")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasComment("Explanation or additional information for the question");
 

@@ -65,7 +65,7 @@ namespace Daskata.Controllers
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [Route("/Exam/Create/Grade/Details")]
         [HttpPost]
-        public IActionResult Details(string grade)
+        public IActionResult Details([FromForm] string grade)
         {
             var model = new FullExamViewModel()
             {
@@ -334,7 +334,7 @@ namespace Daskata.Controllers
                         IsMultipleCorrect = q.IsMultipleCorrect,
                         Points = q.Points,
                         ExamId = q.ExamId,
-                        Explanation = q.Explanation,
+                        Explanation = q.Explanation ?? string.Empty,
 
                         Answers = q.Answers
                             .Select(a => new AnswerViewModel
@@ -346,9 +346,6 @@ namespace Daskata.Controllers
                             }).ToList()
                     }).ToList()
             };
-
-           
-
 
             TempData["ExamQuestionTitle"] = currentExam.Title;
             TempData["ExamQuestionId"] = currentExam.Id;
