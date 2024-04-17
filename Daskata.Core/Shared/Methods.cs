@@ -87,7 +87,18 @@ namespace Daskata.Core.Shared
                     return "Неопределен";
             }
         }
-
+        public static string TranslateQuestionsTypeBG(string subjectName)
+        {
+            switch (subjectName)
+            {
+                case "TrueFalse":
+                    return "Правилно/Грешно";
+                case "Multiple":
+                    return "Посочи правилното";
+                default:
+                    return "Неопределен";
+            }
+        }
 
         public static string GradeNumberExtract(string grade)
         {

@@ -9,6 +9,7 @@
     var userId = @Model.CreatedByUserId.ToString();
     var createdByUser = await _userManager.FindByIdAsync(userId);
     var loggedUser = await _userManager.GetUserAsync(User);
+
 }
 
 <div class="home-container-column">
@@ -42,45 +43,62 @@
                                     }
                                     <div class="col-md-12">
                                         <p class="m-0">Брой точки: <span>@question.Points т.</span></p>
-                                        <p class="m-0">Правилни отговори: @(question.IsMultipleCorrect ? "Няколко" : "Един")</p>
+                                        <p class="m-0">Тип: <span>@TranslateQuestionsTypeBG(question.QuestionType)</span></p>
+                                        <p class="m-0">Верни отговори: @(question.IsMultipleCorrect ? "Няколко" : "Един")</p>
                                     </div>
                                     <div class="col-md-12 mt-3 mb-3">
                                         <p><strong>Отговори:</strong></p>
                                         <ul>
-                                            @foreach (var answer in question.Answers)
+                                            @{
+                                                var random = new Random();
+                                                bool isUnderExam = true;
+                                                var answers = isUnderExam ? question.Answers.ToList() : question.Answers.OrderBy(a => random.Next()).ToList();
+                                                char letter = 'а';
+                                            }
+                                            @foreach (var answer in answers)
                                             {
                                                 <div class="d-flex align-items-center @(answer.IsCorrect ? "correct-answer" : "")">
-                                                    <a href="/Answer/@Model.ExamUrl/@question.Id/@answer.Id/Edit" class="text-decoration-none">
-                                                        <img src="~/lib/edit-answer.png" width="24px" />
-                                                    </a>
-                                                    <form class="delete-answer" asp-controller="Answer" asp-action="Delete" method="post" asp-route-parentExamUrl="@Model.ExamUrl" asp-route-parentQuestionId="@question.Id" asp-route-answerId="@answer.Id">
-                                                        @Html.AntiForgeryToken()
-                                                        <button type="submit" class="border-0 p-0 m-2" style="background-color: transparent" alt="Delete Answer">
-                                                            <img src="~/lib/remove-answer.png" width="24px" />
-                                                        </button>
-                                                    </form>
-                                                    <p class="mb-0">@answer.AnswerText</p>
+                                                    @if (createdByUser == loggedUser)
+                                                    {
+                                                        <a href="/Answer/@Model.ExamUrl/@question.Id/@answer.Id/Edit" class="text-decoration-none">
+                                                            <img src="~/lib/edit-answer.png" width="24px" />
+                                                        </a>
+                                                        <form class="delete-answer" asp-controller="Answer" asp-action="Delete" method="post"
+                                                              asp-route-parentExamUrl="@Model.ExamUrl" asp-route-parentQuestionId="@question.Id" asp-route-answerId="@answer.Id">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="border-0 p-0 m-2" style="background-color: transparent" alt="Delete Answer">
+                                                                <img src="~/lib/remove-answer.png" width="24px" />
+                                                            </button>
+                                                        </form>
+                                                    }
+                                                    <p class="mb-0">@letter/. @answer.AnswerText</p>
                                                 </div>
+                                                letter++;
                                             }
-                                        </ul>
                                     </div>
                                 </div>
-                                <div class="d-flex flex-column align-items-end justify-content-start">
-                                    <a href="/Question/@Model.ExamUrl/@question.Id/Edit" class="m-2" alt="Редактиране на въпрос">
-                                        <partial name="_EditButtonSVGPartial" />
-                                    </a>
-                                    <form class="delete-question border-0 p-0" asp-controller="Question" asp-action="Delete" method="post" asp-route-questionId="@question.Id" asp-route-parentExamUrl="@Model.ExamUrl">
-                                        <input type="hidden" name="questionId" value="@question.Id" />
-                                        <input type="hidden" name="parentExamUrl" value="@Model.ExamUrl" />
-                                        @Html.AntiForgeryToken()
-                                        <button type="submit" class="border-0 p-0 m-2" style="background-color: transparent" alt="Изтриване на въпрос">
-                                            <partial name="_DeleteButtonSVGPartial" />
-                                        </button>
-                                    </form>
-                                </div>
+                                @if (createdByUser == loggedUser)
+                                {
+                                    <div class="d-flex flex-column align-items-end justify-content-start">
+                                        <a href="/Question/@Model.ExamUrl/@question.Id/Edit" class="m-2" alt="Редактиране на въпрос">
+                                            <partial name="_EditButtonSVGPartial" />
+                                        </a>
+                                        <form class="delete-question border-0 p-0" asp-controller="Question" asp-action="Delete" method="post" asp-route-questionId="@question.Id" asp-route-parentExamUrl="@Model.ExamUrl">
+                                            <input type="hidden" name="questionId" value="@question.Id" />
+                                            <input type="hidden" name="parentExamUrl" value="@Model.ExamUrl" />
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="border-0 p-0 m-2" style="background-color: transparent" alt="Изтриване на въпрос">
+                                                <partial name="_DeleteButtonSVGPartial" />
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
                             </div>
                             <div>
-                                <a href="/Answer/@Model.ExamUrl/@question.Id/Add" class="text-decoration-none"><img src="~/lib/add-answer.png" style="width:32px" /> </a>
+                                @if (createdByUser == loggedUser)
+                                {
+                                    <a href="/Answer/@Model.ExamUrl/@question.Id/Add" class="text-decoration-none"><img src="~/lib/add-answer.png" width="30px" /> </a>
+                                }
                             </div>
                             <hr />
                         </li>

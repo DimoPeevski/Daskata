@@ -14,7 +14,6 @@ namespace Daskata.Controllers
         private readonly ILogger<QuestionController> _logger;
         private readonly UserManager<UserProfile> _userManager;
         private readonly DaskataDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public QuestionController(ILogger<QuestionController> logger,
                               IHttpContextAccessor httpContextAccessor,
@@ -24,7 +23,6 @@ namespace Daskata.Controllers
             _logger = logger;
             _userManager = userManager;
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
@@ -33,14 +31,20 @@ namespace Daskata.Controllers
         public async Task<IActionResult> Create()
         {
             var parentExamUrl = TempData["ExamQuestionUrl"];
-
             var parentExamId = TempData["ExamQuestionId"] as Guid?;
+
             if (parentExamId == null)
             {
                 return NotFound();
             }
 
+            var loggedUser = await _userManager.GetUserAsync(User);
             var parentExam = await _context.Exams.FirstOrDefaultAsync(e => e.Id == parentExamId.Value);
+
+            if (loggedUser == null || parentExam!.CreatedByUserId != loggedUser!.Id)
+            {
+                return NotFound();
+            }
 
             var model = new QuestionViewModel
             {
@@ -87,6 +91,8 @@ namespace Daskata.Controllers
             _context.Questions.Add(question);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation($"New question with Id {question.Id} was created");
+
             return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl });
         }
 
@@ -95,7 +101,28 @@ namespace Daskata.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid questionId)
         {
+            var parentExamId = TempData["ExamQuestionId"] as Guid?;
+
+            if (parentExamId == null)
+            {
+                return NotFound();
+            }
+
+            var parentExam = await _context.Exams.FirstOrDefaultAsync(e => e.Id == parentExamId.Value);
+            var loggedUser = await _userManager.GetUserAsync(User);
+
+            if (parentExam == null || loggedUser == null)
+            {
+                return NotFound();
+            }
+
+            if (parentExam.CreatedByUserId != loggedUser.Id)
+            {
+                return Unauthorized();
+            }
+
             var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == questionId);
+
             if (question == null)
             {
                 return NotFound();
@@ -133,6 +160,7 @@ namespace Daskata.Controllers
             }
 
             var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == model.Id);
+
             if (question == null)
             {
                 return NotFound();
@@ -148,6 +176,8 @@ namespace Daskata.Controllers
             _context.Questions.Update(question);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation($"Question with Id {question.Id} was successfully edited");
+
             return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl });
         }
 
@@ -156,7 +186,28 @@ namespace Daskata.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string parentExamUrl, Guid questionId)
         {
+            var parentExamId = TempData["ExamQuestionId"] as Guid?;
+
+            if (parentExamId == null)
+            {
+                return NotFound();
+            }
+
+            var parentExam = await _context.Exams.FirstOrDefaultAsync(e => e.Id == parentExamId.Value);
+            var loggedUser = await _userManager.GetUserAsync(User);
+
+            if (parentExam == null || loggedUser == null)
+            {
+                return NotFound();
+            }
+
+            if (parentExam.CreatedByUserId != loggedUser.Id)
+            {
+                return Unauthorized();
+            }
+
             var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == questionId);
+
             if (question == null)
             {
                 return NotFound();
@@ -164,6 +215,8 @@ namespace Daskata.Controllers
 
             _context.Questions.Remove(question);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"Question with Id {question.Id} was successfully deleted");
 
             return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl });
         }
