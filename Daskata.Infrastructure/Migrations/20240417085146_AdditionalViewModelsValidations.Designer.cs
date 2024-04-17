@@ -4,6 +4,7 @@ using Daskata.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Daskata.Infrastructure.Migrations
 {
     [DbContext(typeof(DaskataDbContext))]
-    partial class DaskataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240417085146_AdditionalViewModelsValidations")]
+    partial class AdditionalViewModelsValidations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,6 +197,7 @@ namespace Daskata.Infrastructure.Migrations
                         .HasComment("Indicates if multiple correct answers are allowed");
 
                     b.Property<int>("Points")
+                        .HasMaxLength(200)
                         .HasColumnType("int")
                         .HasComment("Points assigned to the question");
 

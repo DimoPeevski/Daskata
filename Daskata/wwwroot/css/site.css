@@ -992,6 +992,24 @@ btn-primary:focus {
     color: #11b014;
 }
 
-.error-image {
+.exam-warning-box {
+    background-color: #f8d7da;
+    color: #842029;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 5px;
+    margin-bottom: 50px;
+    border-radius: 9px;
+}
 
+.exam-success-box {
+    background-color: #d4edda;
+    color: #155724;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 5px;
+    margin-bottom: 50px;
+    border-radius: 9px;
 }

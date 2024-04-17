@@ -44,8 +44,18 @@
         public const int QuestionTextLenghtMin = 3;
         public const int QuestionTextLenghtMax = 500;
 
-        public const int QuestionPointsMin = 1;
+        public const int QuestionTypeLenghtMin = 1;
+        public const int QuestionTypeLenghtMax = 50;
+
+        public const int QuestionExplanationLenghtMin = 0;
+        public const int QuestionExplanationLenghtMax = 500;
+
+        public const int QuestionPointsMin = 0;
         public const int QuestionPointsMax = 200;
+
+        //Constants used in: Answer
+        public const int AnswerTextLenghtMin = 1;
+        public const int AnswerTextLenghtMax = 500;
 
 
         //Constants used in: RegisterFormModel and LoginFormModel
@@ -63,5 +73,6 @@
         //Constants used as: Error Messages
         public const string uniqueUserGeneratedFailMessage = "Квотата от 1 000 000 регистрирани потребители е достигната. Моля обърнете се към администратор.";
         public const string signInErrorMessage = "Някъде има грешка...";
+        public const string examPointsMoreThanTotalQuestionsPointsSet = "Точките трябва да са повече или равни на {totalQuestionPoints}. Това е вече зададения общ брой точки като сума на всички въпроси към този изпит";
     }
 }

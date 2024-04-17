@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Infrastructure.Data.Models
 {
@@ -12,8 +13,11 @@ namespace Daskata.Infrastructure.Data.Models
         public Guid Id { get; set; }
 
         [Comment("Text of the answer")]
+        [Required]
+        [MaxLength(AnswerTextLenghtMax)]
         public string AnswerText { get; set; } = string.Empty;
 
+        [Required]
         [Comment("Indicates if the answer is correct")]
         public bool IsCorrect { get; set; }
 

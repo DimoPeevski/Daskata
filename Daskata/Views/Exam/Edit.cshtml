@@ -51,10 +51,14 @@
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
-                <div class="col-12 mt-4">
-                    <button type="submit" class="btn btn-primary button-login">Редактирай</button>
-                    <div id="userEditedNotification" class="user-edited-notification">Обновяване...</div>
+                <div class="col-6 mt-4">
+                    <a href="/Exam/Preview/@Model.ExamUrl" class="btn btn-primary button-create-test m-0 p-3 w-100">Върни ме назад</a>
                 </div>
+                <div class="col-6 mt-4">
+                    <button type="submit" class="btn btn-primary button-login">Редактирай</button>
+                    <div id="userEditedNotification" class="user-edited-notification">Редактиране...</div>
+                </div>
+
             </form>
         </div>
     </div>

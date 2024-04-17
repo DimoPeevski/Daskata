@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using static Daskata.Core.Shared.Methods;
 
-
 namespace Daskata.Controllers
 {
     [Authorize]
@@ -28,6 +27,13 @@ namespace Daskata.Controllers
             _userManager = userManager;
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+        }
+
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [HttpGet]
+        public ActionResult Index()
+        {
+            return RedirectToAction("All", "Exam");
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
@@ -111,6 +117,7 @@ namespace Daskata.Controllers
                 IsPublic = model.IsPublic,
                 StudentGrade = studentGrade,
                 StudySubject = studySubject,
+                IsPublished = false,
             };
 
             if (exam.Description == null)
@@ -121,7 +128,8 @@ namespace Daskata.Controllers
             await _context.Exams.AddAsync(exam);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("The exam was created successfully.");
+            _logger.LogInformation($"Exam with Id {exam.Id} was successfully created.");
+
             return RedirectToAction("My", "Exam");
         }
 
@@ -169,14 +177,16 @@ namespace Daskata.Controllers
                 return NotFound();
             }
 
+            int totalQuestionPoints = await _context.Questions
+                .Where(q => q.ExamId == exam.Id)
+                .SumAsync(q => q.Points);
+
             TimeSpan duration = TimeSpan.FromMinutes(model.Duration);
 
             exam!.Title = model.Title;
             exam.Description = model.Description;
-            exam.TotalPoints = model.TotalPoints;
             exam.Duration = duration;
             exam.LastModifiedDate = DateTime.Now;
-            exam.IsPublished = model.IsPublished;
             exam.IsPublic = model.IsPublic;
 
             if (exam.Description == null)
@@ -184,9 +194,46 @@ namespace Daskata.Controllers
                 exam.Description = string.Empty;
             }
 
+            var totalQuestions = await _context.Questions.CountAsync(q => q.ExamId == exam.Id);
+            bool hasQuestionWithoutAnswer = await _context.Questions
+                .Where(q => q.ExamId == exam.Id).AnyAsync(q => !q.Answers.Any());
+
+            if (totalQuestions == 0 || hasQuestionWithoutAnswer)
+            {
+                if (model.IsPublished)
+                {
+                    ModelState.AddModelError(string.Empty, $"Вашият изпит в момента не разполага с формулирани въпроси или има въпрос, който не притежава зададени отговори. " +
+                                     $"Моля, направете необходимите корекции. При настоящите обстоятелства, изпитът не може да бъде със статус 'Активен'");
+                    return View(model);
+                }
+            }
+
+            if (totalQuestionPoints > model.TotalPoints)
+            {
+                ModelState.AddModelError(string.Empty, $"Точките трябва да са повече или равни на {totalQuestionPoints}. " +
+                    $"Това е вече зададения общ брой точки като сума на всички въпроси към този изпит");
+                return View(model);
+            }
+
+            if (totalQuestionPoints < model.TotalPoints
+                || exam.TotalPoints < model.TotalPoints
+                || totalQuestionPoints == 0)
+            {
+                exam.TotalPoints = model.TotalPoints;
+                exam.IsPublished = false;
+            }
+
+            else if (exam.TotalPoints == model.TotalPoints
+                || totalQuestionPoints == model.TotalPoints)
+            {
+                exam.TotalPoints = model.TotalPoints;
+                exam.IsPublished = model.IsPublished;
+            }
+
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("The exam was edited successfully.");
+            _logger.LogInformation($"Exam with Id {exam.Id} was successfully edited.");
+
             return RedirectToAction("Preview", "Exam", new { examUrl = model.ExamUrl });
         }
 
@@ -288,13 +335,6 @@ namespace Daskata.Controllers
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
-        [HttpGet]
-        public ActionResult Index()
-        {
-            return RedirectToAction("All", "Exam");
-        }
-
-        [Authorize(Roles = "Admin,Manager,Teacher")]
         [Route("/Exam/Preview/{examUrl}/Open")]
         [HttpGet]
         public async Task<IActionResult> Open(string examUrl)
@@ -347,6 +387,20 @@ namespace Daskata.Controllers
                     }).ToList()
             };
 
+            int totalQuestionsPoints = 0;
+            bool hasQuestionWithoutAnswer = false;
+            foreach (var question in model.Questions)
+            {
+                totalQuestionsPoints += question.Points;
+                if (!question.Answers.Any())
+                {
+                    hasQuestionWithoutAnswer = true;
+                }
+            }
+
+            ViewBag.TotalQuestionsPoints = totalQuestionsPoints;
+            ViewBag.HasQuestionWithoutAnswer = hasQuestionWithoutAnswer;
+
             TempData["ExamQuestionTitle"] = currentExam.Title;
             TempData["ExamQuestionId"] = currentExam.Id;
             TempData["ExamQuestionUrl"] = currentExam.ExamUrl;
@@ -356,7 +410,6 @@ namespace Daskata.Controllers
 
 
         // Methods used in class: ExamController
-
         private async Task<Guid?> GetCurentUserId()
         {
             var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);

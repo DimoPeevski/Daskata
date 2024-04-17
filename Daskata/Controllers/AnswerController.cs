@@ -69,7 +69,9 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            var question = await _context.Questions.FindAsync(parentQuestionId);
+            var question = await _context.Questions
+                .Include(q => q.Answers).FirstOrDefaultAsync(q => q.Id == parentQuestionId);
+
             if (question == null)
             {
                 return NotFound();
@@ -82,6 +84,31 @@ namespace Daskata.Controllers
                 IsCorrect = model.IsCorrect,
                 QuestionId = question.Id
             };
+
+            if (question.QuestionType == "TrueFalse")
+            {
+                if (question.Answers.Count() >= 2)
+                {
+                    ModelState.AddModelError(string.Empty, "Въпроси от тип 'Правилно/Грешно' могат да имат само по два отговора.");
+                    return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl, id = parentQuestionId });
+                }
+
+                if (question.Answers.Count(a => a.IsCorrect) > 1)
+                {
+                    ModelState.AddModelError(string.Empty, "Въпросът трябва да има точно един правилен отговор. Моля направете корекция");
+                    return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl, id = parentQuestionId });
+                }
+            }
+
+            if (question.QuestionType == "Multiple" && !question.IsMultipleCorrect)
+            {
+                if (question.Answers.Count(a => a.IsCorrect) > 1)
+                {
+                    ModelState.AddModelError(string.Empty, "Въпросът трябва да има точно един правилен отговор. Моля направете корекция");
+                    return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl, id = parentQuestionId });
+                }
+            }
+
 
             _context.Answers.Add(answer);
             await _context.SaveChangesAsync();
@@ -146,7 +173,7 @@ namespace Daskata.Controllers
             }
 
             var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == parentExamUrl);
-
+            
             if (currentExam == null)
             {
                 return NotFound();
@@ -161,6 +188,29 @@ namespace Daskata.Controllers
 
             answer.AnswerText = model.AnswerText;
             answer.IsCorrect = model.IsCorrect;
+
+            var question = await _context.Questions
+                .Include(q => q.Answers).FirstOrDefaultAsync(q => q.Id == parentQuestionId);
+
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            if (question.QuestionType == "TrueFalse" && question.Answers.Count(a => a.IsCorrect) > 1)
+            {
+                ModelState.AddModelError(string.Empty, "Въпросът вече има зададен правилен отговор. Моля направете корекция");
+                return View(model);
+            }
+
+            if (question.QuestionType == "Multiple" && !question.IsMultipleCorrect)
+            {
+                if (question.Answers.Count(a => a.IsCorrect) > 1)
+                {
+                    ModelState.AddModelError(string.Empty, "Въпросът вече има зададен правилен отговор. Моля направете корекция");
+                    return View(model);
+                }
+            }
 
             _context.Answers.Update(answer);
             await _context.SaveChangesAsync();
@@ -203,6 +253,15 @@ namespace Daskata.Controllers
             }
 
             _context.Answers.Remove(answer);
+
+            int answersCount = await _context.Answers
+                .Where(a => a.QuestionId == parentQuestionId).CountAsync();
+
+            if (answersCount == 0)
+            {
+                parentExam.IsPublished = false;
+            }
+
             await _context.SaveChangesAsync();
 
             _logger.LogInformation($"Answer with Id {answer.Id} was successfully deleted.");

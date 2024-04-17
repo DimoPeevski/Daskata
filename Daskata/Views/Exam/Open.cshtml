@@ -1,6 +1,9 @@
-﻿@using Daskata.Infrastructure.Data.Models
+﻿@using Daskata.Infrastructure.Data
+@using Daskata.Infrastructure.Data.Models
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
 @using static Daskata.Core.Shared.Methods;
+@inject DaskataDbContext _context
 @model FullExamViewModel;
 @inject UserManager<UserProfile> _userManager
 
@@ -9,7 +12,6 @@
     var userId = @Model.CreatedByUserId.ToString();
     var createdByUser = await _userManager.FindByIdAsync(userId);
     var loggedUser = await _userManager.GetUserAsync(User);
-
 }
 
 <div class="home-container-column">
@@ -27,7 +29,51 @@
                     <p class="m-0">Максимален брой точки: @Model.TotalPoints</p>
                 </div>
             </div>
-            <!-- Block saparator-->
+            @{
+                if (userId == loggedUser!.Id.ToString())
+                {
+                    bool warningFlag = Model.Questions.Count() == 0
+                    || ((Model.TotalPoints > ViewBag.TotalQuestionsPoints
+                    || Model.TotalPoints < ViewBag.TotalQuestionsPoints)
+                    && Model.Questions.Count() > 0)
+                    || ViewBag.HasQuestionWithoutAnswer;
+
+                    if (warningFlag)
+                    {
+                        <div class="exam-warning-box">
+                            <h5 class="mb-3 text-center">Внимание!</h5>
+                            @if (Model.Questions.Count() == 0)
+                            {
+                                <p class="mb-3">
+                                    Вашият изпит все още няма формулирани въпроси. Моля, добавете въпроси, за да стане активен.
+                                </p>
+                            }
+                            @if ((Model.TotalPoints > ViewBag.TotalQuestionsPoints
+                                || Model.TotalPoints < ViewBag.TotalQuestionsPoints)
+                                && Model.Questions.Count() > 0)
+                            {
+                                <p class="mb-3">
+                                    Изпитът е определен с максимален брой точки @Model.TotalPoints, докато общият брой точки от въпросите е @ViewBag.TotalQuestionsPoints. За да бъде активен и достъпен за решаване, двете стойности трябва да са равни.
+                                </p>
+                            }
+                            @if (ViewBag.HasQuestionWithoutAnswer)
+                            {
+                                <p class="mb-3">
+                                    Във вашия изпит имате въпрос, който няма отговори. За да е активен и достъпен за решаване не следва да има въпрос без зададени отговори.
+                                </p>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="exam-success-box">
+                            <h5 class="mb-3 text-center">Поздравления!</h5>
+                            <p class="mb-3 text-center">Вашият изпит може да бъде активиран.</p>
+                        </div>
+                    }
+                }
+            }
+
             @if (Model.Questions.Any())
             {
                 <ol>
@@ -48,33 +94,33 @@
                                     </div>
                                     <div class="col-md-12 mt-3 mb-3">
                                         <p><strong>Отговори:</strong></p>
-                                        <ul>
-                                            @{
-                                                var random = new Random();
-                                                bool isUnderExam = true;
-                                                var answers = isUnderExam ? question.Answers.ToList() : question.Answers.OrderBy(a => random.Next()).ToList();
-                                                char letter = 'а';
-                                            }
-                                            @foreach (var answer in answers)
-                                            {
-                                                <div class="d-flex align-items-center @(answer.IsCorrect ? "correct-answer" : "")">
-                                                    @if (createdByUser == loggedUser)
-                                                    {
-                                                        <a href="/Answer/@Model.ExamUrl/@question.Id/@answer.Id/Edit" class="text-decoration-none">
-                                                            <img src="~/lib/edit-answer.png" width="24px" />
-                                                        </a>
-                                                        <form class="delete-answer" asp-controller="Answer" asp-action="Delete" method="post"
-                                                              asp-route-parentExamUrl="@Model.ExamUrl" asp-route-parentQuestionId="@question.Id" asp-route-answerId="@answer.Id">
-                                                            @Html.AntiForgeryToken()
-                                                            <button type="submit" class="border-0 p-0 m-2" style="background-color: transparent" alt="Delete Answer">
-                                                                <img src="~/lib/remove-answer.png" width="24px" />
-                                                            </button>
-                                                        </form>
-                                                    }
-                                                    <p class="mb-0">@letter/. @answer.AnswerText</p>
-                                                </div>
-                                                letter++;
-                                            }
+                                        @{
+                                            var random = new Random();
+                                            bool isUnderExam = true;
+                                            var answers = isUnderExam ? question.Answers.ToList() : question.Answers.OrderBy(a => random.Next()).ToList();
+                                            char letter = 'а';
+                                        }
+
+                                        @foreach (var answer in answers)
+                                        {
+                                            <div class="d-flex align-items-center @(answer.IsCorrect ? "correct-answer" : "")">
+                                                @if (createdByUser == loggedUser)
+                                                {
+                                                    <a href="/Answer/@Model.ExamUrl/@question.Id/@answer.Id/Edit" class="text-decoration-none">
+                                                        <img src="~/lib/edit-answer.png" width="24px" />
+                                                    </a>
+                                                    <form class="delete-answer" asp-controller="Answer" asp-action="Delete" method="post"
+                                                          asp-route-parentExamUrl="@Model.ExamUrl" asp-route-parentQuestionId="@question.Id" asp-route-answerId="@answer.Id">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="border-0 p-0 m-2" style="background-color: transparent" alt="Delete Answer">
+                                                            <img src="~/lib/remove-answer.png" width="24px" />
+                                                        </button>
+                                                    </form>
+                                                }
+                                                <p class="mb-0">@letter/. @answer.AnswerText</p>
+                                            </div>
+                                            letter++;
+                                        }
                                     </div>
                                 </div>
                                 @if (createdByUser == loggedUser)
@@ -104,12 +150,7 @@
                         </li>
                     }
                 </ol>
-            }
-            else
-            {
-                <p>Все още няма въпроси към този изпит.</p>
-            }
-            <p></p>
+            } 
             @{
                 if (userId == loggedUser!.Id.ToString())
                 {
@@ -137,27 +178,8 @@
     </div>
 </div>
 
+
 @section Scripts {
     <script src="~/js/user-profile-fetch.js"></script>
-    <script>
-        // Confirmation for question deletion
-        document.querySelectorAll(".delete-question").forEach(function (form) {
-            form.addEventListener("submit", function (event) {
-                var confirmation = confirm("Сигурни ли сте, че искате да изтриете този въпрос?");
-                if (!confirmation) {
-                    event.preventDefault();
-                }
-            });
-        });
-
-        // Confirmation for answer deletion
-        document.querySelectorAll(".delete-answer").forEach(function (form) {
-            form.addEventListener("submit", function (event) {
-                var confirmation = confirm("Сигурни ли сте, че искате да изтриете този отговор?");
-                if (!confirmation) {
-                    event.preventDefault();
-                }
-            });
-        });
-    </script>
+    <script src="~/js/question-answer-notification.js"></script>
 }

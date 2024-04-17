@@ -89,6 +89,12 @@ namespace Daskata.Controllers
             };
 
             _context.Questions.Add(question);
+
+            int totalQuestionPoints = await _context.Questions
+            .Where(q => q.ExamId == currentExam.Id).SumAsync(q => q.Points);
+
+            currentExam.IsPublished = false;
+
             await _context.SaveChangesAsync();
 
             _logger.LogInformation($"New question with Id {question.Id} was created");
@@ -174,6 +180,15 @@ namespace Daskata.Controllers
             question.Explanation = model.Explanation;
 
             _context.Questions.Update(question);
+
+            int totalQuestionPoints = await _context.Questions
+              .Where(q => q.ExamId == currentExam.Id).SumAsync(q => q.Points);
+
+            if (currentExam.TotalPoints != totalQuestionPoints)
+            {
+                currentExam.IsPublished = false;
+            }
+           
             await _context.SaveChangesAsync();
 
             _logger.LogInformation($"Question with Id {question.Id} was successfully edited");
@@ -214,8 +229,16 @@ namespace Daskata.Controllers
             }
 
             _context.Questions.Remove(question);
-            await _context.SaveChangesAsync();
+            
+            int totalQuestionPoints = await _context.Questions
+                .Where(q => q.ExamId == parentExam.Id).SumAsync(q => q.Points);
 
+            if (parentExam.TotalPoints != totalQuestionPoints)
+            {
+                parentExam.IsPublished = false;
+            }
+
+            await _context.SaveChangesAsync();
             _logger.LogInformation($"Question with Id {question.Id} was successfully deleted");
 
             return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl });

@@ -18,6 +18,7 @@ namespace Daskata.Infrastructure.Data.Models
         public string QuestionText { get; set; } = string.Empty;
 
         [Required]
+        [MaxLength(QuestionTypeLenghtMax)]
         [Comment("Type of the question (e.g., multiple choice, true/false)")]
         public string QuestionType { get; set; } = null!;
 
@@ -25,11 +26,12 @@ namespace Daskata.Infrastructure.Data.Models
         [Comment("Indicates if multiple correct answers are allowed")]
         public bool IsMultipleCorrect { get; set; }
 
+        [MaxLength(QuestionExplanationLenghtMax)]
         [Comment("Explanation or additional information for the question")]
         public string? Explanation { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(QuestionPointsMax)]
+        [Range(QuestionPointsMin, QuestionPointsMax)]
         [Comment("Points assigned to the question")]
         public int Points { get; set; }
 
