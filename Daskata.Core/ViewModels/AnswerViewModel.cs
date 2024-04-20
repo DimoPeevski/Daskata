@@ -1,6 +1,4 @@
-﻿using Daskata.Infrastructure.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static Daskata.Infrastructure.Shared.Constants;
 
 namespace Daskata.Core.ViewModels

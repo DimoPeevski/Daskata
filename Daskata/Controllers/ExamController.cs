@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using static Daskata.Core.Shared.Methods;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Daskata.Controllers
 {
@@ -408,6 +409,142 @@ namespace Daskata.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [Route("/Exam/Pass/{examUrl}")]
+        [HttpGet]
+        public async Task<IActionResult> Pass(string examUrl)
+        {
+            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == examUrl);
+
+            if (currentExam == null)
+            {
+                return NotFound();
+            }
+
+            var loggedUser = await _userManager.GetUserAsync(User);
+
+            if (loggedUser == null)
+            {
+                return NotFound();
+            }
+
+            var startTime = DateTime.Now;
+
+            var model = new FullExamViewModel()
+            {
+                Title = currentExam.Title,
+                Description = currentExam.Description,
+                TotalPoints = currentExam.TotalPoints,
+                Duration = (int)currentExam.Duration.TotalMinutes,
+                CreationDate = currentExam.CreationDate,
+                LastModifiedDate = currentExam.LastModifiedDate,
+                IsPublished = currentExam.IsPublished,
+                IsPublic = currentExam.IsPublic,
+                ExamUrl = examUrl,
+                CreatedByUserId = currentExam.CreatedByUserId,
+                TimesPassed = currentExam.TimesPassed,
+                StudySubject = currentExam.StudySubject,
+                StudentGrade = currentExam.StudentGrade,
+
+                Questions = (await _context.Questions
+                    .Where(q => q.ExamId == currentExam.Id)
+                    .Include(q => q.Answers)
+                    .ToListAsync())
+                    .Select(q => new QuestionViewModel
+                    {
+                        Id = q.Id,
+                        QuestionText = q.QuestionText,
+                        QuestionType = q.QuestionType,
+                        IsMultipleCorrect = q.IsMultipleCorrect,
+                        Points = q.Points,
+                        ExamId = q.ExamId,
+                        Explanation = q.Explanation ?? string.Empty,
+
+                        Answers = q.Answers
+                            .Select(a => new AnswerViewModel
+                            {
+                                Id = a.Id,
+                                AnswerText = a.AnswerText,
+                                IsCorrect = a.IsCorrect,
+                                QuestionId = a.QuestionId,
+                            }).ToList(),
+                    }).ToList(),
+            };
+
+            TempData["ExamStarTime"] = DateTime.Now;
+            TempData["ExamQuestionId"] = currentExam.Id;
+            TempData["ExamQuestionUrl"] = currentExam.ExamUrl;
+            TempData["ExamTotalPoints"] = currentExam.TotalPoints;
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Admin,Manager,Teacher")]
+        [Route("/Exam/Pass/{examUrl}")]
+        [HttpPost]
+        public async Task<IActionResult> Result(string examUrl, ExamAttemptViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == examUrl);
+
+            if (currentExam == null)
+            {
+                return NotFound();
+            }
+
+            var loggedUser = await _userManager.GetUserAsync(User);
+
+            if (loggedUser == null)
+            {
+                return NotFound();
+            }
+
+            List<QuestionViewModel> questions = await _context.Questions
+                .Include(q => q.Answers)
+                .Where(q => q.ExamId == currentExam.Id)
+                .Select(q => new QuestionViewModel
+                {
+                    Id = q.Id,
+                    QuestionText = q.QuestionText,
+                    QuestionType = q.QuestionType,
+                    IsMultipleCorrect = q.IsMultipleCorrect,
+                    Points = q.Points,
+                    ExamId = q.ExamId,
+                    Explanation = q.Explanation ?? string.Empty,
+
+                    Answers = q.Answers.Select(a => new AnswerViewModel
+                    {
+                        AnswerText = a.AnswerText,
+                        IsCorrect = a.IsCorrect
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            var startTime = TempData["ExamStarTime"];
+            var durationTaken = DateTime.Now - (DateTime)startTime!;
+
+            var newExamAttempt = new ExamAttempt
+            {
+                Id = Guid.NewGuid(),
+                StartTime = (DateTime)startTime!,
+                EndTime = DateTime.Now,
+                DurationTaken = durationTaken,
+                IsCompleted = true,
+                ExamId = currentExam.Id,
+                UserId = loggedUser.Id
+            };
+
+            newExamAttempt.Score = CalculateTotalScoreInPercentage(questions);
+
+            _context.ExamAttempts.Add(newExamAttempt);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
 
         // Methods used in class: ExamController
         private async Task<Guid?> GetCurentUserId()
@@ -422,6 +559,53 @@ namespace Daskata.Controllers
             {
                 return await Task.FromResult<Guid?>(null);
             }
+        }
+
+        private double CalculateTotalScoreInPercentage(List<QuestionViewModel> questions)
+        {
+            int sumQuestionsScore = 0;
+            int maxPossiblePoints = (int)TempData["ExamTotalPoints"]!;
+
+            foreach (var question in questions)
+            {
+                if (question.Answers.Any(a => a.IsCorrect))
+                {
+                    if (question.QuestionType == "TrueFalse")
+                    {
+                        sumQuestionsScore += question.Points;
+                    }
+                    if (question.QuestionType == "Multiple")
+                    {
+                        if (question.IsMultipleCorrect)
+                        {
+                            int totalQuestions = question.Answers.Count();
+                            int totalTrueQuestions = question.Answers.Count(q => q.IsCorrect);
+
+                            foreach (var answer in question.Answers)
+                            {
+                                if (answer.IsCorrect)
+                                {
+                                    sumQuestionsScore += question.Points / totalTrueQuestions;
+                                } 
+                            }
+                        }
+                        else
+                        {
+                            sumQuestionsScore += question.Points;
+                        }   
+                    }
+
+                }
+            }
+
+            if (sumQuestionsScore == 0)
+            {
+                return 0;
+            }
+
+            double scoreInPercentage = sumQuestionsScore / maxPossiblePoints * 100;
+
+            return Math.Round(scoreInPercentage, MidpointRounding.AwayFromZero);
         }
     }
 }

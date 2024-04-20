@@ -59,9 +59,9 @@ namespace Daskata.Controllers
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [Route("/Answer/{parentExamUrl}/{parentQuestionId}/Add")]
         [HttpPost]
-        public async Task<IActionResult> AddAnswer(
-            string parentExamUrl, 
-            Guid parentQuestionId, 
+        public async Task<IActionResult> Add(
+            string parentExamUrl,
+            Guid parentQuestionId,
             AnswerViewModel model)
         {
             if (!ModelState.IsValid)
@@ -87,28 +87,27 @@ namespace Daskata.Controllers
 
             if (question.QuestionType == "TrueFalse")
             {
-                if (question.Answers.Count() >= 2)
+                if (question.Answers.Count() == 2)
                 {
                     ModelState.AddModelError(string.Empty, "Въпроси от тип 'Правилно/Грешно' могат да имат само по два отговора.");
-                    return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl, id = parentQuestionId });
+                    return View(model);
                 }
 
-                if (question.Answers.Count(a => a.IsCorrect) > 1)
+                if (question.Answers.Count(a => a.IsCorrect) == 1 && model.IsCorrect)
                 {
-                    ModelState.AddModelError(string.Empty, "Въпросът трябва да има точно един правилен отговор. Моля направете корекция");
-                    return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl, id = parentQuestionId });
+                    ModelState.AddModelError(string.Empty, "Въпросът трябва да има само един правилен отговор. Моля направете корекция.");
+                    return View(model);
                 }
             }
 
             if (question.QuestionType == "Multiple" && !question.IsMultipleCorrect)
             {
-                if (question.Answers.Count(a => a.IsCorrect) > 1)
+                if (question.Answers.Count(a => a.IsCorrect) == 1 && model.IsCorrect)
                 {
-                    ModelState.AddModelError(string.Empty, "Въпросът трябва да има точно един правилен отговор. Моля направете корекция");
-                    return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl, id = parentQuestionId });
+                    ModelState.AddModelError(string.Empty, "Въпросът трябва да има само един правилен отговор. Моля направете корекция.");
+                    return View(model);
                 }
             }
-
 
             _context.Answers.Add(answer);
             await _context.SaveChangesAsync();
@@ -164,7 +163,7 @@ namespace Daskata.Controllers
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [Route("/Answer/{parentExamUrl}/{parentQuestionId}/{answerId}/Edit/")]
         [HttpPost]
-        public async Task<IActionResult> Edit(string parentExamUrl, Guid parentQuestionId, 
+        public async Task<IActionResult> Edit(string parentExamUrl, Guid parentQuestionId,
             Guid answerId, AnswerViewModel model)
         {
             if (!ModelState.IsValid)
@@ -173,7 +172,7 @@ namespace Daskata.Controllers
             }
 
             var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == parentExamUrl);
-            
+
             if (currentExam == null)
             {
                 return NotFound();
@@ -197,17 +196,20 @@ namespace Daskata.Controllers
                 return NotFound();
             }
 
-            if (question.QuestionType == "TrueFalse" && question.Answers.Count(a => a.IsCorrect) > 1)
+            if (question.QuestionType == "TrueFalse")
             {
-                ModelState.AddModelError(string.Empty, "Въпросът вече има зададен правилен отговор. Моля направете корекция");
-                return View(model);
+                if (question.Answers.Count(a => a.IsCorrect) != 1 && model.IsCorrect)
+                {
+                    ModelState.AddModelError(string.Empty, "Въпросът вече има зададен правилен отговор. Моля направете корекция.");
+                    return View(model);
+                }
             }
 
             if (question.QuestionType == "Multiple" && !question.IsMultipleCorrect)
             {
-                if (question.Answers.Count(a => a.IsCorrect) > 1)
+                if (question.Answers.Count(a => a.IsCorrect) != 1 && model.IsCorrect)
                 {
-                    ModelState.AddModelError(string.Empty, "Въпросът вече има зададен правилен отговор. Моля направете корекция");
+                    ModelState.AddModelError(string.Empty, "Въпросът вече има зададен правилен отговор. Моля направете корекция.");
                     return View(model);
                 }
             }

@@ -112,5 +112,23 @@ namespace Daskata.Core.Shared
                 return string.Empty;
             }
         }
+
+        public static double CalculateGrade(double scorePercentage)
+        {
+            double minScoreCutoff = 30.0;
+            double minGrade = 2.50;
+            double maxGrade = 6.00;
+
+            if (scorePercentage < minScoreCutoff)
+            {
+                return minGrade;
+            }
+
+            double scoreRangePercentage = (scorePercentage - minScoreCutoff) / (100 - minScoreCutoff);
+
+            double grade = minGrade + (maxGrade - minGrade) * scoreRangePercentage;
+
+            return Math.Round(grade, 2);
+        }
     }
 }

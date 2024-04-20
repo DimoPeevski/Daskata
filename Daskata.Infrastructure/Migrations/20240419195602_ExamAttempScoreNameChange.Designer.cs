@@ -4,6 +4,7 @@ using Daskata.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Daskata.Infrastructure.Migrations
 {
     [DbContext(typeof(DaskataDbContext))]
-    partial class DaskataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240419195602_ExamAttempScoreNameChange")]
+    partial class ExamAttempScoreNameChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,9 +152,9 @@ namespace Daskata.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasComment("Indicates if the exam attempt is completed");
 
-                    b.Property<double>("Score")
+                    b.Property<double>("ScorePercentage")
                         .HasColumnType("float")
-                        .HasComment("Score in percentages (Score/100) obtained in the exam attempt");
+                        .HasComment("Score obtained in the exam attempt");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2")

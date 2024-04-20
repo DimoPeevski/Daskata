@@ -37,13 +37,13 @@ namespace Daskata.Infrastructure.Data
             modelBuilder.Entity<ExamAttempt>()
                 .HasOne(ea => ea.User)
                 .WithMany(u => u.ExamAttempts)
-                .HasForeignKey(ea => ea.UserID)
+                .HasForeignKey(ea => ea.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<ExamAttempt>()
                 .HasOne(ea => ea.Exam)
                 .WithMany()
-                .HasForeignKey(ea => ea.ExamID)
+                .HasForeignKey(ea => ea.ExamId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
 

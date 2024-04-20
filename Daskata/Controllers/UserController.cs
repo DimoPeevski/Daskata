@@ -119,11 +119,6 @@ namespace Daskata.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            _logger.LogInformation
-                ($"New user with id {uniqueUsername} was created successfully by user with id {user.CreatedByUserId}.");
-
-            await _userManager.AddToRoleAsync(user, userRole);
-
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
@@ -133,6 +128,11 @@ namespace Daskata.Controllers
 
                 return View(model);
             }
+
+            await _userManager.AddToRoleAsync(user, userRole);
+
+            _logger.LogInformation
+                ($"New user with id {uniqueUsername} was created successfully by user with id {user.CreatedByUserId}.");
 
             return RedirectToAction("Index", "Home");
         }

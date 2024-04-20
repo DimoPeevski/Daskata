@@ -1,0 +1,136 @@
+﻿@model FullExamViewModel;
+
+@{
+    ViewData["Title"] = "Провеждане на изпит";
+}
+
+<div class="notification-box text-center" id="confirmBlock">
+    <h2 class="mb-4">Ще стартирате изпит!</h2>
+    <p>Продължителност: @Model.Duration мин</p>
+    <p>Максимален брой точки: @Model.TotalPoints</p>
+    <h4 class="mb-4 mt-4">Желаете ли да започнете?</h4>
+    <button class="btn btn-primary button-title exam" id="backBtn">Назад</button>
+    <button class="btn btn-primary button-title exam" id="startBtn">Да</button>
+</div>
+<div class="home-container-column contentWrapper" id="examBody">
+    <form id="testForm" method="post" asp-controller="Exam" asp-action="Pass" asp-route-examUrl="@Model.ExamUrl">
+        <div class="row">
+            <div class="exam-preview open">
+                <div class="exam-pass-timer-inner text-center">
+                    <span id="countdownDisplay"></span>
+                </div>
+                <h2 class="mb-5 mt-3 text-center">@Model.Title</h2>
+                <p class="mb-5">@Model.Description</p>
+                @if (Model.Questions.Any())
+                {
+                    <ol>
+                        @foreach (var question in Model.Questions)
+                        {
+                            <li>
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <p><strong>@question.QuestionText</strong></p>
+                                        @if (!string.IsNullOrEmpty(question.Explanation))
+                                        {
+                                            <p style="font-size: 15px;">Допълнително пояснение: @question.Explanation</p>
+                                        }
+                                        <div class="col-md-12 mt-3 mb-3">
+                                            @{
+                                                string inputType = string.Empty;
+                                                @if (question.QuestionType == "TrueFalse")
+                                                {
+                                                    inputType = "radio";
+                                                }
+                                                @if (question.QuestionType == "Multiple")
+                                                {
+                                                    @if (question.IsMultipleCorrect)
+                                                    {
+                                                        inputType = "checkbox";
+                                                    }
+                                                    else
+                                                    {
+                                                        inputType = "radio";
+                                                    }
+                                                }
+
+                                                var random = new Random();
+                                                var answers = question.Answers.OrderBy(a => random.Next()).ToList();
+                                                char letter = 'а';
+                                            }
+                                            @foreach (var answer in answers)
+                                            {
+                                                <div class="d-flex align-items-center">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="@inputType" name="@("question" + question.Id)" id="@("answer" + answer.Id)">
+                                                        <label class="form-check-label" for="@("answer" + answer.Id) ">
+                                                            @letter/. @answer.AnswerText
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                letter++;
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                            </li>
+                        }
+                    </ol>
+                }
+                <div class="exam-preview-button">
+                    <button type="submit" class="btn btn-primary button-create-test w-100 d-flex justify-content-center align-items-center m-0">Изпрати за проверка</a>
+                </div>
+                <div class="exam-preview-button">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="button-create-user btn btn-primary d-flex justify-content-center align-items-center m-0">Прекъсни изпита</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    <script>
+        // Function to format seconds into hh:mm:ss
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return [
+                hours.toString().padStart(2, '0'),
+                minutes.toString().padStart(2, '0'),
+                secs.toString().padStart(2, '0'),
+            ].join(':');
+        }
+
+        let duration = @Model.Duration; // Test duration in minutes
+        let timer = duration * 60; // Convert minutes to seconds
+        let countdown; // Will hold the reference to the setInterval
+        let formSubmitted = false;
+
+        // Start the timer when the user clicks "start" button
+        document.getElementById('startBtn').addEventListener('click', function () {
+            // Update the timer on the page and hide the confirm box
+            document.getElementById("countdownDisplay").textContent = formatTime(timer);
+            document.getElementById("confirmBlock").style.display = 'none';
+
+            // Start the countdown
+            countdown = setInterval(function () {
+                if (timer > 0) {
+                    timer--; // Decrement the timer
+                    document.getElementById("countdownDisplay").textContent = formatTime(timer);
+                } else {
+                    clearInterval(countdown); // Stop the countdown
+                    if (!formSubmitted) {
+                        document.getElementById("testForm").submit(); // Submit the form automatically
+                    }
+                }
+            }, 1000);
+        });
+
+        document.getElementById("testForm").addEventListener('submit', function () {
+            formSubmitted = true; // Set to true to prevent form resubmission
+        });
+    </script>
+    <script src="~/js/exam-confirm-box.js"></script>
+}

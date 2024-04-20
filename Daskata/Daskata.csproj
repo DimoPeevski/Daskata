@@ -29,5 +29,12 @@
     <ProjectReference Include="..\Daskata.Core\Daskata.Core.csproj" />
     <ProjectReference Include="..\Daskata.Infrastructure\Daskata.Infrastructure.csproj" />
   </ItemGroup>
+	
+  <ItemGroup>
+    <Content Update="Views\Exam\Pass.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 
 </Project>

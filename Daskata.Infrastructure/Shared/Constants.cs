@@ -73,6 +73,5 @@
         //Constants used as: Error Messages
         public const string uniqueUserGeneratedFailMessage = "Квотата от 1 000 000 регистрирани потребители е достигната. Моля обърнете се към администратор.";
         public const string signInErrorMessage = "Някъде има грешка...";
-        public const string examPointsMoreThanTotalQuestionsPointsSet = "Точките трябва да са повече или равни на {totalQuestionPoints}. Това е вече зададения общ брой точки като сума на всички въпроси към този изпит";
     }
 }

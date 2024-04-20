@@ -142,7 +142,7 @@ namespace Daskata.Controllers
                 IsMultipleCorrect = question.IsMultipleCorrect,
                 Points = question.Points,
                 ExamId = question.ExamId,
-                Explanation = question.Explanation,
+                Explanation = question.Explanation
             };
 
             return View(model);
