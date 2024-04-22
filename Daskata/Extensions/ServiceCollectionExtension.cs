@@ -1,4 +1,6 @@
-﻿using Daskata.Core.Contracts.User;
+﻿using Daskata.Core.Contracts.Profile;
+using Daskata.Core.Contracts.User;
+using Daskata.Core.Services.Profile;
 using Daskata.Core.Services.User;
 using Daskata.Infrastructure.Common;
 using Daskata.Infrastructure.Data;
@@ -13,6 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IProfileService, ProfileService>();
 
             return services;
         }
