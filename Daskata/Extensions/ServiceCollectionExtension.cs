@@ -1,4 +1,7 @@
-﻿using Daskata.Infrastructure.Data;
+﻿using Daskata.Core.Contracts.User;
+using Daskata.Core.Services.User;
+using Daskata.Infrastructure.Common;
+using Daskata.Infrastructure.Data;
 using Daskata.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +12,8 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped<IUserService, UserService>();
+
             return services;
         }
 
@@ -18,6 +23,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             services.AddDbContext<DaskataDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            services.AddScoped<IRepository, Repository>();
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 

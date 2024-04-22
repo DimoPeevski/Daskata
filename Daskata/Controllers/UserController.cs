@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using static Daskata.Infrastructure.Shared.Constants;
+using static Daskata.Infrastructure.Constants.DataConstants;
 
 namespace Daskata.Controllers
 {

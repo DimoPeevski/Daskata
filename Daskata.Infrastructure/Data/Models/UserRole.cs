@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using static Daskata.Infrastructure.Shared.Constants;
+using static Daskata.Infrastructure.Constants.DataConstants;
 
 namespace Daskata.Infrastructure.Data.Models
 {

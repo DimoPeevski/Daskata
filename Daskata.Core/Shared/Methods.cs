@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
-using static Daskata.Infrastructure.Shared.Constants;
+using static Daskata.Infrastructure.Constants.DataConstants;
 
 namespace Daskata.Core.Shared
 {

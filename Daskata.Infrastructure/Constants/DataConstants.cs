@@ -1,6 +1,6 @@
-﻿namespace Daskata.Infrastructure.Shared
+﻿namespace Daskata.Infrastructure.Constants
 {
-    public static class Constants
+    public static class DataConstants
     {
         //Constants used in: UserProfile
         public const int UsernameLenghtMin = 3;
