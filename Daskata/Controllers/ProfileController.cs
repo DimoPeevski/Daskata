@@ -19,7 +19,7 @@ namespace Daskata.Controllers
         public ProfileController(SignInManager<UserProfile> signInManager,
                               UserManager<UserProfile> userManager,
                               DaskataDbContext context,
-                              ILogger<LoginUserFormModel> logger)
+            ILogger<LoginUserFormModel> logger, 
         {
             _signInManager = signInManager;
             _userManager = userManager;
