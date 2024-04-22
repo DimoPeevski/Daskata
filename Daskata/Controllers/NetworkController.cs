@@ -17,7 +17,10 @@ namespace Daskata.Controllers
         private readonly DaskataDbContext _context;
         private readonly ILogger<LoginUserFormModel> _logger;
 
-        public NetworkController(UserManager<UserProfile> userManager, DaskataDbContext context, ILogger<LoginUserFormModel> logger)
+        public NetworkController
+            (UserManager<UserProfile> userManager, 
+            DaskataDbContext context, 
+            ILogger<LoginUserFormModel> logger)
         {
             _userManager = userManager;
             _context = context;

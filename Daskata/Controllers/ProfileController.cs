@@ -1,6 +1,5 @@
 ﻿using Daskata.Core.Contracts.Profile;
 using Daskata.Core.ViewModels;
-using Daskata.Infrastructure.Data;
 using Daskata.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,22 +10,16 @@ namespace Daskata.Controllers
     [Authorize]
     public class ProfileController : Controller
     {
-        private readonly SignInManager<UserProfile> _signInManager;
         private readonly UserManager<UserProfile> _userManager;
         private readonly ILogger<LoginUserFormModel> _logger;
-        private readonly DaskataDbContext _context;
         private readonly IProfileService _profileService;
 
         public ProfileController 
-            (SignInManager<UserProfile> signInManager,
-            UserManager<UserProfile> userManager,
-            DaskataDbContext context,
+            (UserManager<UserProfile> userManager,
             ILogger<LoginUserFormModel> logger, 
             IProfileService profileService)
         {
-            _signInManager = signInManager;
             _userManager = userManager;
-            _context = context;
             _logger = logger;
             _profileService = profileService;
         }
@@ -182,8 +175,7 @@ namespace Daskata.Controllers
             return View(model);
         }
 
-
-        // Methods used in class: ProfileController
+        // Private methods used in class: ProfileController
 
         private string FetchUserId()
         {
