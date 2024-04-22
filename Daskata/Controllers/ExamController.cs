@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using static Daskata.Core.Shared.Methods;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Daskata.Controllers
 {
@@ -96,6 +95,7 @@ namespace Daskata.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ModelState.AddModelError(string.Empty, "Заглавието е задълително.");
                 return View(model);
             }
 

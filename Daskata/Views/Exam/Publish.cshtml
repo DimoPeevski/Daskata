@@ -1,0 +1,63 @@
+﻿@model FullExamViewModel
+
+@{
+    ViewData["Title"] = "Създаване на изпит";
+}
+
+<div class="home-container-column">
+    <div class="row">
+        <h2 class="mt-4 text-center">Стъпка 3/3 : Създаване на изпит</h2>
+        <div class="col-md-12 p-3">
+            <form class="row g-3 mt-0" id="editForm" asp-controller="Exam" asp-action="Publish" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="col-md-7 mb-3">
+                    <label asp-for="Title" class="form-label" style="font-size: 15px;">Заглавие</label>
+                    <input asp-for="Title" class="form-control profile-edit-input" aria-required="true" placeholder="" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+
+                <div class="col-md-2 mb-3">
+                    <label asp-for="Duration" class="form-label" style="font-size: 15px;">Време /мин/</label>
+                    <input asp-for="Duration" type="number" class="form-control profile-edit-input" aria-required="true" placeholder="" />
+                    <span asp-validation-for="Duration" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <label asp-for="TotalPoints" class="form-label" style="font-size: 15px;">Брой точки</label>
+                    <input asp-for="TotalPoints" class="form-control profile-edit-input" aria-required="true" placeholder="" />
+                    <span asp-validation-for="TotalPoints" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-1 mb-3">
+                    <label asp-for="IsPublic" class="form-label" style="font-size: 15px;">Публичен?</label>
+                    <select asp-for="IsPublic" class="form-control profile-edit-input" aria-required="true">
+                        <option value="true">Да</option>
+                        <option value="false">Не</option>
+                    </select>
+                    <span asp-validation-for="TotalPoints" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mb-6">
+                    <label asp-for="Description" class="form-label" style="font-size: 15px;">Описание</label>
+                    <textarea asp-for="Description" class="form-control profile-edit-input" placeholder="" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="col-6 mt-4">
+                    <a href="/Exam/Create" class="btn btn-primary button-create-test m-0 p-3 w-100">Започни отначало</a>
+                </div>
+                <div class="col-6 mt-4">
+                    <button type="submit" class="btn btn-primary button-login">Създай</button>
+                    <div id="userEditedNotification" class="user-edited-notification">Създаване...</div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/post-notification.js"></script>
+}
