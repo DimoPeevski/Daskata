@@ -1,8 +1,15 @@
-﻿using Daskata.Core.Contracts.Error;
+﻿using Daskata.Core.Contracts.Answer;
+using Daskata.Core.Contracts.Exam;
+using Daskata.Core.Contracts.Network;
 using Daskata.Core.Contracts.Profile;
+using Daskata.Core.Contracts.Question;
 using Daskata.Core.Contracts.User;
+using Daskata.Core.Services;
+using Daskata.Core.Services.Answer;
 using Daskata.Core.Services.Error;
+using Daskata.Core.Services.Network;
 using Daskata.Core.Services.Profile;
+using Daskata.Core.Services.Question;
 using Daskata.Core.Services.User;
 using Daskata.Infrastructure.Common;
 using Daskata.Infrastructure.Data;
@@ -18,6 +25,10 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<INetworkService, NetworkService>();
+            services.AddScoped<IExamService, ExamService>();
+            services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IAnswerService, AnswerService>();
             services.AddScoped<IErrorService, ErrorService>();
 
             return services;
@@ -50,7 +61,6 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
- 
         public static async Task<IServiceCollection> RolesSeedAsync(this IServiceCollection services, IConfiguration config)
         {
             var serviceProvider = services.BuildServiceProvider();
@@ -58,7 +68,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<UserRole>>();
 
-                await SeedRolesAsync(roleManager);
+                //await SeedRolesAsync(roleManager);
             }
 
             return services;

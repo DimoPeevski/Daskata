@@ -21,5 +21,8 @@ namespace Daskata.Core.ViewModels
         [Required]
         [Display(Name = " ")]
         public Guid QuestionId { get; set; }
+
+        [Display(Name = " ")]
+        public string? ParentExamUrl { get; set; } = string.Empty;
     }
 }

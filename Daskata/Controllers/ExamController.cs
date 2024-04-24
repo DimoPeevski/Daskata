@@ -1,5 +1,5 @@
-﻿using Daskata.Core.ViewModels;
-using Daskata.Infrastructure.Data;
+﻿using Daskata.Core.Contracts.Exam;
+using Daskata.Core.ViewModels;
 using Daskata.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,20 +13,20 @@ namespace Daskata.Controllers
     [Authorize]
     public class ExamController : Controller
     {
-        private readonly ILogger<ExamController> _logger;
         private readonly UserManager<UserProfile> _userManager;
-        private readonly DaskataDbContext _context;
+        private readonly ILogger<ExamController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IExamService _examService;
 
-        public ExamController(ILogger<ExamController> logger,
-                              IHttpContextAccessor httpContextAccessor,
-                              UserManager<UserProfile> userManager,
-                              DaskataDbContext context)
+        public ExamController(UserManager<UserProfile> userManager,
+            ILogger<ExamController> logger,
+            IHttpContextAccessor httpContextAccessor,
+            IExamService examService)
         {
-            _logger = logger;
             _userManager = userManager;
-            _context = context;
+            _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _examService = examService;
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
@@ -38,31 +38,18 @@ namespace Daskata.Controllers
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var subjects = Enum.GetValues(typeof(SubjectCategory));
-            var subjectList = new List<string>();
-
-            foreach (var subject in subjects)
-            {
-                subjectList.Add(subject.ToString());
-            }
-
+            var subjectList = await _examService.Create();
             return View(subjectList);
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [Route("/Exam/Create/Grade")]
         [HttpPost]
-        public IActionResult Grade([FromForm] string subject)
+        public async Task<IActionResult> Grade([FromForm] string subject)
         {
-            var grades = Enum.GetValues(typeof(GradeCategory));
-            var gradeList = new List<string>();
-
-            foreach (var grade in grades)
-            {
-                gradeList.Add(grade.ToString());
-            }
+            var gradeList = await _examService.Grade(subject);
 
             HttpContext.Session.SetString("Subject", subject);
             return View(gradeList);
@@ -71,18 +58,9 @@ namespace Daskata.Controllers
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [Route("/Exam/Create/Grade/Details")]
         [HttpPost]
-        public IActionResult Details([FromForm] string grade)
+        public async Task<IActionResult> Details([FromForm] string grade)
         {
-            var model = new FullExamViewModel()
-            {
-                Title = string.Empty,
-                Description = string.Empty,
-                Duration = 30,
-                TotalPoints = 60,
-                IsPublic = true,
-                StudySubject = 0,
-                StudentGrade = 0,
-            };
+            var model = await _examService.Details(grade);
 
             HttpContext.Session.SetString("Grade", grade);
             return View(model);
@@ -99,35 +77,11 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            TimeSpan duration = TimeSpan.FromMinutes(model.Duration);
+            var subject = HttpContext.Session.GetString("Subject");
+            var grade = HttpContext.Session.GetString("Grade");
+            var userId = (Guid)await GetCurentUserId();
 
-            var studySubject = (SubjectCategory)Enum.Parse(typeof(SubjectCategory), HttpContext.Session.GetString("Subject"));
-            var studentGrade = (GradeCategory)Enum.Parse(typeof(GradeCategory), HttpContext.Session.GetString("Grade"));
-
-            Exam exam = new()
-            {
-                Id = model.Id,
-                Title = model.Title,
-                Description = model.Description,
-                TotalPoints = model.TotalPoints,
-                Duration = duration,
-                CreationDate = DateTime.Now,
-                LastModifiedDate = DateTime.Now,
-                ExamUrl = GenerateExamUrl(),
-                CreatedByUserId = (Guid)await GetCurentUserId(),
-                IsPublic = model.IsPublic,
-                StudentGrade = studentGrade,
-                StudySubject = studySubject,
-                IsPublished = false,
-            };
-
-            if (exam.Description == null)
-            {
-                exam.Description = string.Empty;
-            }
-
-            await _context.Exams.AddAsync(exam);
-            await _context.SaveChangesAsync();
+            var exam = await _examService.Publish(model, subject, grade, userId);
 
             _logger.LogInformation($"Exam with Id {exam.Id} was successfully created.");
 
@@ -139,7 +93,17 @@ namespace Daskata.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string ExamUrl)
         {
-            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == ExamUrl);
+            Exam currentExam;
+            try
+            {
+                currentExam = await _examService.GetExamByUrlAsync(ExamUrl);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting exam.");
+                return BadRequest();
+            }
 
             if (currentExam == null)
             {
@@ -148,7 +112,7 @@ namespace Daskata.Controllers
 
             var model = new FullExamViewModel()
             {
-                Title = currentExam!.Title,
+                Title = currentExam.Title,
                 Description = currentExam.Description,
                 TotalPoints = currentExam.TotalPoints,
                 Duration = (int)currentExam.Duration.TotalMinutes,
@@ -171,71 +135,21 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            var exam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == model.ExamUrl);
-
-            if (exam == null)
+            try
             {
-                return NotFound();
+                var exam = await _examService.UpdateExamAsync(model);
+
+                _logger.LogInformation($"Exam with Id {exam.Id} was successfully edited.");
+
+                return RedirectToAction("Preview", "Exam", new { examUrl = model.ExamUrl });
             }
 
-            int totalQuestionPoints = await _context.Questions
-                .Where(q => q.ExamId == exam.Id)
-                .SumAsync(q => q.Points);
-
-            TimeSpan duration = TimeSpan.FromMinutes(model.Duration);
-
-            exam!.Title = model.Title;
-            exam.Description = model.Description;
-            exam.Duration = duration;
-            exam.LastModifiedDate = DateTime.Now;
-            exam.IsPublic = model.IsPublic;
-
-            if (exam.Description == null)
+            catch (Exception ex)
             {
-                exam.Description = string.Empty;
-            }
+                ModelState.AddModelError(string.Empty, ex.Message);
 
-            var totalQuestions = await _context.Questions.CountAsync(q => q.ExamId == exam.Id);
-            bool hasQuestionWithoutAnswer = await _context.Questions
-                .Where(q => q.ExamId == exam.Id).AnyAsync(q => !q.Answers.Any());
-
-            if (totalQuestions == 0 || hasQuestionWithoutAnswer)
-            {
-                if (model.IsPublished)
-                {
-                    ModelState.AddModelError(string.Empty, $"Вашият изпит в момента не разполага с формулирани въпроси или има въпрос, който не притежава зададени отговори. " +
-                                     $"Моля, направете необходимите корекции. При настоящите обстоятелства, изпитът не може да бъде със статус 'Активен'");
-                    return View(model);
-                }
-            }
-
-            if (totalQuestionPoints > model.TotalPoints)
-            {
-                ModelState.AddModelError(string.Empty, $"Точките трябва да са повече или равни на {totalQuestionPoints}. " +
-                    $"Това е вече зададения общ брой точки като сума на всички въпроси към този изпит");
                 return View(model);
             }
-
-            if (totalQuestionPoints < model.TotalPoints
-                || exam.TotalPoints < model.TotalPoints
-                || totalQuestionPoints == 0)
-            {
-                exam.TotalPoints = model.TotalPoints;
-                exam.IsPublished = false;
-            }
-
-            else if (exam.TotalPoints == model.TotalPoints
-                || totalQuestionPoints == model.TotalPoints)
-            {
-                exam.TotalPoints = model.TotalPoints;
-                exam.IsPublished = model.IsPublished;
-            }
-
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"Exam with Id {exam.Id} was successfully edited.");
-
-            return RedirectToAction("Preview", "Exam", new { examUrl = model.ExamUrl });
         }
 
         [HttpGet]
@@ -248,89 +162,52 @@ namespace Daskata.Controllers
                 return RedirectToAction("Login", "User");
             }
 
-            var myExams = await _context.Exams
-                .Where(t => t.CreatedByUserId == user.Id)
-                .ToListAsync();
+            try
+            {
+                var myExamsCollection = await _examService.GetExamsByCreatorAsync(user.Id);
+                return View(myExamsCollection);
+            }
 
-            var myExamsCollection = myExams
-                .Select(e => new FullExamViewModel
-                {
-                    Title = e.Title,
-                    Description = e.Description,
-                    Duration = (int)e.Duration.TotalMinutes,
-                    TotalPoints = e.TotalPoints,
-                    IsPublished = e.IsPublished,
-                    CreationDate = e.CreationDate,
-                    ExamUrl = e.ExamUrl,
-                    CreatedByUserId = e.CreatedByUserId,
-                    IsPublic = e.IsPublic
-                }).ToList();
-
-            return View(myExamsCollection);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving the user's exams.");
+                return NotFound();
+            }
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpGet]
         public async Task<IActionResult> All()
         {
-            var allExams = await _context.Exams.ToListAsync();
-
-            if (allExams == null)
+            try
             {
-                return NotFound();
+                var allExamsCollection = await _examService.GetAllExamsAsync();
+
+                if (allExamsCollection == null || allExamsCollection.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return View(allExamsCollection);
             }
 
-            var allExamsCollection = allExams
-                .Select(e => new FullExamViewModel
-                {
-                    Title = e.Title,
-                    Description = e.Description,
-                    Duration = (int)e.Duration.TotalMinutes,
-                    TotalPoints = e.TotalPoints,
-                    IsPublished = e.IsPublished,
-                    CreationDate = e.CreationDate,
-                    ExamUrl = e.ExamUrl,
-                    CreatedByUserId = e.CreatedByUserId,
-                    IsPublic = e.IsPublic
-
-                }).ToList();
-
-            return View(allExamsCollection);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving all exams.");
+                return NotFound();
+            }
         }
 
         [Route("/Exam/Preview/{examUrl}")]
         [HttpGet]
-        public async Task<IActionResult> Preview(string ExamUrl)
+        public async Task<IActionResult> Preview(string examUrl)
         {
-            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == ExamUrl);
+            var examPreview = await _examService.GetExamPreview(examUrl);
 
-            if (currentExam == null)
+            if (examPreview == null)
             {
                 return NotFound();
             }
-
-            var loggedUser = await _userManager.GetUserAsync(User);
-            if (currentExam.CreatedByUserId != loggedUser?.Id && !currentExam.IsPublished)
-            {
-                return NotFound();
-            }
-
-            var examPreview = new FullExamViewModel
-            {
-                Title = currentExam.Title,
-                Description = currentExam.Description,
-                TotalPoints = currentExam.TotalPoints,
-                Duration = (int)currentExam.Duration.TotalMinutes,
-                CreationDate = currentExam.CreationDate,
-                CreatedByUserId = currentExam.CreatedByUserId,
-                LastModifiedDate = currentExam.LastModifiedDate,
-                IsPublished = currentExam.IsPublished,
-                ExamUrl = currentExam.ExamUrl,
-                IsPublic = currentExam.IsPublic,
-                StudySubject = currentExam.StudySubject,
-                StudentGrade = currentExam.StudentGrade,
-                TimesPassed = currentExam.TimesPassed,
-            };
 
             return View(examPreview);
         }
@@ -340,53 +217,12 @@ namespace Daskata.Controllers
         [HttpGet]
         public async Task<IActionResult> Open(string examUrl)
         {
-            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == examUrl);
+            var model = await _examService.GetOpenExam(examUrl);
 
-            if (currentExam == null)
+            if (model == null)
             {
                 return NotFound();
             }
-
-            var model = new FullExamViewModel()
-            {
-                Title = currentExam.Title,
-                Description = currentExam.Description,
-                TotalPoints = currentExam.TotalPoints,
-                Duration = (int)currentExam.Duration.TotalMinutes,
-                CreationDate = currentExam.CreationDate,
-                LastModifiedDate = currentExam.LastModifiedDate,
-                IsPublished = currentExam.IsPublished,
-                IsPublic = currentExam.IsPublic,
-                ExamUrl = examUrl,
-                CreatedByUserId = currentExam.CreatedByUserId,
-                TimesPassed = currentExam.TimesPassed,
-                StudySubject = currentExam.StudySubject,
-                StudentGrade = currentExam.StudentGrade,
-
-                Questions = (await _context.Questions
-                    .Where(q => q.ExamId == currentExam.Id)
-                    .Include(q => q.Answers)
-                    .ToListAsync())
-                    .Select(q => new QuestionViewModel
-                    {
-                        Id = q.Id,
-                        QuestionText = q.QuestionText,
-                        QuestionType = q.QuestionType,
-                        IsMultipleCorrect = q.IsMultipleCorrect,
-                        Points = q.Points,
-                        ExamId = q.ExamId,
-                        Explanation = q.Explanation ?? string.Empty,
-
-                        Answers = q.Answers
-                            .Select(a => new AnswerViewModel
-                            {
-                                Id = a.Id,
-                                AnswerText = a.AnswerText,
-                                IsCorrect = a.IsCorrect,
-                                QuestionId = a.QuestionId,
-                            }).ToList()
-                    }).ToList()
-            };
 
             int totalQuestionsPoints = 0;
             bool hasQuestionWithoutAnswer = false;
@@ -402,9 +238,9 @@ namespace Daskata.Controllers
             ViewBag.TotalQuestionsPoints = totalQuestionsPoints;
             ViewBag.HasQuestionWithoutAnswer = hasQuestionWithoutAnswer;
 
-            TempData["ExamQuestionTitle"] = currentExam.Title;
-            TempData["ExamQuestionId"] = currentExam.Id;
-            TempData["ExamQuestionUrl"] = currentExam.ExamUrl;
+            TempData["ExamQuestionTitle"] = model.Title;
+            TempData["ExamQuestionId"] = model.Id;
+            TempData["ExamQuestionUrl"] = model.ExamUrl;
 
             return View(model);
         }
@@ -414,11 +250,16 @@ namespace Daskata.Controllers
         [HttpGet]
         public async Task<IActionResult> Pass(string examUrl)
         {
-            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == examUrl);
-
-            if (currentExam == null)
+            FullExamViewModel model;
+            try
             {
-                return NotFound();
+                model = await _examService.GetExamAndQuestionsByUrlAsync(examUrl);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while getting exam.");
+                return BadRequest();
             }
 
             var loggedUser = await _userManager.GetUserAsync(User);
@@ -428,53 +269,10 @@ namespace Daskata.Controllers
                 return NotFound();
             }
 
-            var startTime = DateTime.Now;
-
-            var model = new FullExamViewModel()
-            {
-                Title = currentExam.Title,
-                Description = currentExam.Description,
-                TotalPoints = currentExam.TotalPoints,
-                Duration = (int)currentExam.Duration.TotalMinutes,
-                CreationDate = currentExam.CreationDate,
-                LastModifiedDate = currentExam.LastModifiedDate,
-                IsPublished = currentExam.IsPublished,
-                IsPublic = currentExam.IsPublic,
-                ExamUrl = examUrl,
-                CreatedByUserId = currentExam.CreatedByUserId,
-                TimesPassed = currentExam.TimesPassed,
-                StudySubject = currentExam.StudySubject,
-                StudentGrade = currentExam.StudentGrade,
-
-                Questions = (await _context.Questions
-                    .Where(q => q.ExamId == currentExam.Id)
-                    .Include(q => q.Answers)
-                    .ToListAsync())
-                    .Select(q => new QuestionViewModel
-                    {
-                        Id = q.Id,
-                        QuestionText = q.QuestionText,
-                        QuestionType = q.QuestionType,
-                        IsMultipleCorrect = q.IsMultipleCorrect,
-                        Points = q.Points,
-                        ExamId = q.ExamId,
-                        Explanation = q.Explanation ?? string.Empty,
-
-                        Answers = q.Answers
-                            .Select(a => new AnswerViewModel
-                            {
-                                Id = a.Id,
-                                AnswerText = a.AnswerText,
-                                IsCorrect = a.IsCorrect,
-                                QuestionId = a.QuestionId,
-                            }).ToList(),
-                    }).ToList(),
-            };
-
             TempData["ExamStarTime"] = DateTime.Now;
-            TempData["ExamQuestionId"] = currentExam.Id;
-            TempData["ExamQuestionUrl"] = currentExam.ExamUrl;
-            TempData["ExamTotalPoints"] = currentExam.TotalPoints;
+            TempData["ExamQuestionId"] = model.Id;
+            TempData["ExamQuestionUrl"] = model.ExamUrl;
+            TempData["ExamTotalPoints"] = model.TotalPoints;
 
             return View(model);
         }
@@ -489,64 +287,30 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == examUrl);
-
-            if (currentExam == null)
+            try
             {
-                return NotFound();
-            }
+                var loggedUser = await _userManager.GetUserAsync(User);
 
-            var loggedUser = await _userManager.GetUserAsync(User);
-
-            if (loggedUser == null)
-            {
-                return NotFound();
-            }
-
-            List<QuestionViewModel> questions = await _context.Questions
-                .Include(q => q.Answers)
-                .Where(q => q.ExamId == currentExam.Id)
-                .Select(q => new QuestionViewModel
+                if (loggedUser == null)
                 {
-                    Id = q.Id,
-                    QuestionText = q.QuestionText,
-                    QuestionType = q.QuestionType,
-                    IsMultipleCorrect = q.IsMultipleCorrect,
-                    Points = q.Points,
-                    ExamId = q.ExamId,
-                    Explanation = q.Explanation ?? string.Empty,
+                    return NotFound();
+                }
 
-                    Answers = q.Answers.Select(a => new AnswerViewModel
-                    {
-                        AnswerText = a.AnswerText,
-                        IsCorrect = a.IsCorrect
-                    }).ToList()
-                })
-                .ToListAsync();
+                model.UserId = loggedUser.Id;
+                var newExamAttempt = await _examService.CalculateExamResultAsync(examUrl, model);
 
-            var startTime = TempData["ExamStarTime"];
-            var durationTaken = DateTime.Now - (DateTime)startTime!;
+                return RedirectToAction("Index", "Home");
+            }
 
-            var newExamAttempt = new ExamAttempt
+            catch (Exception ex)
             {
-                Id = Guid.NewGuid(),
-                StartTime = (DateTime)startTime!,
-                EndTime = DateTime.Now,
-                DurationTaken = durationTaken,
-                IsCompleted = true,
-                ExamId = currentExam.Id,
-                UserId = loggedUser.Id
-            };
-
-            newExamAttempt.Score = CalculateTotalScoreInPercentage(questions);
-
-            _context.ExamAttempts.Add(newExamAttempt);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Index", "Home");
+                _logger.LogError(ex, "Error occurred while calculating exam result.");
+                return BadRequest();
+            }
         }
 
         // Methods used in class: ExamController
+
         private async Task<Guid?> GetCurentUserId()
         {
             var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -559,53 +323,6 @@ namespace Daskata.Controllers
             {
                 return await Task.FromResult<Guid?>(null);
             }
-        }
-
-        private double CalculateTotalScoreInPercentage(List<QuestionViewModel> questions)
-        {
-            int sumQuestionsScore = 0;
-            int maxPossiblePoints = (int)TempData["ExamTotalPoints"]!;
-
-            foreach (var question in questions)
-            {
-                if (question.Answers.Any(a => a.IsCorrect))
-                {
-                    if (question.QuestionType == "TrueFalse")
-                    {
-                        sumQuestionsScore += question.Points;
-                    }
-                    if (question.QuestionType == "Multiple")
-                    {
-                        if (question.IsMultipleCorrect)
-                        {
-                            int totalQuestions = question.Answers.Count();
-                            int totalTrueQuestions = question.Answers.Count(q => q.IsCorrect);
-
-                            foreach (var answer in question.Answers)
-                            {
-                                if (answer.IsCorrect)
-                                {
-                                    sumQuestionsScore += question.Points / totalTrueQuestions;
-                                } 
-                            }
-                        }
-                        else
-                        {
-                            sumQuestionsScore += question.Points;
-                        }   
-                    }
-
-                }
-            }
-
-            if (sumQuestionsScore == 0)
-            {
-                return 0;
-            }
-
-            double scoreInPercentage = sumQuestionsScore / maxPossiblePoints * 100;
-
-            return Math.Round(scoreInPercentage, MidpointRounding.AwayFromZero);
         }
     }
 }

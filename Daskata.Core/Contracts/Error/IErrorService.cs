@@ -1,4 +1,4 @@
-﻿namespace Daskata.Core.Contracts
+﻿namespace Daskata.Core.Services.Error
 {
     public interface IErrorService
     {

@@ -1,5 +1,5 @@
-﻿using Daskata.Core.ViewModels;
-using Daskata.Infrastructure.Data;
+﻿using Daskata.Core.Contracts.Question;
+using Daskata.Core.ViewModels;
 using Daskata.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,18 +11,17 @@ namespace Daskata.Controllers
     [Authorize]
     public class QuestionController : Controller
     {
-        private readonly ILogger<QuestionController> _logger;
         private readonly UserManager<UserProfile> _userManager;
-        private readonly DaskataDbContext _context;
+        private readonly ILogger<QuestionController> _logger;
+        private readonly IQuestionService _questionService;
 
-        public QuestionController(ILogger<QuestionController> logger,
-                              IHttpContextAccessor httpContextAccessor,
-                              UserManager<UserProfile> userManager,
-                              DaskataDbContext context)
+        public QuestionController (UserManager<UserProfile> userManager,
+            ILogger<QuestionController> logger,
+            IQuestionService questionService)
         {
-            _logger = logger;
             _userManager = userManager;
-            _context = context;
+            _logger = logger;
+            _questionService = questionService;
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
@@ -31,31 +30,8 @@ namespace Daskata.Controllers
         public async Task<IActionResult> Create()
         {
             var parentExamUrl = TempData["ExamQuestionUrl"];
-            var parentExamId = TempData["ExamQuestionId"] as Guid?;
 
-            if (parentExamId == null)
-            {
-                return NotFound();
-            }
-
-            var loggedUser = await _userManager.GetUserAsync(User);
-            var parentExam = await _context.Exams.FirstOrDefaultAsync(e => e.Id == parentExamId.Value);
-
-            if (loggedUser == null || parentExam!.CreatedByUserId != loggedUser!.Id)
-            {
-                return NotFound();
-            }
-
-            var model = new QuestionViewModel
-            {
-                Id = Guid.NewGuid(),
-                QuestionText = string.Empty,
-                QuestionType = "",
-                IsMultipleCorrect = false,
-                Points = 10,
-                ExamId = parentExamId.Value,
-                Explanation = string.Empty,
-            };
+            var model = await _questionService.PrepareQuestionForCreationAsync(parentExamUrl!.ToString()!);
 
             return View(model);
         }
@@ -70,34 +46,19 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == parentExamUrl);
+            try
 
-            if (currentExam == null)
             {
-                return NotFound();
+                await _questionService.CreateQuestionAsync(model, parentExamUrl);
+
+                _logger.LogInformation("New question was created for the exam URL: {parentExamUrl}", parentExamUrl);
             }
-
-            var question = new Question
+            catch (ArgumentException ex)
             {
-                Id = Guid.NewGuid(),
-                QuestionText = model.QuestionText,
-                QuestionType = model.QuestionType,
-                IsMultipleCorrect = model.IsMultipleCorrect,
-                Points = model.Points,
-                ExamId = currentExam.Id,
-                Explanation = model.Explanation,
-            };
-
-            _context.Questions.Add(question);
-
-            int totalQuestionPoints = await _context.Questions
-            .Where(q => q.ExamId == currentExam.Id).SumAsync(q => q.Points);
-
-            currentExam.IsPublished = false;
-
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"New question with Id {question.Id} was created");
+                _logger.LogError(ex, "Error creating question: Exam not found for URL: {parentExamUrl}", parentExamUrl);
+                ModelState.AddModelError(string.Empty, "Търсеният изпит не беше намерен.");
+                return View(model);
+            }
 
             return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl });
         }
@@ -114,38 +75,26 @@ namespace Daskata.Controllers
                 return NotFound();
             }
 
-            var parentExam = await _context.Exams.FirstOrDefaultAsync(e => e.Id == parentExamId.Value);
             var loggedUser = await _userManager.GetUserAsync(User);
 
-            if (parentExam == null || loggedUser == null)
-            {
-                return NotFound();
-            }
-
-            if (parentExam.CreatedByUserId != loggedUser.Id)
+            if (loggedUser == null)
             {
                 return Unauthorized();
             }
 
-            var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == questionId);
-
-            if (question == null)
+            try
             {
-                return NotFound();
+                var model = await _questionService.GetQuestionForEditAsync(questionId, loggedUser.Id);
+                return View(model);
             }
-
-            var model = new QuestionViewModel
+            catch (InvalidOperationException ex)
             {
-                Id = question.Id,
-                QuestionText = question.QuestionText,
-                QuestionType = question.QuestionType,
-                IsMultipleCorrect = question.IsMultipleCorrect,
-                Points = question.Points,
-                ExamId = question.ExamId,
-                Explanation = question.Explanation
-            };
-
-            return View(model);
+                return NotFound(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
@@ -158,42 +107,29 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            var currentExam = await _context.Exams.FirstOrDefaultAsync(e => e.ExamUrl == parentExamUrl);
-
-            if (currentExam == null)
+            try
             {
-                return NotFound();
+                var result = await _questionService.UpdateQuestionAsync(model, parentExamUrl);
+
+                if (!result)
+                {
+                    return NotFound();
+                }
+
+                _logger.LogInformation($"Question with Id {model.Id} was successfully edited.");
+                return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl });
             }
-
-            var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == model.Id);
-
-            if (question == null)
+            catch (KeyNotFoundException ex)
             {
-                return NotFound();
+                _logger.LogError(ex, ex.Message);
+                return NotFound(ex.Message);
             }
-
-            question.QuestionText = model.QuestionText;
-            question.QuestionType = model.QuestionType;
-            question.IsMultipleCorrect = model.IsMultipleCorrect;
-            question.Points = model.Points;
-            question.ExamId = currentExam.Id;
-            question.Explanation = model.Explanation;
-
-            _context.Questions.Update(question);
-
-            int totalQuestionPoints = await _context.Questions
-              .Where(q => q.ExamId == currentExam.Id).SumAsync(q => q.Points);
-
-            if (currentExam.TotalPoints != totalQuestionPoints)
+            catch (Exception ex)
             {
-                currentExam.IsPublished = false;
+                _logger.LogError(ex, "An error occurred when trying to update the question.");
+                ModelState.AddModelError(string.Empty, "Възникна неочаквана грешка по време на актуализиране на въпроса.");
+                return View(model);
             }
-           
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"Question with Id {question.Id} was successfully edited");
-
-            return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl });
         }
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
@@ -201,45 +137,21 @@ namespace Daskata.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string parentExamUrl, Guid questionId)
         {
-            var parentExamId = TempData["ExamQuestionId"] as Guid?;
-
-            if (parentExamId == null)
-            {
-                return NotFound();
-            }
-
-            var parentExam = await _context.Exams.FirstOrDefaultAsync(e => e.Id == parentExamId.Value);
             var loggedUser = await _userManager.GetUserAsync(User);
 
-            if (parentExam == null || loggedUser == null)
-            {
-                return NotFound();
-            }
-
-            if (parentExam.CreatedByUserId != loggedUser.Id)
+            if (loggedUser == null)
             {
                 return Unauthorized();
             }
 
-            var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == questionId);
+            var result = await _questionService.DeleteQuestionAsync(questionId, loggedUser.Id);
 
-            if (question == null)
+            if (!result)
             {
                 return NotFound();
             }
 
-            _context.Questions.Remove(question);
-            
-            int totalQuestionPoints = await _context.Questions
-                .Where(q => q.ExamId == parentExam.Id).SumAsync(q => q.Points);
-
-            if (parentExam.TotalPoints != totalQuestionPoints)
-            {
-                parentExam.IsPublished = false;
-            }
-
-            await _context.SaveChangesAsync();
-            _logger.LogInformation($"Question with Id {question.Id} was successfully deleted");
+            _logger.LogInformation($"Question with Id {questionId} was successfully deleted.");
 
             return RedirectToAction("Open", "Exam", new { examUrl = parentExamUrl });
         }

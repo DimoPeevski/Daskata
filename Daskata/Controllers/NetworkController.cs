@@ -1,12 +1,9 @@
-﻿using Daskata.Core.ViewModels;
-using Daskata.Infrastructure.Data;
+﻿using Daskata.Core.Contracts.Network;
+using Daskata.Core.ViewModels;
 using Daskata.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using static Daskata.Core.Shared.Methods;
 
 namespace Daskata.Controllers
 {
@@ -14,120 +11,78 @@ namespace Daskata.Controllers
     public class NetworkController : Controller
     {
         private readonly UserManager<UserProfile> _userManager;
-        private readonly DaskataDbContext _context;
-        private readonly ILogger<LoginUserFormModel> _logger;
+        private readonly ILogger<NetworkController> _logger;
+        private readonly INetworkService _networkService;
 
-        public NetworkController
-            (UserManager<UserProfile> userManager, 
-            DaskataDbContext context, 
-            ILogger<LoginUserFormModel> logger)
+        public NetworkController(UserManager<UserProfile> userManager,
+            ILogger<NetworkController> logger,
+            INetworkService networkService)
         {
             _userManager = userManager;
-            _context = context;
             _logger = logger;
+            _networkService = networkService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var loggedUser = await _userManager.GetUserAsync(User);
+            try
+            {
+                var loggedUser = await _userManager.GetUserAsync(User);
+                var model = await _networkService.GetConnectedUsersAsync(loggedUser!);
 
-            if (loggedUser == null || !loggedUser.IsActive)
+                return View(model);
+            }
+
+            catch (InvalidOperationException ex)
             {
                 return NotFound();
             }
-
-            var userConnections = await _context.UserConnections
-            .Include(uc => uc.FirstUser)
-            .Include(uc => uc.SecondUser)
-            .ToListAsync();
-
-            var connectedUsers = new List<UserProfile>();
-            foreach (var connection in userConnections)
-            {
-                if (!connectedUsers.Contains(connection.FirstUser))
-                {
-                    connectedUsers.Add(connection.FirstUser);
-                }
-                if (!connectedUsers.Contains(connection.SecondUser))
-                {
-                    connectedUsers.Add(connection.SecondUser);
-                }
-            }
-
-            var model = connectedUsers.Select(u => new UserProfileModel
-            {
-                ProfilePictureUrl = u.ProfilePictureUrl,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                Username = u.UserName!,
-                AdditionalInfo = u.AdditionalInfo,
-                School = u.School,
-                RegistrationDate = GetRegistrationMonthYearAsNumbers(u.RegistrationDate.ToString()),
-                Location = u.Location,
-                IsActive = u.IsActive,
-            }).ToList();
-
-            return View(model);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> My()
         {
-            var loggedUser = await _userManager.GetUserAsync(User);
+            try
+            {
+                var loggedUser = await _userManager.GetUserAsync(User);
+                if (loggedUser == null || !loggedUser.IsActive)
+                {
+                    return NotFound();
+                }
 
-            if (loggedUser == null || !loggedUser.IsActive)
+                var model = await _networkService.GetUsersCreatedByAsync(loggedUser.Id);
+
+                return View(model);
+            }
+            catch (Exception ex)
             {
                 return NotFound();
             }
-
-            var usersCreatedByMe = await _context.Users
-                .Where(u => u.CreatedByUserId == loggedUser!.Id)
-                .ToListAsync();
-
-            var model = usersCreatedByMe.Select(u => new UserProfileModel
-            {
-                ProfilePictureUrl = u.ProfilePictureUrl,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                Username = u.UserName!,
-                AdditionalInfo = u.AdditionalInfo,
-                School = u.School,
-                RegistrationDate = GetRegistrationMonthYearAsNumbers(u.RegistrationDate.ToString()),
-                Location = u.Location,
-                IsActive = u.IsActive,
-            }).ToList();
-
-            return View(model);
         }
 
         [Route("/Network/@{username}/Edit")]
         [HttpGet]
         public async Task<IActionResult> Edit(string username)
         {
-            var userToEdit = await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+            try
+            {
+                var model = await _networkService.GetUserForEditAsync(username);
 
-            if (userToEdit == null || !userToEdit.IsActive)
+                HttpContext.Session.SetString("CurrentUsername", model.Username);
+
+                return View(model);
+            }
+
+            catch (InvalidOperationException ex)
             {
                 return NotFound();
             }
 
-            var model = new EditUserFormModel
+            catch (ArgumentException ex)
             {
-                Username = userToEdit.UserName,
-                Email = userToEdit.Email,
-                FirstName = userToEdit.FirstName,
-                LastName = userToEdit.LastName,
-                PhoneNumber = userToEdit.PhoneNumber,
-                AdditionalInfo = userToEdit.AdditionalInfo,
-                ProfilePictureUrl = userToEdit.ProfilePictureUrl,
-                Location = userToEdit.Location,
-                School = userToEdit.School
-            };
-
-            HttpContext.Session.SetString("CurrentUsername", userToEdit.UserName);
-            return View(model);
+                return BadRequest();
+            }
         }
 
         [Route("/Network/@{username}/Edit")]
@@ -140,109 +95,53 @@ namespace Daskata.Controllers
             }
 
             var currentUsername = HttpContext.Session.GetString("CurrentUsername");
-            var userUnderEdit = await _context.UserProfiles.FirstOrDefaultAsync(e => e.UserName == currentUsername);
 
-            if (userUnderEdit == null)
+            try
             {
-                return NotFound();
+                await _networkService.EditUserAsync(currentUsername, model);
+                _logger.LogInformation($"User {currentUsername} was edited successfully.");
+                return RedirectToAction("My", "Network");
             }
 
-            userUnderEdit.FirstName = model.FirstName;
-            userUnderEdit.LastName = model.LastName;
-            userUnderEdit.ProfilePictureUrl = model.ProfilePictureUrl;
-
-            if (model.School == null)
+            catch (ArgumentException ex)
             {
-                model.School = string.Empty;
-            }
-            if (model.Location == null)
-            {
-                model.Location = string.Empty;
-            }
-            if (model.AdditionalInfo == null)
-            {
-                model.AdditionalInfo = string.Empty;
-            }
-            if (model.PhoneNumber == null)
-            {
-                model.PhoneNumber = string.Empty;
+                return BadRequest();
             }
 
-            userUnderEdit.School = model.School;
-            userUnderEdit.Location = model.Location;
-            userUnderEdit.AdditionalInfo = model.AdditionalInfo;
-
-            if (userUnderEdit.UserName != model.Username)
+            catch (InvalidOperationException ex)
             {
-                if (await UsernameExistsAsync(model.Username))
+                if (ex.Message == "Потребителят не е намерен.")
                 {
-                    ModelState.AddModelError("UsernameExists", "Потребителското име вече съществува.");
+                    return NotFound();
+                }
+
+                else
+                {
                     return View(model);
                 }
             }
-
-            userUnderEdit.UserName = model.Username;
-
-            if (userUnderEdit.Email != model.Email)
-            {
-                if (await EmailExistsAsync(model.Email) && model.Email != "no@email.xyz" && model.Email != string.Empty)
-                {
-                    ModelState.AddModelError("EmailExists", "E-mail адресът име вече съществува.");
-                    return View(model);
-                }
-            }
-
-            userUnderEdit.Email = model.Email.ToLower();
-
-            if (userUnderEdit.PhoneNumber != model.PhoneNumber && model.PhoneNumber != string.Empty)
-            {
-                if (await PhoneNumberExistsAsync(model.PhoneNumber))
-                {
-                    ModelState.AddModelError("PhoneNumberExists", "Телефонът вече съществува.");
-                    return View(model);
-                }
-            }
-
-            userUnderEdit.PhoneNumber = model.PhoneNumber;
-
-            var result = await _userManager.UpdateAsync(userUnderEdit);
-            if (!result.Succeeded)
-            {
-                return View(model);
-            }
-
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation($"User with id {userUnderEdit.Id} was edited.");
-
-            return RedirectToAction("My", "Network");
         }
 
         [Route("/Network/@{username}/Delete")]
         [HttpGet]
         public async Task<IActionResult> Delete(string username)
         {
-            var userToDelete = await _context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == username);
+            try
+            {
+                var model = await _networkService.GetUserProfileForDeletionAsync(username);
 
-            if (userToDelete == null || !userToDelete.IsActive)
+                return View(model);
+            }
+
+            catch (ArgumentException ex)
+            {
+                return BadRequest();
+            }
+
+            catch (InvalidOperationException ex)
             {
                 return NotFound();
             }
-
-            var model = new UserProfileModel
-            {
-                FirstName = userToDelete.FirstName,
-                LastName = userToDelete.LastName,
-                Username = userToDelete.UserName!,
-                ProfilePictureUrl = userToDelete.ProfilePictureUrl,
-                School = userToDelete.School,
-                Location = userToDelete.Location,
-                PhoneNumber = userToDelete.PhoneNumber,
-                RegistrationDate = userToDelete.RegistrationDate.ToString(),
-                Email = userToDelete.Email!
-            };
-
-            return View(model);
         }
 
         [Route("/Network/@{username}/Delete")]
@@ -254,56 +153,25 @@ namespace Daskata.Controllers
                 return View(model);
             }
 
-            var userUnderDelete = await _context.UserProfiles.FirstOrDefaultAsync(u => u.UserName == model.Username);
-
-            userUnderDelete!.FirstName = model.FirstName;
-            userUnderDelete.LastName = model.LastName;
-            userUnderDelete.ProfilePictureUrl = "/lib/profile-pictures/default-profile-image.png";
-            userUnderDelete.AdditionalInfo = string.Empty;
-            userUnderDelete.School = string.Empty;
-            userUnderDelete.Location = string.Empty;
-            userUnderDelete.PhoneNumber = string.Empty;
-
-            userUnderDelete.UserName = model.Username;
-            userUnderDelete.Email = "no@email.xyz";
-            userUnderDelete.IsActive = false;
-
-            var result = await _userManager.UpdateAsync(userUnderDelete);
-            if (!result.Succeeded)
+            try
             {
-                return View(model);
+                await _networkService.DeactivateUserAsync(model.Username);
+                _logger.LogInformation($"User with username {model.Username} was delete (marked as inactive).");
+
+                return RedirectToAction("My", "Network");
             }
 
-            _logger.LogInformation($"User with id {userUnderDelete.Id} was delete (marked as inactive).");
-
-            return RedirectToAction("My", "Network");
-        }
-
-        // Methods used in class: NetworkController
-
-        private async Task<bool> UsernameExistsAsync(string username)
-        {
-            var context = _context.Users;
-            return await context.AnyAsync(u => u.UserName == username);
-        }
-
-        private async Task<bool> EmailExistsAsync(string email)
-        {
-            var context = _context.Users;
-            if (email.ToLower() == "no@email.xyz")
+            catch (ArgumentException ex)
             {
-                return false;
+                return BadRequest();
             }
 
-            return await context.AnyAsync(u => u.Email == email);
-        }
-
-        private async Task<bool> PhoneNumberExistsAsync(string phoneNumber)
-        {
-            var context = _context.Users;
-            return await context.AnyAsync(u => u.PhoneNumber == phoneNumber);
+            catch (InvalidOperationException ex)
+            {
+                return NotFound();
+            }
         }
     }
 }
 
-    
+

@@ -11,6 +11,7 @@
             <form class="row g-3 mt-4" id="editForm" asp-controller="Answer" asp-action="Edit" method="post">
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="QuestionId" />
+                <input type="hidden" asp-for="ParentExamUrl" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="col-md-10 mb-3">
                     <label asp-for="AnswerText" class="form-label" style="font-size: 15px;">Въведете отговор</label>
@@ -28,7 +29,7 @@
                 </div>
 
                 <div class="col-6 mt-4">
-                    <a href="/Exam/Preview/@TempData["ExamQuestionUrl"]/Open" class="btn btn-primary button-create-test m-0 p-3 w-100">Върни ме назад</a>
+                    <a href="/Exam/Preview/@Model.ParentExamUrl/Open" class="btn btn-primary button-create-test m-0 p-3 w-100">Върни ме назад</a>
                 </div>
                 <div class="col-6 mt-4">
                     <button type="submit" class="btn btn-primary button-create-user m-0 p-3 w-100">Обнови отговора</button>

@@ -1,13 +1,12 @@
-﻿using Daskata.Core.Contracts;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
-namespace Daskata.Infrastructure.Services
+namespace Daskata.Core.Services.Error
 {
     public class ErrorService : IErrorService
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<ErrorService> _logger;
 
-        public ErrorService(ILogger logger)
+        public ErrorService(ILogger<ErrorService> logger)
         {
             _logger = logger;
         }
