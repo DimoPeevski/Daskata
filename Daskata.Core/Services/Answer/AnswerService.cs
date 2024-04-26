@@ -25,7 +25,7 @@ namespace Daskata.Core.Services.Answer
                 throw new InvalidOperationException("Въпросът не е намерен.");
             }
 
-            var exam = await _repository.All<Exam>()
+            var exam = await _repository.All<Infrastructure.Data.Models.Exam>()
                 .FirstOrDefaultAsync(e => e.Id == question.ExamId);
 
             if (exam == null || exam.CreatedByUserId != userId)
@@ -137,7 +137,7 @@ namespace Daskata.Core.Services.Answer
                 throw new InvalidOperationException("Въпросът не беше намерен.");
             }
 
-            var parentExam = await _repository.All<Exam>()
+            var parentExam = await _repository.All<Infrastructure.Data.Models.Exam>()
                 .FirstOrDefaultAsync(e => e.Id == answer.Question.ExamId);
 
             if (parentExam!.CreatedByUserId != userId)

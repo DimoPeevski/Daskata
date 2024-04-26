@@ -51,7 +51,7 @@ namespace Daskata.Core.Services.Profile
                 RegistrationDate = loggedUser.RegistrationDate.ToString(),
                 Location = loggedUser.Location,
 
-                Exams = await _repository.All<Exam>()
+                Exams = await _repository.All<Infrastructure.Data.Models.Exam>()
                .Where(e => e.CreatedByUserId == loggedUser.Id)
                .Select(e => new FullExamViewModel
                {
@@ -93,7 +93,7 @@ namespace Daskata.Core.Services.Profile
                 RegistrationDate = currentUser.RegistrationDate.ToString(),
                 Location = currentUser.Location,
 
-                Exams = await _repository.All<Exam>()
+                Exams = await _repository.All<Infrastructure.Data.Models.Exam>()
                 .Where(e => e.CreatedByUserId == currentUser.Id)
                 .Select(e => new FullExamViewModel
                 {

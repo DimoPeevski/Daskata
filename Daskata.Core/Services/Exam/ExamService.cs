@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using static Daskata.Core.Shared.Methods;
 
-namespace Daskata.Core.Services
+namespace Daskata.Core.Services.Exam
 {
     public class ExamService : IExamService
     {
@@ -26,7 +26,8 @@ namespace Daskata.Core.Services
 
         public async Task<List<FullExamViewModel>> GetAllExamsAsync()
         {
-            List<Infrastructure.Data.Models.Exam> exams = await _repository.All<Infrastructure.Data.Models.Exam>().ToListAsync();
+            List<Infrastructure.Data.Models.Exam> exams = await _repository.All<Infrastructure.Data.Models.Exam>()
+                .ToListAsync();
 
             return exams.Select(e => new FullExamViewModel
             {
@@ -157,7 +158,7 @@ namespace Daskata.Core.Services
 
             catch (Exception ex)
             {
-                throw new Exception ("Изпитът не е намерен.");
+                throw new Exception("Изпитът не е намерен.");
             }
         }
 

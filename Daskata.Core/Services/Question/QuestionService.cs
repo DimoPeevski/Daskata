@@ -38,7 +38,7 @@ namespace Daskata.Core.Services.Question
                 return null;
             }
 
-            var parentExam = await _repository.All<Exam>()
+            var parentExam = await _repository.All<Infrastructure.Data.Models.Exam>()
                 .FirstOrDefaultAsync(e => e.ExamUrl == parentExamUrl);
 
             if (parentExam == null || parentExam.CreatedByUserId != loggedUser.Id)
@@ -64,7 +64,7 @@ namespace Daskata.Core.Services.Question
 
         public async Task<Guid> CreateQuestionAsync(QuestionViewModel model, string examUrl)
         {
-            var currentExam = await _repository.All<Exam>()
+            var currentExam = await _repository.All<Infrastructure.Data.Models.Exam>()
            .FirstOrDefaultAsync(e => e.ExamUrl == examUrl);
 
             if (currentExam == null)
@@ -121,7 +121,7 @@ namespace Daskata.Core.Services.Question
 
         public async Task<bool> UpdateQuestionAsync(QuestionViewModel model, string examUrl)
         {
-            var currentExam = await _repository.All<Exam>()
+            var currentExam = await _repository.All<Infrastructure.Data.Models.Exam>()
                 .FirstOrDefaultAsync(e => e.ExamUrl == examUrl);
 
             if (currentExam == null)
@@ -158,7 +158,7 @@ namespace Daskata.Core.Services.Question
                 return false;
             }
 
-            var exam = await _repository.All<Exam>().FirstOrDefaultAsync(e => e.Id == question.ExamId);
+            var exam = await _repository.All<Infrastructure.Data.Models.Exam>().FirstOrDefaultAsync(e => e.Id == question.ExamId);
 
             if (exam == null || exam.CreatedByUserId != userId)
             {
