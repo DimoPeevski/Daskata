@@ -2,6 +2,6 @@
 {
     public class RoleConstants
     {
-        public const string AdminRole = "admin";
+        public const string AdminRole = "Admin";
     }
 }
