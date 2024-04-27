@@ -1,0 +1,34 @@
+﻿@using Daskata.Infrastructure.Data
+@using Microsoft.EntityFrameworkCore
+@using static Daskata.Core.Shared.Methods;
+@model List<PartialExamViewModel>
+@inject DaskataDbContext _context
+
+<div class="home-container-column">
+    <div class="row">
+        @{
+            var users = await _context.UserProfiles.ToDictionaryAsync(u => u.Id);
+        }
+        @foreach (var exam in Model)
+        {
+            if (users.TryGetValue(exam.CreatedByUserId, out var user) && exam.IsPublished && user.Id == exam.CreatedByUserId)
+            {
+                <div class="exam-box" onclick="previewExam('@exam.ExamUrl')">
+                    <div class="exam-status @(exam.IsPublished ? "active" : "non-active")" onclick="@exam.ExamUrl)"></div>
+                    <p><span class="exam-title">@exam.Title</span></p>
+                    <p><span class="exam-description">@exam.Description</span></p>
+                    <div class="exam-box-inner">
+                        <div class="exam-box-sub"><span class="exam-sub-text">⌛ @FormatTimeSpanAsMinutes(exam.Duration)</span></div>
+                        <div class="exam-box-sub"><span class="exam-sub-text">✍️ @exam.TotalPoints т.</span></div>
+                        <div class="exam-box-sub"><span class="exam-sub-text">📅 @GetRegistrationMonthYearAsNumbers(exam.CreationDate.ToString())</span></div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/reduce-title-description.js"></script>
+    <script src="~/js/user-profile-fetch.js"></script>
+}

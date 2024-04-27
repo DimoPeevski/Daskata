@@ -16,12 +16,15 @@
     var roleName = userRolesNames.FirstOrDefault() ?? "None";
 }
 
+<div id="header">
+    <div id="weather"></div>
+</div>
 <div class="navbar-nav">
     <div class="dropdown">
-        <button class="dropbtn" id="profile-picture-desktop">
+        <button class="dropbtn" id="profile-picture-mobile">
             <img class="profile-pic" src="@loggedUser!.ProfilePictureUrl" alt="Профил">
         </button>
-        <div class="dropdown-content" id="dropdown-menu-desktop">
+        <div class="dropdown-content" id="dropdown-menu-mobile">
             <span class="profile-username">@@@loggedUser</span> <br />
             <span class="profile-names">@userFirstName @userLastName</span><br />
 
@@ -48,14 +51,14 @@
                 }
             }
 
-            <a asp-controller="Profile" asp-action="Index">Моят профил</a>
-            @if (roleName == "Admin")
+            <a asp-area="" asp-controller="Profile" asp-action="Index">Моят профил</a>
+            @if(roleName == "Admin")
             {
                 <a asp-area="Admin" asp-controller="Home" asp-action="Dashboard">Админ табло</a>
             }
             <a href="#">Съобщения</a>
-            <a asp-controller="Network" asp-action="Index">Мрежа</a>
-            <a asp-controller="User" asp-action="Logout" id="logoutLinkDesktop">Изход</a>
+            <a asp-area="" asp-controller="Network" asp-action="Index">Мрежа</a>
+            <a asp-area="" asp-controller="User" asp-action="Logout" id="logoutLinkMobile">Изход</a>
         </div>
     </div>
 </div>

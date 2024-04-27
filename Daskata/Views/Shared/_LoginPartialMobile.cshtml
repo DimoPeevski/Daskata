@@ -51,10 +51,14 @@
                 }
             }
 
-            <a asp-controller="Profile" asp-action="Index">Моят профил</a>
+            <a asp-area="" asp-controller="Profile" asp-action="Index">Моят профил</a>
+            @if (roleName == "Admin")
+            {
+                <a asp-area="Admin" asp-controller="Home" asp-action="Dashboard">Админ табло</a>
+            }
             <a href="#">Съобщения</a>
-            <a asp-controller="Network" asp-action="Index">Мрежа</a>
-            <a asp-controller="User" asp-action="Logout" id="logoutLinkMobile">Изход</a>
+            <a asp-area="" asp-controller="Network" asp-action="Index">Мрежа</a>
+            <a asp-area="" asp-controller="User" asp-action="Logout" id="logoutLinkMobile">Изход</a>
         </div>
     </div>
 </div>

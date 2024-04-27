@@ -1,0 +1,56 @@
+﻿@using Daskata.Infrastructure.Data.Models
+@using Microsoft.AspNetCore.Identity
+@using static Daskata.Core.Shared.Methods;
+@model Daskata.Core.ViewModels.UserProfileModel
+@inject UserManager<UserProfile> _userManager
+
+@{
+    var loggedUser = await _userManager.GetUserAsync(User);
+    var userRolesNames = await _userManager.GetRolesAsync(loggedUser!);
+    var roleName = userRolesNames.FirstOrDefault();
+
+    var modifiedDate = @Model.RegistrationDate.ToString();
+    var formattedRegistrationDate = GetRegistrationMonthYearAsText(modifiedDate);
+}
+
+<div class="home-container-column">
+    <div class="row profile-container-cover m-1">
+        <div class="col-md-3">
+            <img src="@Model.ProfilePictureUrl" class="profile-pic-edit" alt="Профилна снимка на @Model.FirstName @Model.LastName">
+        </div>
+        <div class="col-md-9">
+            <div class="row profile-container-info">
+                <div class="col profile-name-resp">
+                    <span class="profile-acc-name">@Model.FirstName @Model.LastName</span>
+                </div>
+                <div class="col-md-4 text-end mt-2 mb-2 profile-button-resp-desktop">
+                    <a class="btn btn-primary button-connect" id="connectButtonDesktop" href="#">Свържете се!</a>
+                </div>
+                <div class="mb-2">
+                    <span class="profile-acc-username" id="viewUserUsername">@@@Model.Username</span>
+                    <input type="hidden" id="loggedUserUsername" value="@loggedUser" />
+                </div>
+                <div class="mb-2">
+                    <span class="profile-acc-username">@TranslateRoleInBG(roleName!)</span>
+                </div>
+                <div class="col-md-4 text-end mt-4 mb-4 profile-button-resp-mobile">
+                    <a class="btn btn-primary button-connect" id="connectButtonMobile" href="#">Свържете се!</a>
+                </div>
+                <div class="mb-4 mt-2">
+                    <span class="profile-acc-info">@Model.AdditionalInfo</span>
+                </div>
+                <div class="row">
+                    @if (!String.IsNullOrEmpty(@Model.School))
+                    {
+                        <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/school.png" alt="Моето училище"> @loggedUser!.School</div></div>
+                    }
+                    @if (!String.IsNullOrEmpty(@Model.Location))
+                    {
+                        <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/location.png" alt="Моята локация"> @loggedUser!.Location</div></div>
+                    }
+                    <div class="col-md-4 mb-2 mt-2"><div class="profile-box"><img src="~/lib/calendar.png" alt="Дата на присъединяване"> Регистриран @formattedRegistrationDate</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

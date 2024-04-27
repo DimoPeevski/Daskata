@@ -68,7 +68,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<UserRole>>();
 
-                //await SeedRolesAsync(roleManager);
+                await SeedRolesAsync(roleManager);
             }
 
             return services;

@@ -51,10 +51,12 @@ app.UseEndpoints(endpoints =>
       name: "areas",
       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
     );
+
+    endpoints.MapDefaultControllerRoute();
+    endpoints.MapRazorPages();
 });
 
-app.MapDefaultControllerRoute();
-app.MapRazorPages();
+
 
 await app.RunAsync();
 
