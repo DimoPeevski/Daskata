@@ -4,6 +4,7 @@ using Daskata.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Daskata.Controllers
@@ -175,24 +176,47 @@ namespace Daskata.Controllers
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpGet]
-        public async Task<IActionResult> All(int pageNumber = 1, int pageSize = 20)
+        public async Task<IActionResult> All( int pageNumber = 1, int pageSize = 20, 
+            string? keyword = null, string? subjectCategory = null, string? gradeCategory = null, 
+            DateTime? dateFromFilter = null, DateTime? dateToFilter = null)
         {
             try
             {
-                // Make sure the GetAllExamsAsync method returns a PaginatedList<FullExamViewModel>
-                var paginatedExams = await _examService.GetAllExamsAsync(pageNumber, pageSize);
+                var paginatedExams = await _examService.GetAllExamsAsync(
+                    pageNumber,
+                    pageSize,
+                    keyword,
+                    subjectCategory,
+                    gradeCategory,
+                    dateFromFilter,
+                    dateToFilter);
 
-                if (paginatedExams == null || !paginatedExams.Any())
+                if (paginatedExams == null)
                 {
-                    return NotFound();
+                    _logger.LogError("The exam service returned null instead of a list of exams.");
+
+                    ModelState.AddModelError(string.Empty, "Възникна грешка при обработката на данните.");
+
+                    return View(new ExamListViewModel());
                 }
 
-                // The ViewModel should reflect pagination, so pass the PaginatedList<FullExamViewModel> to the view
+                if (!paginatedExams.Any())
+                {
+                    ModelState.AddModelError(string.Empty, "Не е намерен нищо с така зададените параметри."); 
+
+                    return View(new ExamListViewModel { CurrentPage = pageNumber, Exams = paginatedExams });
+                }
+
                 var viewModel = new ExamListViewModel
                 {
                     Exams = paginatedExams,
                     CurrentPage = pageNumber,
-                    TotalPages = paginatedExams.TotalPages
+                    TotalPages = paginatedExams.TotalPages,
+                    Keyword = keyword,
+                    SubjectCategory = subjectCategory,
+                    GradeCategory = gradeCategory,
+                    DateFromFilter = dateFromFilter,
+                    DateToFilter = dateToFilter
                 };
 
                 return View(viewModel);

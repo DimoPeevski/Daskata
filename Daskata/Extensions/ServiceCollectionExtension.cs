@@ -14,6 +14,7 @@ using Daskata.Core.Services.User;
 using Daskata.Infrastructure.Common;
 using Daskata.Infrastructure.Data;
 using Daskata.Infrastructure.Data.Models;
+using Daskata.Infrastructure.Data.SeedDb;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,6 +46,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            services.AddScoped<SeedData>();
+
             return services;
         }
 
@@ -61,17 +64,23 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static async Task<IServiceCollection> RolesSeedAsync(this IServiceCollection services, IConfiguration config)
+        public static async Task RolesSeedAsync(this IServiceCollection services, IConfiguration config)
         {
-            var serviceProvider = services.BuildServiceProvider();
-            using (var scope = serviceProvider.CreateScope())
+            using (var scope = services.BuildServiceProvider().CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<UserRole>>();
-
                 await SeedRolesAsync(roleManager);
             }
+        }
 
-            return services;
+        public static async Task InitializeApplicationData(IServiceProvider services)
+        {
+            using (var scope = services.CreateScope())
+            {
+                var seeder = scope.ServiceProvider.GetRequiredService<SeedData>();
+
+                await seeder.Initialize();
+            }
         }
 
         private static async Task SeedRolesAsync(RoleManager<UserRole> roleManager)

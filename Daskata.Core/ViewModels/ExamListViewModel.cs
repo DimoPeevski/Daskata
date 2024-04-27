@@ -3,7 +3,7 @@
 public class ExamListViewModel
 {
     public PaginatedList<FullExamViewModel> Exams { get; set; } = null!;
-        
+
     public int CurrentPage { get; set; }
 
     public int TotalPages { get; set; }
@@ -12,7 +12,11 @@ public class ExamListViewModel
 
     public bool HasNextPage => CurrentPage < TotalPages;
 
-    public string? CategoryFilter { get; set; }
+    public string? Keyword { get; set; }
+
+    public string? SubjectCategory { get; set; }
+
+    public string? GradeCategory { get; set; }
 
     public DateTime? DateFromFilter { get; set; }
 

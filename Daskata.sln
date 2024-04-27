@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daskata.Core", "Daskata.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daskata.Infrastructure", "Daskata.Infrastructure\Daskata.Infrastructure.csproj", "{56BD07F1-19A3-4A4B-852E-06108465AFF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daskata.Services.Tests", "Daskata.Services.Tests\Daskata.Services.Tests.csproj", "{A7B06F6A-F69A-4656-9ACF-332850C3824C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daskata.Tests", "Daskata.Services.Tests\Daskata.Tests.csproj", "{A7B06F6A-F69A-4656-9ACF-332850C3824C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

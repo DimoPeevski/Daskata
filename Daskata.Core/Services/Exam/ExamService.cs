@@ -24,11 +24,59 @@ namespace Daskata.Core.Services.Exam
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<List<FullExamViewModel>> GetAllExamsAsync()
+        public async Task<PaginatedList<FullExamViewModel>> GetAllExamsAsync( int pageNumber, 
+            int pageSize, string? keyword, string? subjectCategory, string? gradeCategory, 
+            DateTime? dateFromFilter, DateTime? dateToFilter)
         {
-            List<Infrastructure.Data.Models.Exam> exams = await _repository.All<Infrastructure.Data.Models.Exam>().ToListAsync();
+            IQueryable<Infrastructure.Data.Models.Exam> query = _repository.All<Infrastructure.Data.Models.Exam>();
 
-            return exams.Select(e => new FullExamViewModel
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query = query.Where(e => e.Title.Contains(keyword) || e.Description.Contains(keyword));
+            }
+
+            if (!string.IsNullOrWhiteSpace(subjectCategory))
+            {
+                if (Enum.TryParse<SubjectCategory>(subjectCategory, true, out var subjectEnumValue))
+                {
+                    query = query.Where(e => e.StudySubject == subjectEnumValue);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(gradeCategory))
+            {
+                if (Enum.TryParse<GradeCategory>(gradeCategory, true, out var gradeEnumValue))
+                {
+                    query = query.Where(e => e.StudentGrade == gradeEnumValue);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            if (dateFromFilter.HasValue)
+            {
+                query = query.Where(e => e.CreationDate >= dateFromFilter.Value);
+            }
+            if (dateToFilter.HasValue)
+            {
+                query = query.Where(e => e.CreationDate <= dateToFilter.Value);
+            }
+
+            var totalItemCount = await query.CountAsync();
+
+            var pagedExams = await query
+                .OrderBy(e => e.CreationDate) 
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var examViewModels = pagedExams.Select(e => new FullExamViewModel
             {
                 Title = e.Title,
                 Description = e.Description,
@@ -40,6 +88,9 @@ namespace Daskata.Core.Services.Exam
                 CreatedByUserId = e.CreatedByUserId,
                 IsPublic = e.IsPublic
             }).ToList();
+
+            return new PaginatedList<FullExamViewModel>
+                (examViewModels, totalItemCount, pageNumber, pageSize);
         }
 
         public async Task<List<FullExamViewModel>> GetExamsByCreatorAsync(Guid userId)

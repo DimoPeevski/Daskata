@@ -1,12 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationIdentity(builder.Configuration);
-
 builder.Services.AddApplicationDbContext(builder.Configuration);
-
 builder.Services.AddApplicationServices();
-
-await builder.Services.RolesSeedAsync(builder.Configuration);
 
 builder.Services.ConfigureApplicationCookie(config =>
 {
@@ -16,13 +12,13 @@ builder.Services.ConfigureApplicationCookie(config =>
 });
 
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddSession();
-
 builder.Services.AddRazorPages();
 
-
 var app = builder.Build();
+
+await builder.Services.RolesSeedAsync(builder.Configuration);
+await ServiceCollectionExtension.InitializeApplicationData(app.Services);
 
 if (app.Environment.IsDevelopment())
 {
@@ -35,28 +31,19 @@ else
 }
 
 app.UseStatusCodePagesWithReExecute("/Error/404");
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 app.UseSession();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-      name: "areas",
-      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-    );
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+);
 
-    endpoints.MapDefaultControllerRoute();
-    endpoints.MapRazorPages();
-});
-
-
+app.MapDefaultControllerRoute();
+app.MapRazorPages();
 
 await app.RunAsync();
-

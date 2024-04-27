@@ -21,6 +21,74 @@
             </div>
         </div>
     </div>
+
+    <div class="row page-title-box align-items-center">
+        <div class="row">
+            <div class="col-12">
+                <form asp-controller="Exam" asp-action="All" method="get" class="mb-4 pt-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-10 col-12">
+                            <input type="text" class="form-control profile-edit-input" placeholder="Търсене..." asp-for="@Model.Keyword">
+                        </div>
+                        <div class="col-md-2 col-12 mt-md-0 mt-2">
+                            <button type="submit" class="btn btn-primary w-100 button-title">Търси</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <form asp-controller="Exam" asp-action="All" method="get" class="mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-3 col-12 mt-2">
+                            <select class="form-control profile-edit-input" asp-for="@Model.SubjectCategory" asp-items="ViewBag.SubjectCategories">
+                                <option value="">Изберете категория</option>
+                                <option value="Mathematics">Математика</option>
+                                <option value="BulgarianLanguage">Български език</option>
+                                <option value="Literature">Литература</option>
+                                <option value="History">История</option>
+                                <option value="Biology">Биология</option>
+                                <option value="Chemistry">Химия</option>
+                                <option value="Physics">Физика</option>
+                                <option value="Geography">География</option>
+                                <option value="EnglishLanguage">Английски език</option>
+
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-12 mt-2">
+                            <select class="form-control profile-edit-input" asp-for="@Model.GradeCategory" asp-items="ViewBag.GradeCategories">
+                                <option value="">Изберете клас</option>
+                                <option value="Grade1">Първи клас</option>
+                                <option value="Grade2">Втори клас</option>
+                                <option value="Grade3">Трети клас</option>
+                                <option value="Grade4">Четвърти клас</option>
+                                <option value="Grade5">Пети клас</option>
+                                <option value="Grade6">Шести клас</option>
+                                <option value="Grade7">Седми клас</option>
+                                <option value="Grade8">Осми клас</option>
+                                <option value="Grade9">Девети клас</option>
+                                <option value="Grade10">Десети клас</option>
+                                <option value="Grade11">Единадесети клас</option>
+                                <option value="Grade12">Дванадесети клас</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 col-12 mt-2">
+                            <input type="date" class="form-control profile-edit-input" asp-for="@Model.DateFromFilter" placeholder="От дата">
+                        </div>
+                        <div class="col-md-2 col-12 mt-2">
+                            <input type="date" class="form-control profile-edit-input" asp-for="@Model.DateToFilter" placeholder="До дата">
+                        </div>
+                        <div class="col-md-2 col-12 mt-2">
+                            <button type="submit" class="btn btn-primary w-100 button-title">Филтрирай</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         @foreach (var exam in Model.Exams)
         {
@@ -39,16 +107,23 @@
             }
         }
     </div>
-    <div class="pagination-container">
+    <div class="pagination-container mt-4 mb-4 text-center">
         @if (Model.Exams.HasPreviousPage)
         {
-            <a asp-action="All" asp-route-pageNumber="@(Model.CurrentPage - 1)" class="btn btn-default">Previous</a>
+            <a asp-action="All" asp-route-pageNumber="@(Model.CurrentPage - 1)" class="btn btn-default">Предишна</a>
         }
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
             if (i == Model.CurrentPage)
             {
-                <span class="current-page">@i</span>
+                if (Model.CurrentPage == 1 && Model.TotalPages == 1)
+                {
+                    <span></span>
+                }
+                else
+                {
+                    <span class="current-page">@i</span>
+                }   
             }
             else
             {
@@ -57,7 +132,7 @@
         }
         @if (Model.Exams.HasNextPage)
         {
-            <a asp-action="All" asp-route-pageNumber="@(Model.CurrentPage + 1)" class="btn btn-default">Next</a>
+            <a asp-action="All" asp-route-pageNumber="@(Model.CurrentPage + 1)" class="btn btn-default">Следваща</a>
         }
     </div>
 </div>

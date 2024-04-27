@@ -10,7 +10,6 @@ public class ExamServiceTests
     private ExamService _examService;
     private readonly Guid _mockUserId = Guid.NewGuid();
 
-
     [SetUp]
     public void Setup()
     {
