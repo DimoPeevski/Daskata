@@ -4,9 +4,7 @@ using Daskata.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using static Daskata.Core.Shared.Methods;
 
 namespace Daskata.Controllers
 {
@@ -177,20 +175,28 @@ namespace Daskata.Controllers
 
         [Authorize(Roles = "Admin,Manager,Teacher")]
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(int pageNumber = 1, int pageSize = 20)
         {
             try
             {
-                var allExamsCollection = await _examService.GetAllExamsAsync();
+                // Make sure the GetAllExamsAsync method returns a PaginatedList<FullExamViewModel>
+                var paginatedExams = await _examService.GetAllExamsAsync(pageNumber, pageSize);
 
-                if (allExamsCollection == null || allExamsCollection.Count == 0)
+                if (paginatedExams == null || !paginatedExams.Any())
                 {
                     return NotFound();
                 }
 
-                return View(allExamsCollection);
-            }
+                // The ViewModel should reflect pagination, so pass the PaginatedList<FullExamViewModel> to the view
+                var viewModel = new ExamListViewModel
+                {
+                    Exams = paginatedExams,
+                    CurrentPage = pageNumber,
+                    TotalPages = paginatedExams.TotalPages
+                };
 
+                return View(viewModel);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving all exams.");

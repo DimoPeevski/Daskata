@@ -24,23 +24,32 @@ namespace Daskata.Core.Services.Exam
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<List<FullExamViewModel>> GetAllExamsAsync()
+        public async Task<PaginatedList<FullExamViewModel>> GetAllExamsAsync(int pageNumber, int pageSize)
         {
-            List<Infrastructure.Data.Models.Exam> exams = await _repository.All<Infrastructure.Data.Models.Exam>()
+            var count = await _repository.All<Infrastructure.Data.Models.Exam>().CountAsync();
+
+            List<Infrastructure.Data.Models.Exam> exams = await _repository
+                .All<Infrastructure.Data.Models.Exam>()
+                .OrderBy(e => e.Title)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            return exams.Select(e => new FullExamViewModel
-            {
-                Title = e.Title,
-                Description = e.Description,
-                Duration = (int)e.Duration.TotalMinutes,
-                TotalPoints = e.TotalPoints,
-                IsPublished = e.IsPublished,
-                CreationDate = e.CreationDate,
-                ExamUrl = e.ExamUrl,
-                CreatedByUserId = e.CreatedByUserId,
-                IsPublic = e.IsPublic
-            }).ToList();
+            List<FullExamViewModel> examViewModels = exams
+                .Select(e => new FullExamViewModel
+                {
+                    Title = e.Title,
+                    Description = e.Description,
+                    Duration = (int)e.Duration.TotalMinutes,
+                    TotalPoints = e.TotalPoints,
+                    IsPublished = e.IsPublished,
+                    CreationDate = e.CreationDate,
+                    ExamUrl = e.ExamUrl,
+                    CreatedByUserId = e.CreatedByUserId,
+                    IsPublic = e.IsPublic
+                }).ToList();
+
+            return new PaginatedList<FullExamViewModel>(examViewModels, count, pageNumber, pageSize);
         }
 
         public async Task<List<FullExamViewModel>> GetExamsByCreatorAsync(Guid userId)

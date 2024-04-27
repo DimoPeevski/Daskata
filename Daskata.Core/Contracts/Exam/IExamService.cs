@@ -5,7 +5,7 @@ namespace Daskata.Core.Contracts.Exam
 {
     public interface IExamService
     {
-        Task<List<FullExamViewModel>> GetAllExamsAsync();
+        Task<PaginatedList<FullExamViewModel>> GetAllExamsAsync(int pageNumber, int pageSize);
 
         Task<List<FullExamViewModel>> GetExamsByCreatorAsync(Guid userId);
 
