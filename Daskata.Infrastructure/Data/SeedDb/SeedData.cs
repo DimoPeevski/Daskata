@@ -15,7 +15,7 @@ namespace Daskata.Infrastructure.Data.SeedDb
             _userManager = userManager;
         }
 
-        public async Task Initialize()
+        public async Task InitializeDbSeed()
         {
             await SeedUsersAsync();
             await SeedExamsAsync();
@@ -79,94 +79,96 @@ namespace Daskata.Infrastructure.Data.SeedDb
             var teacherUserId = Guid.Parse("84ed7e36-8256-4e35-a74c-f72254c334cc");
 
             return new List<Exam>
-    {
-        new Exam
-        {
-            Id = Guid.NewGuid(),
-            Title = "Основи на алгебрата",
-            Description = "Изпит за оценка на знанията по алгебра за средно образование.",
-            Duration = TimeSpan.FromMinutes(60),
-            TotalPoints = 100,
-            IsPublished = true,
-            IsPublic = false,
-            StudySubject = SubjectCategory.Mathematics,
-            StudentGrade = GradeCategory.Grade8,
-            TimesPassed = 0,
-            CreationDate = DateTime.UtcNow.AddDays(-30),
-            LastModifiedDate = DateTime.UtcNow.AddDays(-28),
-            CreatedByUserId = teacherUserId,
-            ExamUrl = "111111111"
-        },
-        new Exam
-        {
-            Id = Guid.NewGuid(),
-            Title = "Световна литература",
-            Description = "Подробен изпит по класическа и модерна световна литература.",
-            Duration = TimeSpan.FromMinutes(90),
-            TotalPoints = 120,
-            IsPublished = true,
-            IsPublic = true,
-            StudySubject = SubjectCategory.Literature,
-            StudentGrade = GradeCategory.Grade10,
-            TimesPassed = 0,
-            CreationDate = DateTime.UtcNow.AddDays(-25),
-            LastModifiedDate = DateTime.UtcNow.AddDays(-20),
-            CreatedByUserId = teacherUserId,
-            ExamUrl = "222222222"
-        },
-        new Exam
-        {
-            Id = Guid.NewGuid(),
-            Title = "Физика: Механика",
-            Description = "Оценяване на знанията по механика в раздела на физиката.",
-            Duration = TimeSpan.FromMinutes(45),
-            TotalPoints = 80,
-            IsPublished = false,
-            IsPublic = false,
-            StudySubject = SubjectCategory.Physics,
-            StudentGrade = GradeCategory.Grade11,
-            TimesPassed = 0,
-            CreationDate = DateTime.UtcNow.AddDays(-20),
-            LastModifiedDate = DateTime.UtcNow.AddDays(-18),
-            CreatedByUserId = teacherUserId,
-            ExamUrl = "333333333"
-        },
-        new Exam
-        {
-            Id = Guid.NewGuid(),
-            Title = "История на България",
-            Description = "Пълноценен тест, обхващащ ключови събития в историята на България.",
-            Duration = TimeSpan.FromMinutes(60),
-            TotalPoints = 100,
-            IsPublished = true,
-            IsPublic = true,
-            StudySubject = SubjectCategory.History,
-            StudentGrade = GradeCategory.Grade12,
-            TimesPassed = 0,
-            CreationDate = DateTime.UtcNow.AddDays(-15),
-            LastModifiedDate = DateTime.UtcNow.AddDays(-10),
-            CreatedByUserId = teacherUserId,
-            ExamUrl = "444444444"
-        },
-        new Exam
-        {
-            Id = Guid.NewGuid(),
-            Title = "Биология: Човешкото тяло",
-            Description = "Тест за оценка на познанията относно човешките органи и системи.",
-            Duration = TimeSpan.FromMinutes(75),
-            TotalPoints = 110,
-            IsPublished = false,
-            IsPublic = true,
-            StudySubject = SubjectCategory.Biology,
-            StudentGrade = GradeCategory.Grade9,
-            TimesPassed = 0,
-            CreationDate = DateTime.UtcNow.AddDays(-10),
-            LastModifiedDate = DateTime.UtcNow.AddDays(-5),
-            CreatedByUserId = teacherUserId,
-            ExamUrl = "555555555"
-        }
-    };
-        }
+            {
+                new Exam
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Основи на алгебрата",
+                    Description = "Изпит за оценка на знанията по алгебра за средно образование.",
+                    Duration = TimeSpan.FromMinutes(60),
+                    TotalPoints = 100,
+                    IsPublished = true,
+                    IsPublic = false,
+                    StudySubject = SubjectCategory.Mathematics,
+                    StudentGrade = GradeCategory.Grade8,
+                    TimesPassed = 0,
+                    CreationDate = DateTime.UtcNow.AddDays(-30),
+                    LastModifiedDate = DateTime.UtcNow.AddDays(-28),
+                    CreatedByUserId = teacherUserId,
+                    ExamUrl = "aoPlYTOUKxvlMq2l"
+                },
 
+                new Exam
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Световна литература",
+                    Description = "Подробен изпит по класическа и модерна световна литература.",
+                    Duration = TimeSpan.FromMinutes(90),
+                    TotalPoints = 120,
+                    IsPublished = true,
+                    IsPublic = true,
+                    StudySubject = SubjectCategory.Literature,
+                    StudentGrade = GradeCategory.Grade10,
+                    TimesPassed = 0,
+                    CreationDate = DateTime.UtcNow.AddDays(-25),
+                    LastModifiedDate = DateTime.UtcNow.AddDays(-20),
+                    CreatedByUserId = teacherUserId,
+                    ExamUrl = "coPlYTOUKxvlMq2l"
+                },
+                
+                new Exam
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Физика: Механика",
+                    Description = "Оценяване на знанията по механика в раздела на физиката.",
+                    Duration = TimeSpan.FromMinutes(45),
+                    TotalPoints = 80,
+                    IsPublished = false,
+                    IsPublic = false,
+                    StudySubject = SubjectCategory.Physics,
+                    StudentGrade = GradeCategory.Grade11,
+                    TimesPassed = 0,
+                    CreationDate = DateTime.UtcNow.AddDays(-20),
+                    LastModifiedDate = DateTime.UtcNow.AddDays(-18),
+                    CreatedByUserId = teacherUserId,
+                    ExamUrl = "doPlYTOUKxvlMq2l"
+                },
+                
+                new Exam
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "История на България",
+                    Description = "Пълноценен тест, обхващащ ключови събития в историята на България.",
+                    Duration = TimeSpan.FromMinutes(60),
+                    TotalPoints = 100,
+                    IsPublished = true,
+                    IsPublic = true,
+                    StudySubject = SubjectCategory.History,
+                    StudentGrade = GradeCategory.Grade12,
+                    TimesPassed = 0,
+                    CreationDate = DateTime.UtcNow.AddDays(-15),
+                    LastModifiedDate = DateTime.UtcNow.AddDays(-10),
+                    CreatedByUserId = teacherUserId,
+                    ExamUrl = "eoPlYTOUKxvlMq2l"
+                },
+                new Exam
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "Биология: Човешкото тяло",
+                    Description = "Тест за оценка на познанията относно човешките органи и системи.",
+                    Duration = TimeSpan.FromMinutes(75),
+                    TotalPoints = 110,
+                    IsPublished = false,
+                    IsPublic = true,
+                    StudySubject = SubjectCategory.Biology,
+                    StudentGrade = GradeCategory.Grade9,
+                    TimesPassed = 0,
+                    CreationDate = DateTime.UtcNow.AddDays(-10),
+                    LastModifiedDate = DateTime.UtcNow.AddDays(-5),
+                    CreatedByUserId = teacherUserId,
+                    ExamUrl = "foPlYTOUKxvlMq2l"
+        }
+            };
+        }
     }
 }

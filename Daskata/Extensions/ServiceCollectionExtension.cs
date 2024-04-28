@@ -79,7 +79,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 var seeder = scope.ServiceProvider.GetRequiredService<SeedData>();
 
-                await seeder.Initialize();
+                await seeder.InitializeDbSeed();
             }
         }
 
@@ -91,7 +91,10 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 if (!await roleManager.RoleExistsAsync(roleName))
                 {
-                    await roleManager.CreateAsync(new UserRole { Name = roleName });
+                    await roleManager.CreateAsync(new UserRole 
+                    { 
+                        Name = roleName 
+                    });
                 }
             }
         }
