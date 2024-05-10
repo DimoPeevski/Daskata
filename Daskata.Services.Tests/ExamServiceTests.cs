@@ -1,168 +1,174 @@
-﻿using Daskata.Core.Services.Exam;
-using Daskata.Infrastructure.Common;
-using Daskata.Infrastructure.Data.Models;
+﻿using NUnit.Framework;
 using Moq;
+using Daskata.Core.Contracts.Exam;
+using Daskata.Core.ViewModels;
+using Daskata.Infrastructure.Data.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 [TestFixture]
 public class ExamServiceTests
 {
-    private Mock<IRepository> _repositoryMock;
-    private ExamService _examService;
-    private readonly Guid _mockUserId = Guid.NewGuid();
+    private Mock<IExamService> _mockExamService;
+    private Guid _userId;
+    private string _examUrl, _subject, _grade;
+    private FullExamViewModel _fullExamViewModel;
+    private ExamAttemptViewModel _examAttemptViewModel;
+    private List<QuestionViewModel> _questions;
+    private int _maxPossiblePoints;
 
     [SetUp]
     public void Setup()
     {
-        _repositoryMock = new Mock<IRepository>();
+        _mockExamService = new Mock<IExamService>();
+        _userId = Guid.NewGuid();
+        _examUrl = "TestExamUrl";
+        _subject = "TestSubject";
+        _grade = "TestGrade";
+        _fullExamViewModel = new FullExamViewModel();
+        _examAttemptViewModel = new ExamAttemptViewModel();
+        _questions = new List<QuestionViewModel>();
+        _maxPossiblePoints = 100;
     }
 
     [Test]
-    public async Task GetAllExamsAsync_WithExams_ReturnsNonEmptyList()
+    public async Task GetExamsByCreatorAsync_ShouldReturnListOfFullExamViewModel()
     {
-        // Arrange
-        var mockExams = new List<Exam> { new Exam
-        {
+        var expectedModel = new List<FullExamViewModel>();
+        _mockExamService.Setup(service => service.GetExamsByCreatorAsync(_userId))
+            .ReturnsAsync(expectedModel);
 
-        }
-        };
-        _repositoryMock.Setup(repo => repo.All<Exam>()).Returns(mockExams.AsQueryable());
+        var result = await _mockExamService.Object.GetExamsByCreatorAsync(_userId);
 
-        // Act
-        var result = await _examService.GetAllExamsAsync();
-
-        // Assert
-        Assert.IsNotEmpty(result);
+        Assert.AreEqual(expectedModel, result);
     }
 
     [Test]
-    public async Task GetAllExamsAsync_WhenNoExams_ReturnsEmptyList()
+    public async Task GetExamPreview_ShouldReturnFullExamViewModel()
     {
-        // Arrange
-        _repositoryMock.Setup(repo => repo.All<Exam>()).Returns(Enumerable.Empty<Exam>().AsQueryable());
+        _mockExamService.Setup(service => service.GetExamPreview(_examUrl))
+            .ReturnsAsync(_fullExamViewModel);
 
-        // Act
-        var result = await _examService.GetAllExamsAsync();
+        var result = await _mockExamService.Object.GetExamPreview(_examUrl);
 
-        // Assert
-        Assert.IsEmpty(result);
+        Assert.AreEqual(_fullExamViewModel, result);
     }
 
     [Test]
-    public void GetAllExamsAsync_WhenRepositoryThrowsException_PropagatesException()
+    public async Task GetOpenExam_ShouldReturnFullExamViewModel()
     {
-        // Arrange
-        _repositoryMock.Setup(repo => repo.All<Exam>()).Throws(new Exception());
+        _mockExamService.Setup(service => service.GetOpenExam(_examUrl))
+            .ReturnsAsync(_fullExamViewModel);
 
-        // Act & Assert
-        Assert.ThrowsAsync<Exception>(() => _examService.GetAllExamsAsync());
+        var result = await _mockExamService.Object.GetOpenExam(_examUrl);
+
+        Assert.AreEqual(_fullExamViewModel, result);
     }
 
     [Test]
-    public async Task GetAllExamsAsync_CallsRepositoryAllMethodOnce()
+    public async Task Create_ShouldReturnListOfString()
     {
-        // Arrange
-        _repositoryMock.Setup(repo => repo.All<Exam>()).Returns(new List<Exam>().AsQueryable());
+        var expectedModel = new List<string>();
+        _mockExamService.Setup(service => service.Create())
+            .ReturnsAsync(expectedModel);
 
-        // Act
-        await _examService.GetAllExamsAsync();
+        var result = await _mockExamService.Object.Create();
 
-        // Assert
-        _repositoryMock.Verify(repo => repo.All<Exam>(), Times.Once());
+        Assert.AreEqual(expectedModel, result);
     }
 
     [Test]
-    public async Task GetAllExamsAsync_MapsPropertiesCorrectly()
+    public async Task Grade_ShouldReturnListOfString()
     {
-        // Arrange
-        var mockExam = new Exam
-        {
-            Id = Guid.NewGuid(),
-            Title = "Hello",
-            Description = "Test",
-            TotalPoints = 20,
-            IsPublic = false
-        };
-        _repositoryMock.Setup(repo => repo.All<Exam>()).Returns(new List<Exam> { mockExam }.AsQueryable());
+        var expectedModel = new List<string>();
+        _mockExamService.Setup(service => service.Grade(_subject))
+            .ReturnsAsync(expectedModel);
 
-        // Act
-        var result = await _examService.GetAllExamsAsync();
-        var examViewModel = result.First();
+        var result = await _mockExamService.Object.Grade(_subject);
 
-        // Assert
-        Assert.AreEqual(mockExam.Id, examViewModel.Id);
-        Assert.AreEqual(mockExam.Title, examViewModel.Title);
-        Assert.AreEqual(mockExam.Description, examViewModel.Description);
-        Assert.AreEqual(mockExam.TotalPoints, examViewModel.TotalPoints);
-        Assert.AreEqual(mockExam.IsPublic, examViewModel.IsPublic);
+        Assert.AreEqual(expectedModel, result);
     }
 
     [Test]
-    public async Task GetExamsByCreatorAsync_WithExams_ReturnsNonEmptyList()
+    public async Task Details_ShouldReturnFullExamViewModel()
     {
-        // Arrange
-        var mockExams = new List<Exam> { new Exam { CreatedByUserId = _mockUserId /*, other properties */ } };
-        _repositoryMock.Setup(repo => repo.All<Exam>()).Returns(mockExams.AsQueryable());
+        _mockExamService.Setup(service => service.Details(_grade))
+            .ReturnsAsync(_fullExamViewModel);
 
-        // Act
-        var result = await _examService.GetExamsByCreatorAsync(_mockUserId);
+        var result = await _mockExamService.Object.Details(_grade);
 
-        // Assert
-        Assert.IsNotEmpty(result);
-        Assert.IsTrue(result.All(e => e.CreatedByUserId == _mockUserId));
+        Assert.AreEqual(_fullExamViewModel, result);
     }
 
     [Test]
-    public async Task GetExamsByCreatorAsync_WhenNoExams_ReturnsEmptyList()
+    public async Task Publish_ShouldReturnExam()
     {
-        // Arrange
-        _repositoryMock.Setup(repo => repo.All<Exam>()).Returns(new List<Exam>().AsQueryable());
+        var expectedModel = new Exam();
+        _mockExamService.Setup(service => service.Publish(_fullExamViewModel, _subject, _grade, _userId))
+            .ReturnsAsync(expectedModel);
 
-        // Act
-        var result = await _examService.GetExamsByCreatorAsync(_mockUserId);
+        var result = await _mockExamService.Object.Publish(_fullExamViewModel, _subject, _grade, _userId);
 
-        // Assert
-        Assert.IsEmpty(result);
+        Assert.AreEqual(expectedModel, result);
     }
 
     [Test]
-    public async Task GetExamsByCreatorAsync_FiltersByUserId()
+    public async Task GetExamByUrlAsync_ShouldReturnExam()
     {
-        // Arrange
-        var mockExams = new List<Exam>
-        {
-            new Exam { CreatedByUserId = _mockUserId },
-            new Exam { CreatedByUserId = Guid.NewGuid() }
-        };
-        _repositoryMock.Setup(repo => repo.All<Exam>()).Returns(mockExams.AsQueryable());
+        var expectedModel = new Exam();
+        _mockExamService.Setup(service => service.GetExamByUrlAsync(_examUrl))
+            .ReturnsAsync(expectedModel);
 
-        // Act
-        var result = await _examService.GetExamsByCreatorAsync(_mockUserId);
+        var result = await _mockExamService.Object.GetExamByUrlAsync(_examUrl);
 
-        // Assert
-        Assert.IsTrue(result.All(e => e.CreatedByUserId == _mockUserId) && result.Count == 1);
+        Assert.AreEqual(expectedModel, result);
     }
 
     [Test]
-    public async Task GetExamsByCreatorAsync_WhenRepositoryThrowsException_PropagatesException()
+    public async Task UpdateExamAsync_ShouldReturnExam()
     {
-        // Arrange
-        _repositoryMock.Setup(repo => repo.All<Exam>()).Throws(new Exception());
+        var expectedModel = new Exam();
+        _mockExamService.Setup(service => service.UpdateExamAsync(_fullExamViewModel))
+            .ReturnsAsync(expectedModel);
 
-        // Act & Assert
-        Assert.ThrowsAsync<Exception>(() => _examService.GetExamsByCreatorAsync(_mockUserId));
+        var result = await _mockExamService.Object.UpdateExamAsync(_fullExamViewModel);
+
+        Assert.AreEqual(expectedModel, result);
     }
 
     [Test]
-    public async Task GetExamsByCreatorAsync_CallsRepositoryAllMethodOnce()
+    public async Task GetExamAndQuestionsByUrlAsync_ShouldReturnFullExamViewModel()
     {
-        // Arrange
-        var mockExams = new List<Exam> { new Exam { CreatedByUserId = _mockUserId } };
-        _repositoryMock.Setup(repo => repo.All<Exam>()).Returns(mockExams.AsQueryable());
+        _mockExamService.Setup(service => service.GetExamAndQuestionsByUrlAsync(_examUrl))
+            .ReturnsAsync(_fullExamViewModel);
 
-        // Act
-        await _examService.GetExamsByCreatorAsync(_mockUserId);
+        var result = await _mockExamService.Object.GetExamAndQuestionsByUrlAsync(_examUrl);
 
-        // Assert
-        _repositoryMock.Verify(repo => repo.All<Exam>(), Times.Once());
+        Assert.AreEqual(_fullExamViewModel, result);
+    }
+
+    [Test]
+    public async Task CalculateExamResultAsync_ShouldReturnExamAttempt()
+    {
+        var expectedModel = new ExamAttempt();
+        _mockExamService.Setup(service => service.CalculateExamResultAsync(_examUrl, _examAttemptViewModel))
+            .ReturnsAsync(expectedModel);
+
+        var result = await _mockExamService.Object.CalculateExamResultAsync(_examUrl, _examAttemptViewModel);
+
+        Assert.AreEqual(expectedModel, result);
+    }
+
+    [Test]
+    public void CalculateTotalScoreInPercentage_ShouldReturnDouble()
+    {
+        var expectedModel = 0.0;
+        _mockExamService.Setup(service => service.CalculateTotalScoreInPercentage(_questions, _maxPossiblePoints))
+            .Returns(expectedModel);
+
+        var result = _mockExamService.Object.CalculateTotalScoreInPercentage(_questions, _maxPossiblePoints);
+
+        Assert.AreEqual(expectedModel, result);
     }
 }
